@@ -5,6 +5,7 @@ description = "XRPL wallet guardian: monitoring and haircut taint tracking of st
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "fastapi>=0.115",
     "xrpl-py>=5.1",
 ]
 
