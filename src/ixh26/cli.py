@@ -88,6 +88,38 @@ def cmd_config(settings: config.Settings) -> int:
     return 0
 
 
+def cmd_create_user(
+    settings: config.Settings, username: str, role: str, password_stdin: bool
+) -> int:
+    """Create a pseudonymous account (analysts are only created here, never via the web)."""
+    import getpass
+
+    from ixh26.app.auth import hash_password, validate_credentials
+    from ixh26.store.repo import Store
+
+    password = sys.stdin.readline().rstrip("\n") if password_stdin else getpass.getpass()
+    validate_credentials(username, password)
+    store = Store.from_url(settings.database_url)
+    if store.user_by_name(username):
+        print(f"user {username} already exists")
+        return 1
+    store.create_user(username, hash_password(password), role)
+    print(f"created {role} {username}")
+    return 0
+
+
+def cmd_label(settings: config.Settings, address: str, kind: str, name: str) -> int:
+    """Label a known entity (exchange, issuer...): traces stop there and report the tag."""
+    from ixh26.contracts import AccountLabel, AccountLabelKind
+    from ixh26.store.repo import Store
+
+    Store.from_url(settings.database_url).upsert_label(
+        AccountLabel(address, AccountLabelKind(kind), name)
+    )
+    print(f"labelled {address} as {kind} '{name}'")
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="ixh26", description=__doc__)
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -97,6 +129,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     api.add_argument("--port", type=int, default=8000)
     sub.add_parser("worker", help="run the wallet monitor / trace worker")
     sub.add_parser("config", help="show effective non-secret configuration")
+    cu = sub.add_parser("create-user", help="create a user or analyst account")
+    cu.add_argument("username")
+    cu.add_argument("--role", choices=["user", "analyst"], default="user")
+    cu.add_argument("--password-stdin", action="store_true", help="read the password from stdin")
+    lb = sub.add_parser("label", help="label an exchange/issuer address for traces")
+    lb.add_argument("address")
+    lb.add_argument("--kind", default="exchange", choices=["exchange", "issuer", "bridge", "mixer"])
+    lb.add_argument("--name", required=True)
     args = parser.parse_args(argv)
 
     settings = config.load_settings()
@@ -109,6 +149,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         return cmd_api(settings, args.host, args.port)
     if args.cmd == "worker":
         return cmd_worker(settings)
+    if args.cmd == "create-user":
+        return cmd_create_user(settings, args.username, args.role, args.password_stdin)
+    if args.cmd == "label":
+        return cmd_label(settings, args.address, args.kind, args.name)
     return cmd_config(settings)
 
 
