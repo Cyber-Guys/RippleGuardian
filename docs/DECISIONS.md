@@ -47,3 +47,19 @@ To reverse a decision, add a new entry that supersedes it. Don't edit old entrie
 - Why: CLAUDE.md §4 module boundaries; lets T-001/T-002/T-003 run in parallel.
 - Alternatives considered: persistence inside `flows/`.
 - Consequences: shared types in `contracts.py` (Transfer, SecurityEvent, TraceParams, TraceResult, Alert, TxResult, LedgerReader/LedgerStream protocols).
+
+## D-005 · One app, two roles, no personal data, in-app notifications
+- Date: 2026-11-20 23:15 CET · Decided by: nico (drafted by nico/claude, pending approval)
+- Status: accepted
+- Decision: A single web app with a `user` and an `analyst` role replaces the "two explorers" idea. Users see only their watched wallets (history, statement, notification settings) and the accounts/txs flagged by analysts. Analysts see detector findings, run haircut traces and flag accounts/txs. Accounts are pseudonymous (username + password, no email). Notifications are in-app only and fire on (a) activity on a watched wallet (outgoing payment above a per-wallet threshold, signing-key change) and (b) contact with a flagged account. Wallets are watch-only (public data); proof of ownership is roadmap.
+- Why: Execution (one app to build and demo), Impact (detection and flags stay with accountable analysts), no personal data on our side.
+- Alternatives considered: two explorers; email notifications (dropped, personal data); ownership proof via a tagged micro-payment (roadmap).
+- Consequences: T-008, T-009; AlertKind.FLAGGED_COUNTERPARTY.
+
+## D-006 · Web front-end: Jinja2 + HTMX inside FastAPI
+- Date: 2026-11-20 23:15 CET · Decided by: nico
+- Status: accepted
+- Decision: Server-rendered Jinja2 templates served by the same FastAPI app; HTMX (vendored static file) for live fragments. One CSS file with design tokens; animation hooks only, animations later.
+- Why: Python-first policy (no JS we write), one container, signing stays server-side.
+- Alternatives considered: NiceGUI, Streamlit, a JS SPA (needs the JS exception).
+- Consequences: Jinja2 + python-multipart dependencies; HTMX listed in THIRD_PARTY.md. Live notifications use HTMX polling of the DB; Redis pub/sub is not used for now.

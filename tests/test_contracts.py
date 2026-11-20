@@ -50,3 +50,21 @@ def test_trace_defaults_match_policy() -> None:
     p = TraceParams(origin="rV", asset=XRP, stolen_value=Decimal(10**8), start_ledger=1)
     assert p.min_ratio == Decimal("0.01")
     assert p.model == "haircut"
+
+
+def test_activity_carries_pre_tx_balances_and_event_order() -> None:
+    from ixh26.contracts import (
+        AccountActivity,
+        AlertKind,
+        PreTxBalance,
+        SecurityEvent,
+        SecurityEventKind,
+    )
+
+    event = SecurityEvent(
+        "A" * 64, 10, datetime(2026, 11, 20, tzinfo=UTC), "rA", SecurityEventKind.SET_REGULAR_KEY
+    )
+    balance = PreTxBalance("B" * 64, "rA", Amount(XRP, Decimal(7)))
+    activity = AccountActivity(security_events=(event,), pre_tx_balances=(balance,))
+    assert activity.security_events[0].tx_index == 0
+    assert AlertKind("flagged_counterparty") is AlertKind.FLAGGED_COUNTERPARTY

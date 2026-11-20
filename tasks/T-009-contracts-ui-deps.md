@@ -1,7 +1,7 @@
 ---
 id: T-009
 objective: O-1
-status: claimed
+status: review
 owner: nico/claude
 branch: t/T-009-contracts-ui-deps
 depends_on: [T-000]
@@ -12,12 +12,13 @@ policy: "1.0"
 ## Objective
 Small contract task: shared types and dependencies needed by the in-app notifications and the web UI.
 ## Acceptance criteria
-- [ ] `AlertKind.FLAGGED_COUNTERPARTY` (in-app notification when a watched wallet touches an analyst-flagged account)
-- [ ] `SecurityEvent.tx_index` and `AccountActivity.pre_tx_balances` (needed by the takeover detector of T-006)
-- [ ] Jinja2 + python-multipart added, each with a THIRD_PARTY row
-- [ ] D-005 (one app, two roles, no personal data, in-app notifications) and D-006 (Jinja2 + HTMX) drafted for human approval
+- [x] `AlertKind.FLAGGED_COUNTERPARTY` (in-app notification when a watched wallet touches an analyst-flagged account)
+- [x] `SecurityEvent.tx_index` and `AccountActivity.pre_tx_balances` (needed by the takeover detector of T-006)
+- [x] Jinja2 + python-multipart added, each with a THIRD_PARTY row
+- [x] D-005 (one app, two roles, no personal data, in-app notifications) and D-006 (Jinja2 + HTMX) drafted for human approval
 ## Out of scope
 Any behaviour change.
 ## Log
 - 23:10 nico/claude: policy 1.0 acknowledged. Created on nico's instruction.
 ## Evidence
+- 23:20 nico/claude: done; make check green (23 tests). Evidence: tests/test_contracts.py::test_activity_carries_pre_tx_balances_and_event_order.

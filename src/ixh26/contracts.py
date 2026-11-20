@@ -101,6 +101,16 @@ class SecurityEvent:
     account: str
     kind: SecurityEventKind
     detail: str = ""  # short, non-sensitive (e.g. the new regular key address)
+    tx_index: int = 0  # position inside the ledger, to order it against transfers
+
+
+@dataclass(frozen=True)
+class PreTxBalance:
+    """Balance of ``account`` in ``amount.asset`` just before ``tx_hash`` was applied."""
+
+    tx_hash: str
+    account: str
+    amount: Amount
 
 
 @dataclass(frozen=True)
@@ -109,6 +119,7 @@ class AccountActivity:
 
     transfers: tuple[Transfer, ...] = ()
     security_events: tuple[SecurityEvent, ...] = ()
+    pre_tx_balances: tuple[PreTxBalance, ...] = ()  # sources' balances (from tx metadata)
 
 
 # --- Taint tracking ---------------------------------------------------------------------------
@@ -189,6 +200,7 @@ class AlertKind(StrEnum):
     SECURITY_CHANGE = "security_change"
     TAINT_AT_EXCHANGE = "taint_at_exchange"
     TAINTED_TOKEN_MOVED = "tainted_token_moved"  # notify the issuer (freeze / clawback)
+    FLAGGED_COUNTERPARTY = "flagged_counterparty"  # watched wallet touched a flagged account
 
 
 @dataclass(frozen=True)
