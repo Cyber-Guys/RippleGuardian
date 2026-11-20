@@ -21,3 +21,5 @@ build/
 .idea/
 .DS_Store
 *.swp
+# task worktrees (CLAUDE.md §3)
+wt-*/
