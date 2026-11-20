@@ -8,3 +8,4 @@ Every library, copied snippet (>5 lines), dataset, image, font or icon used in t
 | FastAPI | https://github.com/fastapi/fastapi | MIT | app/: HTTP API |
 | Uvicorn | https://github.com/encode/uvicorn | BSD-3-Clause | cli: ASGI server for the API |
 | SQLAlchemy | https://github.com/sqlalchemy/sqlalchemy | MIT | store/: ORM / Postgres access |
+| psycopg | https://github.com/psycopg/psycopg | LGPL-3.0 | store/: Postgres driver (used as unmodified library) |
