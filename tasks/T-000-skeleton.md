@@ -1,7 +1,7 @@
 ---
 id: T-000
 objective: O-1
-status: review
+status: done
 owner: tommaso/a1
 branch: t/T-000-skeleton
 depends_on: []
@@ -25,6 +25,7 @@ The repo has a runnable, dockerized Python skeleton with shared contracts and gr
   Handoff/gotchas: contracts use Decimal only, XRP in integer drops; `ixh26 smoke` delegates to
   `ixh26.flows.smoke:run` once T-004 provides it; `make demo` expects scripts/demo.py (T-005);
   config secrets via `config.jwt_secret()` / `config.wallet_seed(name)` (env XRPL_SEED_<NAME>).
+- 21:50 tommaso/a1: worktree moved into repo (wt-*/ ignored); rebased; fast-forward merged to master on tommaso OK. status done.
 ## Evidence
 - `make check`: 22 passed (tests/test_config.py, test_contracts.py, test_cli.py, test_secret_scan.py), ruff clean, secret scan ok.
 - `make smoke`: "skeleton smoke ok (network=testnet)".
