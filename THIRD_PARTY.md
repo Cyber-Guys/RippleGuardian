@@ -1,0 +1,6 @@
+# Third-party software & assets
+
+Every library, copied snippet (>5 lines), dataset, image, font or icon used in this repo (CLAUDE.md §7).
+
+| Name | URL | Licence | Where used |
+|---|---|---|---|

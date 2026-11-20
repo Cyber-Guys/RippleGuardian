@@ -1,0 +1,23 @@
+# secrets
+.env
+.env.*
+!.env.example
+# data & artifacts
+data/
+artifacts/screenshots/*.png.tmp
+# python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+# notebooks
+.ipynb_checkpoints/
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp

@@ -1,0 +1,27 @@
+[project]
+name = "ixh26"
+version = "0.1.0"
+description = "XRPL wallet guardian: monitoring and haircut taint tracking of stolen funds (IXH26 Track 2)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[project.scripts]
+ixh26 = "ixh26.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.9,<0.13"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "BLE", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = ["network: hits XRPL Testnet (run with `make test-network`)"]
+asyncio_mode = "auto"
