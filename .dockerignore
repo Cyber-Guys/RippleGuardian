@@ -1,0 +1,13 @@
+.git
+.venv
+.env
+.env.*
+data
+artifacts
+brainstorming
+tasks
+docs
+tests
+**/__pycache__
+.pytest_cache
+.ruff_cache
