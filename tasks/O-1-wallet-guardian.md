@@ -2,7 +2,7 @@
 id: O-1
 owner: tommaso
 criterion: [Execution, Impact, Pitch]
-tasks: [T-000, T-001, T-002, T-003, T-004, T-005]
+tasks: [T-000, T-001, T-002, T-003, T-004, T-005, T-006, T-008, T-009]
 ---
 ## Outcome
 A judge watches, live on Testnet, a monitored wallet get "robbed" (funds split across attacker
