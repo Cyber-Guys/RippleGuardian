@@ -5,7 +5,7 @@ status: claimed
 owner: nico/claude
 branch: t/T-005-testnet-demo
 depends_on: [T-004]
-scope: [scripts/, artifacts/, tests/scripts/]
+scope: [scripts/, artifacts/, tests/scripts/, src/ixh26/ledger/ops.py, tests/ledger/test_ledger_ops.py]
 contracts_used: []
 policy: "1.0"
 ---
