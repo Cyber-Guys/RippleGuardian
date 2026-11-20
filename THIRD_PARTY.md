@@ -11,3 +11,4 @@ Every library, copied snippet (>5 lines), dataset, image, font or icon used in t
 | psycopg | https://github.com/psycopg/psycopg | LGPL-3.0 | store/: Postgres driver (used as unmodified library) |
 | redis-py | https://github.com/redis/redis-py | MIT | store/, flows/: job queue and pub/sub |
 | PyJWT | https://github.com/jpadilla/pyjwt | MIT | app/: JWT auth |
+| argon2-cffi | https://github.com/hynek/argon2-cffi | MIT | app/: password hashing |
