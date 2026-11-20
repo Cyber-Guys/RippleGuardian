@@ -37,5 +37,6 @@ asyncio_mode = "auto"
 
 [dependency-groups]
 dev = [
+    "pytest>=8.3",
     "ruff>=0.8",
 ]
