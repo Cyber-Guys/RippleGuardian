@@ -89,3 +89,24 @@ def test_analyst_findings_trace_and_flag_visible_to_users(store: Store) -> None:
     carol = client_for(store, "carol", "carol-pass")
     lookup = carol.get("/flags", params={"q": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh"})
     assert "Flagged as theft" in lookup.text and "ana" in lookup.text
+
+
+def test_ribbon_marks_only_stops_and_known_entities() -> None:
+    from ixh26.app.web import ribbon
+
+    edge = {"destination_tag": None, "taint": "5 XRP"}
+    result = {
+        "params": {"origin": "rV", "stolen": "10 XRP"},
+        "edges": [
+            {**edge, "hop": 1, "source": "rV", "destination": "rMule"},
+            {**edge, "hop": 2, "source": "rMule", "destination": "rEx", "destination_tag": 7},
+            {**edge, "hop": 1, "source": "rV", "destination": "rStay"},
+        ],
+        "sinks": [
+            {"address": "rEx", "destination_tag": 7, "label": "Exchange"},
+            {"address": "rMule", "destination_tag": None, "label": None},  # reserve left behind
+            {"address": "rStay", "destination_tag": None, "label": None},
+        ],
+    }
+    kinds = {n["address"]: n["kind"] for col in ribbon(result) for n in col["nodes"]}
+    assert kinds == {"rV": "origin", "rMule": "hop", "rEx": "sink", "rStay": "sink"}

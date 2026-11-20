@@ -183,7 +183,9 @@ def ribbon(result: dict[str, Any]) -> list[dict[str, Any]]:
     stolen = number_in(result["params"]["stolen"]) or Decimal(1)
     unit = result["params"]["stolen"].split()[-1]
     sinks = {(s["address"], s["destination_tag"]): s for s in result["sinks"]}
-    sink_addresses = {s["address"] for s in result["sinks"]}
+    forwarded = {e["source"] for e in result["edges"]}
+    # red = funds stopped here or reached a known entity; residual reserves on hops don't count
+    stopped = {s["address"] for s in result["sinks"] if s["label"] or s["address"] not in forwarded}
     columns: dict[int, dict[tuple[str, int | None], Decimal]] = defaultdict(
         lambda: defaultdict(Decimal)
     )
@@ -213,7 +215,7 @@ def ribbon(result: dict[str, Any]) -> list[dict[str, Any]]:
                 {
                     "address": address,
                     "tag": tag,
-                    "kind": "sink" if address in sink_addresses else "hop",
+                    "kind": "sink" if address in stopped else "hop",
                     "value": f"{value.quantize(Decimal('0.000001')).normalize():f} {unit}",
                     "share": float(min(value / stolen * 100, Decimal(100))),
                     "label": sink["label"] if sink and sink["label"] else None,
