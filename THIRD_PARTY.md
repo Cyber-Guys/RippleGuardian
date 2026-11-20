@@ -15,3 +15,4 @@ Every library, copied snippet (>5 lines), dataset, image, font or icon used in t
 | Ruff | https://github.com/astral-sh/ruff | MIT | dev: lint and format |
 | pytest | https://github.com/pytest-dev/pytest | MIT | dev: tests |
 | pytest-asyncio | https://github.com/pytest-dev/pytest-asyncio | Apache-2.0 | dev: async tests |
+| HTTPX | https://github.com/encode/httpx | BSD-3-Clause | dev: FastAPI TestClient |
