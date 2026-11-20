@@ -1,0 +1,13 @@
+{% extends "auth_base.html" %}
+{% from "macros.html" import errors %}
+{% block title %}Sign in{% endblock %}
+{% block form %}
+<h2>Sign in</h2>
+{{ errors(error) }}
+<form method="post" action="/login" class="stack" style="gap: var(--s-4)">
+  <div class="field"><label for="username">Username</label><input id="username" name="username" type="text" autocomplete="username" required value="{{ username or '' }}"></div>
+  <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
+  <button class="btn" type="submit">Sign in</button>
+</form>
+<p class="muted">New here? <a href="/register">Create an account</a></p>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% from "macros.html" import address, tx, tag, flag_form %}
+{% if trace.status == "pending" %}
+  <div class="status-band" data-state="attention" role="status"><span class="status-dot"></span><strong>Tracing…</strong><span>Reading each hop from the ledger. This usually takes a few seconds.</span></div>
+{% elif trace.status == "failed" %}
+  <div class="status-band" data-state="compromised" role="alert"><span class="status-dot"></span><strong>Trace failed</strong><span>{{ trace.error }}</span></div>
+{% else %}
+<div class="stack">
+  <section>
+    <h2 style="margin-bottom: var(--s-2)">Where the stolen funds went</h2>
+    <p class="muted small" style="margin-bottom: var(--s-3)">Bars show each account's share of the {{ result.params.stolen }} taken. Red boxes are where funds stopped or reached a known entity.</p>
+    <div class="ribbon" role="list">
+      {% for col in ribbon %}
+      <div class="hop" role="listitem">
+        <div class="hop-title">{{ "Victim" if col.hop == 0 else "Hop " ~ col.hop }}</div>
+        {% for n in col.nodes %}
+        <div class="node" data-kind="{{ n.kind }}">
+          <div>{% if n.label %}<strong>{{ n.label }}</strong><br>{% endif %}{{ address(n.address, account_url, n.tag) }}</div>
+          <div class="node-meter" aria-hidden="true"><span style="--share: {{ '%.2f'|format(n.share) }}%"></span></div>
+          <div class="node-figures"><span>{{ n.value }}</span><span class="muted">{{ '%.1f'|format(n.share) }}%</span></div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Endpoints</h2>{% if result.truncated %}<span class="small muted">Some branches stopped at the {{ (result.params.min_ratio|float * 100)|round(1) }}% threshold or {{ result.params.max_hops }} hops</span>{% endif %}</div>
+    {% if result.sinks %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Account</th><th>Known as</th><th class="num">Tainted value</th><th class="num">Share</th><th>Hop</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for s in result.sinks %}
+          <tr>
+            <td>{{ address(s.address, account_url, s.destination_tag) }}</td>
+            <td>{{ s.label or "Unlabelled" }}{% if s.address in flagged %} {{ tag("flagged", "flagged") }}{% endif %}</td>
+            <td class="num">{{ s.taint }}</td>
+            <td class="num">{{ '%.1f'|format(s.share|float * 100) }}%</td>
+            <td>{{ s.hop }}</td>
+            <td>{% if s.address not in flagged and not s.label_kind %}<details><summary>Flag</summary>{{ flag_form(s.address, "account", categories, "/analyst/traces/" ~ trace.id) }}</details>{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <div class="empty"><strong>No endpoint above the threshold</strong>The stolen value spread below the stop threshold or nothing left the wallet after this ledger.</div>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Tainted transfers</h2><span class="small muted">{{ result.edges|length }}</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Hop</th><th>From</th><th>To</th><th class="num">Amount</th><th class="num">Tainted</th><th class="num">Ratio</th><th>Transaction</th></tr></thead>
+        <tbody>
+        {% for e in result.edges %}
+          <tr>
+            <td>{{ e.hop }}</td>
+            <td>{{ address(e.source, account_url) }}</td>
+            <td>{{ address(e.destination, account_url, e.destination_tag) }}</td>
+            <td class="num">{{ e.amount }}</td>
+            <td class="num">{{ e.taint }}</td>
+            <td class="num">{{ '%.0f'|format(e.taint_ratio|float * 100) }}%</td>
+            <td>{{ tx(e.tx_hash, tx_url) }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <p class="small muted">{{ result.disclaimer }} Computed {{ result.computed_at[:19].replace('T', ' ') }} UTC.{% for n in result.notes %} {{ n }}.{% endfor %}</p>
+</div>
+{% endif %}

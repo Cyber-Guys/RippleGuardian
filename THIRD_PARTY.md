@@ -18,3 +18,4 @@ Every library, copied snippet (>5 lines), dataset, image, font or icon used in t
 | HTTPX | https://github.com/encode/httpx | BSD-3-Clause | dev: FastAPI TestClient |
 | Jinja2 | https://github.com/pallets/jinja | BSD-3-Clause | app/: server-rendered HTML templates |
 | python-multipart | https://github.com/Kludex/python-multipart | Apache-2.0 | app/: HTML form parsing for FastAPI |
+| htmx 2.0.4 | https://github.com/bigskysoftware/htmx | 0BSD | app/static/htmx.min.js (vendored, unmodified): live notification and trace fragments |

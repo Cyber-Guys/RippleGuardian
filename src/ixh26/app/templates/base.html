@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Wallet Guardian{% endblock %} | Wallet Guardian</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+{% block body %}
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      {% include "partials/mark.html" %}
+      <span class="brand-name">Wallet Guardian<small>{{ "Analyst desk" if user.is_analyst else "Your wallets" }}</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      {% if user.is_analyst %}
+        <a href="/analyst/findings" {% if path.startswith('/analyst/findings') %}aria-current="page"{% endif %}>Findings</a>
+        <a href="/analyst/traces" {% if path.startswith('/analyst/traces') %}aria-current="page"{% endif %}>Traces</a>
+        <a href="/flags" {% if path == '/flags' %}aria-current="page"{% endif %}>Flags</a>
+      {% else %}
+        <a href="/" {% if path == '/' or path.startswith('/wallets') %}aria-current="page"{% endif %}>Wallets</a>
+        <a href="/notifications" {% if path == '/notifications' %}aria-current="page"{% endif %}>
+          Notifications
+          <span class="count" hx-get="/ui/unread" hx-trigger="every 5s" hx-swap="outerHTML" aria-label="unread notifications">{{ unread or "" }}</span>
+        </a>
+        <a href="/flags" {% if path == '/flags' %}aria-current="page"{% endif %}>Flagged accounts</a>
+      {% endif %}
+    </nav>
+    <div class="sidebar-foot">
+      <span class="network">XRPL {{ network|capitalize }}</span>
+      <span>Signed in as {{ user.username }}</span>
+      <form method="post" action="/logout"><button class="link-button" type="submit">Sign out</button></form>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    {% block main %}{% endblock %}
+  </main>
+</div>
+{% endblock %}
+</body>
+</html>

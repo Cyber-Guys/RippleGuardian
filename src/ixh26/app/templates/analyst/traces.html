@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% from "macros.html" import address, tag, errors, empty %}
+{% block title %}Traces{% endblock %}
+{% block main %}
+<div class="page-head">
+  <div>
+    <h1>Traces</h1>
+    <p>Follow stolen XRP hop by hop with the haircut model: each outflow carries taint in proportion to the account's tainted share.</p>
+  </div>
+</div>
+{{ errors(error) }}
+<div class="stack">
+  <section class="panel">
+    <div class="panel-head"><h2>Start a trace</h2></div>
+    <form class="panel-body form-row" method="post" action="/analyst/traces">
+      <div class="field"><label for="origin">Robbed wallet</label><input id="origin" name="origin" type="text" required value="{{ origin }}" placeholder="r…" spellcheck="false"></div>
+      <div class="field" style="flex: 0 1 10rem"><label for="stolen_xrp">Stolen amount (XRP)</label><input id="stolen_xrp" name="stolen_xrp" type="text" inputmode="decimal" required></div>
+      <div class="field" style="flex: 0 1 11rem"><label for="start_ledger">From ledger</label><input id="start_ledger" name="start_ledger" type="number" min="1" required></div>
+      <button class="btn" type="submit">Start trace</button>
+    </form>
+    <p class="panel-body small muted" style="padding-top: 0">Use the ledger of the theft (the first drain) so earlier, legitimate payments are not counted.</p>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>Recent traces</h2></div>
+    {% if traces %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Origin</th><th class="num">Stolen</th><th>From ledger</th><th>Status</th><th>Started (UTC)</th></tr></thead>
+        <tbody>
+        {% for t in traces %}
+          <tr>
+            <td><a href="/analyst/traces/{{ t.id }}">Trace {{ t.id }}</a></td>
+            <td>{{ address(t.origin, account_url) }}</td>
+            <td class="num">{{ xrp(t.stolen_value) if t.currency == "XRP" else t.stolen_value }} {{ t.currency }}</td>
+            <td>{{ t.start_ledger }}</td>
+            <td>{{ tag(t.status, t.status) }}</td>
+            <td>{{ t.created_at.strftime('%d %b %H:%M') }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      {{ empty("No traces yet", "Start one from a robbed wallet, or from a takeover finding.") }}
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

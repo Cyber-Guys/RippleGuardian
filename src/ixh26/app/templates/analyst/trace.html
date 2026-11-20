@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Trace {{ trace.id }}{% endblock %}
+{% block main %}
+<div class="page-head">
+  <div>
+    <h1>Trace {{ trace.id }}</h1>
+    <p>From <span class="data">{{ trace.origin }}</span>, ledger {{ trace.start_ledger }} onward.</p>
+  </div>
+  <a class="btn btn-quiet" href="/analyst/traces">All traces</a>
+</div>
+{% include "partials/trace_body.html" %}
+{% endblock %}

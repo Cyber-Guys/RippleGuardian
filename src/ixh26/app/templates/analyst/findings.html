@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "macros.html" import address, tx, tag, errors, empty, flag_form %}
+{% block title %}Findings{% endblock %}
+{% block main %}
+<div class="page-head">
+  <div>
+    <h1>Findings</h1>
+    <p>Signals raised by the detectors on validated ledger activity. Each one is a lead to review, not a verdict.</p>
+  </div>
+  <nav class="actions" aria-label="Filter by status">
+    {% for s in ["open", "flagged", "dismissed", "all"] %}
+      <a class="btn btn-small {{ '' if s == status else 'btn-quiet' }}" href="?status={{ s }}" {% if s == status %}aria-current="page"{% endif %}>{{ s|capitalize }}</a>
+    {% endfor %}
+  </nav>
+</div>
+{{ errors(error) }}
+<section class="panel">
+  {% if findings %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Detector</th><th>Subject</th><th>Asset</th><th>Trigger</th><th>Status</th><th>Review</th></tr></thead>
+      <tbody>
+      {% for f in findings %}
+        {% set subject = f.subject.split(':')[0] %}
+        {% set subject_tag = f.subject.split(':')[1] if ':' in f.subject else None %}
+        <tr>
+          <td><strong>{{ f.kind.replace('_', ' ')|capitalize }}</strong><br><span class="small muted">{{ f.close_time.strftime('%d %b %H:%M') }} UTC</span></td>
+          <td>{{ address(subject, account_url, subject_tag) }}{% if subject in flagged %}<br>{{ tag("flagged", "flagged") }}{% endif %}</td>
+          <td class="small">{{ f.asset.split('.')[0] }}</td>
+          <td>{{ tx(f.tx_hash, tx_url) }}<br><span class="small muted">ledger {{ f.ledger_index }}</span></td>
+          <td>{{ tag(f.status, f.status) }}</td>
+          <td>
+            <details>
+              <summary>Evidence and actions</summary>
+              <dl class="kv">
+                {% for k, v in f.metrics.items() %}<dt>{{ k.replace('_', ' ') }}</dt><dd>{{ v }}</dd>{% endfor %}
+                <dt>transactions</dt><dd>{% for h in f.evidence %}{{ tx(h, tx_url) }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+              </dl>
+              <div class="stack" style="gap: var(--s-2); margin-top: var(--s-3)">
+                {% if f.status == "open" %}
+                  {{ flag_form(subject, "account", categories, "/analyst/findings", f.id) }}
+                  <div class="actions">
+                    <form method="post" action="/analyst/findings/{{ f.id }}/dismiss"><button class="btn btn-quiet btn-small" type="submit">Dismiss</button></form>
+                    {% if f.kind == "possible_takeover" %}<a class="btn btn-quiet btn-small" href="/analyst/traces?origin={{ subject }}">Trace funds from this wallet</a>{% endif %}
+                  </div>
+                {% endif %}
+              </div>
+            </details>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    {{ empty("No " ~ ("" if status == "all" else status ~ " ") ~ "findings", "Findings appear when the detectors see a takeover, a funnel into one destination, wash trading or a liquidity pull.") }}
+  {% endif %}
+</section>
+{% endblock %}

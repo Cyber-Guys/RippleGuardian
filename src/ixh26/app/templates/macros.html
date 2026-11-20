@@ -1,0 +1,41 @@
+{% macro address(addr, account_url, tag=None) -%}
+<a class="data" href="{{ account_url(addr) }}" target="_blank" rel="noopener" title="{{ addr }}">{{ addr[:6] }}…{{ addr[-4:] }}</a>{% if tag is not none %} <span class="muted small">tag {{ tag }}</span>{% endif %}
+{%- endmacro %}
+
+{% macro tx(hash, tx_url) -%}
+<a class="data" href="{{ tx_url(hash) }}" target="_blank" rel="noopener" title="{{ hash }}">{{ hash[:8] }}…</a>
+{%- endmacro %}
+
+{% macro tag(text, kind) -%}
+<span class="tag tag-{{ kind }}">{{ text }}</span>
+{%- endmacro %}
+
+{% macro errors(error) -%}
+{% if error %}<p class="notice notice-error" role="alert">{{ error }}</p>{% endif %}
+{%- endmacro %}
+
+{% macro empty(title, text) -%}
+<div class="empty"><strong>{{ title }}</strong>{{ text }}</div>
+{%- endmacro %}
+
+{% macro flag_form(target, target_type, categories, back, finding_id=None, compact=False) -%}
+<form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="{{ target }}">
+  <input type="hidden" name="target_type" value="{{ target_type }}">
+  <input type="hidden" name="back" value="{{ back }}">
+  {% if finding_id %}<input type="hidden" name="finding_id" value="{{ finding_id }}">{% endif %}
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-{{ target }}-{{ finding_id }}">Category</label>
+      <select id="cat-{{ target }}-{{ finding_id }}" name="category">
+        {% for c in categories %}<option value="{{ c }}">{{ c.replace('_', ' ') }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-{{ target }}-{{ finding_id }}">Reason users will read</label>
+      <input id="reason-{{ target }}-{{ finding_id }}" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag {{ "account" if target_type == "account" else "transaction" }}</button>
+  </div>
+</form>
+{%- endmacro %}

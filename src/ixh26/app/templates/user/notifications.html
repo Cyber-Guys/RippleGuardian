@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block main %}
+<div class="page-head">
+  <div>
+    <h1>Notifications</h1>
+    <p>Everything that happened on your watched wallets. New ones appear here automatically.</p>
+  </div>
+  <form method="post" action="/notifications/read"><button class="btn btn-quiet" type="submit">Mark all as read</button></form>
+</div>
+<section class="panel" hx-get="/ui/feed?limit=100" hx-trigger="every 5s" hx-swap="innerHTML" data-anim="feed">
+  {% include "partials/feed.html" %}
+</section>
+{% endblock %}

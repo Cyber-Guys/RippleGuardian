@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="auth">
+  <section class="auth-story">
+    {% include "partials/mark.html" %}
+    <h1>Know the moment your wallet moves.</h1>
+    <p>Wallet Guardian watches your XRP Ledger wallets, tells you when something looks wrong and shows you which accounts our analysts have flagged.</p>
+    <p class="small">Runs on XRPL {{ network|capitalize }}. No email and no personal data: just a username.</p>
+  </section>
+  <section class="auth-form">
+    {% block form %}{% endblock %}
+  </section>
+</div>
+{% endblock %}
