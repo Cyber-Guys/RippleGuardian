@@ -4,3 +4,4 @@ Every library, copied snippet (>5 lines), dataset, image, font or icon used in t
 
 | Name | URL | Licence | Where used |
 |---|---|---|---|
+| xrpl-py | https://github.com/XRPLF/xrpl-py | ISC | ledger/: XRPL client, tx models, websocket subscribe |

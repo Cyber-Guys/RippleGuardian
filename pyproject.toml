@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "XRPL wallet guardian: monitoring and haircut taint tracking of stolen funds (IXH26 Track 2)"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "xrpl-py>=5.1",
+]
 
 [project.scripts]
 ixh26 = "ixh26.cli:main"
