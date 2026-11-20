@@ -6,3 +6,4 @@ Every library, copied snippet (>5 lines), dataset, image, font or icon used in t
 |---|---|---|---|
 | xrpl-py | https://github.com/XRPLF/xrpl-py | ISC | ledger/: XRPL client, tx models, websocket subscribe |
 | FastAPI | https://github.com/fastapi/fastapi | MIT | app/: HTTP API |
+| Uvicorn | https://github.com/encode/uvicorn | BSD-3-Clause | cli: ASGI server for the API |
