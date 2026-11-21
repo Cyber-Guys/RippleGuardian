@@ -1,7 +1,7 @@
 ---
 id: T-010
 objective: O-1
-status: review
+status: done
 owner: nico/claude
 branch: t/T-005-testnet-demo
 depends_on: [T-000]
@@ -19,5 +19,6 @@ Docker (compose already loads .env).
 ## Log
 - 00:45 nico/claude: policy 1.0 acknowledged. Small shared-file task, committed on the T-005 branch because the demo needs it; announce to the team on merge.
 - 00:55 nico/claude: targets added; process env wins over .env with uv --env-file (checked), so DATABASE_URL/JWT_SECRET can be overridden per run.
+- 01:05 nico/claude: merged to master (fast-forward of the stacked chain) with nico's OK.
 ## Evidence
 - make check / make smoke green; make wallets + make demo used for the Testnet run in T-005

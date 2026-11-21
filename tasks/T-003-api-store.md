@@ -1,7 +1,7 @@
 ---
 id: T-003
 objective: O-1
-status: review
+status: done
 owner: nico/claude
 branch: t/T-003-api-store
 depends_on: [T-000]
@@ -20,6 +20,7 @@ FastAPI exposes users (JWT), watched wallets, alerts and trace endpoints, persis
 ## Log
 - 23:10 nico/claude: policy 1.0 acknowledged. Claimed on nico's instruction (backend + frontend end-to-end). Branches are stacked: T-009 -> T-001 -> T-002 -> T-003 -> T-004 -> T-008 -> T-005; merge in that order.
 - 00:20 nico/claude: store/ (SQLAlchemy, sqlite or Postgres, create_all, no migrations), app/auth.py (argon2 + JWT cookie/bearer, roles user|analyst), app/api.py JSON API, app/main.py create_app (mounts app/web.py if present). Traces are queued as pending rows; the worker (T-004) runs them. Local run without docker: DATABASE_URL=sqlite:///data/guardian.db.
+- 01:05 nico/claude: merged to master (fast-forward of the stacked chain) with nico's OK.
 ## Evidence
 - tests/store/test_store.py (idempotent activity, per-user alerts, findings/flags/traces)
 - tests/app/test_api.py (register/login, wallet CRUD + thresholds, 403 for users on analyst endpoints, flags visible to users, trace queued)

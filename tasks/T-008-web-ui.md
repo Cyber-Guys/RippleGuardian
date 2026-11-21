@@ -1,7 +1,7 @@
 ---
 id: T-008
 objective: O-1
-status: review
+status: done
 owner: nico/claude
 branch: t/T-008-web-ui
 depends_on: [T-003, T-004]
@@ -22,6 +22,7 @@ Animations, email, Clawback/Freeze, mainnet.
 ## Log
 - 23:10 nico/claude: policy 1.0 acknowledged. Created on nico's instruction.
 - 00:35 nico/claude: app/web.py + templates + static/app.css (tokens, components, motion hooks: --motion-*, data-anim, htmx swap classes, reduced-motion zeroes durations). Design: cool ledger-paper, ink navy, semantic red/amber/green only for state; serif display. Signature element: the taint ribbon on the trace page. CSRF relies on SameSite=Lax cookies; cookie not Secure (localhost demo).
+- 01:05 nico/claude: merged to master (fast-forward of the stacked chain) with nico's OK.
 ## Evidence
 - tests/app/test_web.py: login redirect, register + watch wallet, user pages + 403 on analyst pages, analyst findings/trace ribbon/flag visible to a user
 - Screenshots of SIMULATED data reviewed locally (home, wallet, findings, trace, login)

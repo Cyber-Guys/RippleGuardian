@@ -1,7 +1,7 @@
 ---
 id: T-005
 objective: O-1
-status: review
+status: done
 owner: nico/claude
 branch: t/T-005-testnet-demo
 depends_on: [T-004]
@@ -20,6 +20,7 @@ policy: "1.0"
 ## Log
 - 23:10 nico/claude: policy 1.0 acknowledged. Claimed on nico's instruction (backend + frontend end-to-end). Branches are stacked: T-009 -> T-001 -> T-002 -> T-003 -> T-004 -> T-008 -> T-005; merge in that order.
 - 00:55 nico/claude: scripts/new_wallets.py (VICTIM, EXCHANGE via faucet, seeds appended to .env, idempotent), scripts/demo.py (rekey -> drain to fresh attacker -> split to 3 fresh mules -> deposits at exchange tag 777001; attacker/mule key pairs are in-memory only), ledger/ops.py. Victim/exchange are topped up from the faucet when low, so the demo can be rerun. Gotcha: on this WSL machine IPv6 DNS lookups time out (5-15 s per connection); run with RES_OPTIONS="timeout:1 attempts:1" or fix /etc/resolv.conf.
+- 01:05 nico/claude: merged to master (fast-forward of the stacked chain) with nico's OK.
 ## Evidence
 Testnet run 2026-11-21 00:26 CET (artifacts/tx_log.jsonl, 8 txs), worker + API on sqlite:
 - rekey https://testnet.xrpl.org/transactions/FBA56EC541F85EE5A32E95F856819501629C18B9C65A9CBB6C61A0F94D183FB0

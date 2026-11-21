@@ -1,7 +1,7 @@
 ---
 id: T-002
 objective: O-1
-status: review
+status: done
 owner: nico/claude
 branch: t/T-002-taint-engine
 depends_on: [T-000]
@@ -20,5 +20,6 @@ policy: "1.0"
 ## Log
 - 23:10 nico/claude: policy 1.0 acknowledged. Claimed on nico's instruction (backend + frontend end-to-end). Branches are stacked: T-009 -> T-001 -> T-002 -> T-003 -> T-004 -> T-008 -> T-005; merge in that order.
 - 23:55 nico/claude: core/taint.py pure haircut. Unknown opening balances default to 0 and oversized outflows draw on untainted funds; flows/ should pass opening balances at start_ledger. Labelled accounts absorb taint (sinks per destination tag). Same-asset only; DEX cross-asset is roadmap.
+- 01:05 nico/claude: merged to master (fast-forward of the stacked chain) with nico's OK.
 ## Evidence
 - tests/core/test_taint.py: split + exchange sink by tag, haircut dilution and temporal order, merge + cycle conservation, threshold + max hops

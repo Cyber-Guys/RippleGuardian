@@ -1,7 +1,7 @@
 ---
 id: T-009
 objective: O-1
-status: review
+status: done
 owner: nico/claude
 branch: t/T-009-contracts-ui-deps
 depends_on: [T-000]
@@ -20,5 +20,6 @@ Small contract task: shared types and dependencies needed by the in-app notifica
 Any behaviour change.
 ## Log
 - 23:10 nico/claude: policy 1.0 acknowledged. Created on nico's instruction.
+- 01:05 nico/claude: merged to master (fast-forward of the stacked chain) with nico's OK.
 ## Evidence
 - 23:20 nico/claude: done; make check green (23 tests). Evidence: tests/test_contracts.py::test_activity_carries_pre_tx_balances_and_event_order.
