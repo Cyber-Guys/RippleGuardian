@@ -12,7 +12,7 @@ Last run: 21 Nov 2026, 01:44 to 01:50 CET, on the docker compose stack (api, wor
 
 | Check | Result |
 |---|---|
-| Drain of 99.99997 XRP at ledger 22,485,782 | [9C004106…](https://testnet.xrpl.org/transactions/9C004106BB908901B1B328AD82272EA253D1EB2C116F1146553D1018A7EB4E) |
+| Drain of 99.99997 XRP at ledger 22,485,782 | [9C004106…](https://testnet.xrpl.org/transactions/9C004106BB908901B1B328AD82272EA253D1EB2C116F1146553D1018A7EB4E3F) |
 | Deposits at the exchange, tag 777001 | [4D847C23…](https://testnet.xrpl.org/transactions/4D847C23561D914AF102B963C31A30F24C293839C13CFFD42D0CDACC4F1900EC), [22A892C1…](https://testnet.xrpl.org/transactions/22A892C1F7A0971654D9AF81347D081E5413F3DF1614C552B3EA154363F1C8A0), [6BF03F43…](https://testnet.xrpl.org/transactions/6BF03F43C6EC73E88B0751AFC6EFACA90020A7C5BE4F63AD6F042677D370028C) |
 | Trace edges against the ledger's own `tx` answer (sender, receiver, tag, `delivered_amount`) | 7 of 7 match |
 | Amount attributed to the exchange | 95.59997 XRP, the exact sum of the three deposits (95.6% of the theft) |
