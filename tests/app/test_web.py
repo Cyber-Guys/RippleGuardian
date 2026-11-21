@@ -59,9 +59,15 @@ def test_user_pages_and_role_enforcement(store: Store) -> None:
         s.get(type(demo), demo.id).password_hash = hash_password("demo-pass")
     client = client_for(store, "demo", "demo-pass")
     home = client.get("/")
-    assert "Possible compromise" in home.text  # unread security alert on the victim
+    assert (
+        "Savings (SIMULATED) may be compromised" in home.text and "What to do now" in home.text
+    )  # unread security alert on the victim
     wallet = client.get(f"/wallets/{smoke.VICTIM}")
-    assert wallet.status_code == 200 and "Statement" in wallet.text and "95" in wallet.text
+    assert (
+        wallet.status_code == 200
+        and "Balance from recorded transfers" in wallet.text
+        and "<svg" in wallet.text
+    )
     assert client.get("/notifications").status_code == 200
     assert re.search(r'class="count"[^>]*>\s*\d', client.get("/ui/unread").text)
     assert client.get("/analyst/findings").status_code == 403
@@ -72,6 +78,8 @@ def test_user_pages_and_role_enforcement(store: Store) -> None:
 
 def test_analyst_findings_trace_and_flag_visible_to_users(store: Store) -> None:
     ana = client_for(store, "ana", "analyst-pass")
+    overview = ana.get("/analyst")
+    assert "Open findings" in overview.text and 'class="flow-band"' in overview.text
     findings = ana.get("/analyst/findings")
     assert "Possible takeover" in findings.text and "Funds funnel" in findings.text
     trace = ana.get("/analyst/traces/1")
@@ -91,16 +99,21 @@ def test_analyst_findings_trace_and_flag_visible_to_users(store: Store) -> None:
     assert "Flagged as theft" in lookup.text and "ana" in lookup.text
 
 
-def test_ribbon_marks_only_stops_and_known_entities() -> None:
-    from ixh26.app.views.models import ribbon
+def test_flow_marks_only_stops_and_known_entities() -> None:
+    from ixh26.app.charts import flow_graph, flow_nodes
 
-    edge = {"destination_tag": None, "taint": "5 XRP"}
-    result = {
-        "params": {"origin": "rV", "stolen": "10 XRP"},
+    edge = {
+        "destination_tag": None,
+        "taint": "5 XRP",
+        "taint_value": "5000000",
+        "tx_hash": "AB" * 32,
+    }
+    report = {
+        "params": {"origin": "rVictim", "stolen": "10 XRP", "stolen_value": "10000000"},
         "edges": [
-            {**edge, "hop": 1, "source": "rV", "destination": "rMule"},
+            {**edge, "hop": 1, "source": "rVictim", "destination": "rMule"},
             {**edge, "hop": 2, "source": "rMule", "destination": "rEx", "destination_tag": 7},
-            {**edge, "hop": 1, "source": "rV", "destination": "rStay"},
+            {**edge, "hop": 1, "source": "rVictim", "destination": "rStay"},
         ],
         "sinks": [
             {"address": "rEx", "destination_tag": 7, "label": "Exchange"},
@@ -108,5 +121,34 @@ def test_ribbon_marks_only_stops_and_known_entities() -> None:
             {"address": "rStay", "destination_tag": None, "label": None},
         ],
     }
-    kinds = {n["address"]: n["kind"] for col in ribbon(result) for n in col["nodes"]}
-    assert kinds == {"rV": "origin", "rMule": "hop", "rEx": "sink", "rStay": "sink"}
+    kinds = {n.key[0]: n.kind for n in flow_nodes(report)}
+    assert kinds == {"rVictim": "origin", "rMule": "hop", "rEx": "sink", "rStay": "sink"}
+    svg = str(flow_graph(report))
+    assert svg.count('class="flow-band"') == 3 and "Exchange, tag 7" in svg
+
+
+def test_balance_line_follows_transfers() -> None:
+    from datetime import UTC, datetime
+    from decimal import Decimal
+
+    from ixh26.app.charts import line_chart
+    from ixh26.app.views.models import balance_points
+    from ixh26.contracts import XRP, Amount, Transfer, TransferKind
+
+    t0 = datetime(2026, 11, 21, tzinfo=UTC)
+
+    def pay(n: int, src: str, dst: str, xrp: int) -> Transfer:
+        return Transfer(
+            f"{n:064X}",
+            n,
+            0,
+            t0.replace(minute=n),
+            TransferKind.PAYMENT,
+            src,
+            dst,
+            Amount(XRP, Decimal(xrp * 1_000_000)),
+        )
+
+    points = balance_points("rMe", [pay(1, "rFaucet", "rMe", 100), pay(2, "rMe", "rThief", 99)])
+    assert [p.value for p in points] == [Decimal(100), Decimal(1)]
+    assert "<svg" in str(line_chart(points, unit="XRP"))

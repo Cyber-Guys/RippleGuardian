@@ -1,38 +1,46 @@
+{% from "partials/icons.html" import icon %}
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Wallet Guardian{% endblock %} | Wallet Guardian</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%229%22 fill=%22%23111827%22/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/static/app.css">
   <script src="/static/htmx.min.js" defer></script>
 </head>
 <body>
 {% block body %}
 <div class="shell">
-  <aside class="sidebar">
+  <aside class="sidebar glass">
     <a class="brand" href="/">
       {% include "partials/mark.html" %}
       <span class="brand-name">Wallet Guardian<small>{{ "Analyst desk" if user.is_analyst else "Your wallets" }}</small></span>
     </a>
     <nav class="nav" aria-label="Main">
       {% if user.is_analyst %}
-        <a href="/analyst/findings" {% if path.startswith('/analyst/findings') %}aria-current="page"{% endif %}>Findings</a>
-        <a href="/analyst/traces" {% if path.startswith('/analyst/traces') %}aria-current="page"{% endif %}>Traces</a>
-        <a href="/flags" {% if path == '/flags' %}aria-current="page"{% endif %}>Flags</a>
+        <span class="nav-label">Investigate</span>
+        <a href="/analyst" {% if path == '/analyst' %}aria-current="page"{% endif %}>{{ icon("layout-dashboard") }} Overview</a>
+        <a href="/analyst/findings" {% if path.startswith('/analyst/findings') %}aria-current="page"{% endif %}>{{ icon("radar") }} Findings</a>
+        <a href="/analyst/traces" {% if path.startswith('/analyst/traces') %}aria-current="page"{% endif %}>{{ icon("route") }} Traces</a>
+        <span class="nav-label">Publish</span>
+        <a href="/flags" {% if path == '/flags' %}aria-current="page"{% endif %}>{{ icon("flag") }} Flags</a>
       {% else %}
-        <a href="/" {% if path == '/' or path.startswith('/wallets') %}aria-current="page"{% endif %}>Wallets</a>
-        <a href="/notifications" {% if path == '/notifications' %}aria-current="page"{% endif %}>
-          Notifications
-          <span class="count" hx-get="/ui/unread" hx-trigger="every 5s" hx-swap="outerHTML" aria-label="unread notifications">{{ unread or "" }}</span>
-        </a>
-        <a href="/flags" {% if path == '/flags' %}aria-current="page"{% endif %}>Flagged accounts</a>
+        <a href="/" {% if path == '/' or path.startswith('/wallets') %}aria-current="page"{% endif %}>{{ icon("wallet") }} Wallets</a>
+        <a href="/notifications" {% if path == '/notifications' %}aria-current="page"{% endif %}>{{ icon("bell") }} Notifications
+          <span class="count" hx-get="/ui/unread" hx-trigger="every 5s" hx-swap="outerHTML" aria-label="unread notifications">{{ unread or "" }}</span></a>
+        <a href="/flags" {% if path == '/flags' %}aria-current="page"{% endif %}>{{ icon("search") }} Check an address</a>
       {% endif %}
     </nav>
     <div class="sidebar-foot">
-      <span class="network">XRPL {{ network|capitalize }}</span>
-      <span>Signed in as {{ user.username }}</span>
-      <form method="post" action="/logout"><button class="link-button" type="submit">Sign out</button></form>
+      <span class="pulse" data-live="{{ 'true' if pulse_ledger else 'false' }}" title="Last ledger fully read by the monitor">
+        <span class="pulse-dot"></span>
+        {% if pulse_ledger %}XRPL {{ network|capitalize }}, ledger <span class="mono">{{ "{:,}".format(pulse_ledger) }}</span>{% else %}XRPL {{ network|capitalize }}, waiting for the monitor{% endif %}
+      </span>
+      <div class="signout">
+        <span>{{ user.username }}</span>
+        <form method="post" action="/logout"><button class="link-button" type="submit">{{ icon("log-out") }} Sign out</button></form>
+      </div>
     </div>
   </aside>
   <main class="main" id="main">

@@ -1,35 +1,28 @@
 {% from "macros.html" import address, tx, tag, flag_form %}
+{% from "partials/icons.html" import icon %}
 {% if trace.status == "pending" %}
-  <div class="status-band" data-state="attention" role="status"><span class="status-dot"></span><strong>Tracing…</strong><span>Reading each hop from the ledger. This usually takes a few seconds.</span></div>
+  <section class="status-hero glass" data-state="attention" role="status"><span class="status-icon">{{ icon("radar") }}</span><div><h2>Tracing</h2><p>Reading each hop from the ledger. This usually takes under a minute.</p></div></section>
 {% elif trace.status == "failed" %}
-  <div class="status-band" data-state="compromised" role="alert"><span class="status-dot"></span><strong>Trace failed</strong><span>{{ trace.error }}</span></div>
+  <section class="status-hero glass" data-state="compromised" role="alert"><span class="status-icon">{{ icon("shield-alert") }}</span><div><h2>Trace failed</h2><p>{{ trace.error }}</p></div></section>
 {% else %}
 <div class="stack">
-  <section>
-    <h2 style="margin-bottom: var(--s-2)">Where the stolen funds went</h2>
-    <p class="muted small" style="margin-bottom: var(--s-3)">Bars show each account's share of the {{ result.params.stolen }} taken. Red boxes are where funds stopped or reached a known entity.</p>
-    <div class="ribbon" role="list">
-      {% for col in ribbon %}
-      <div class="hop" role="listitem">
-        <div class="hop-title">{{ "Victim" if col.hop == 0 else "Hop " ~ col.hop }}</div>
-        {% for n in col.nodes %}
-        <div class="node" data-kind="{{ n.kind }}">
-          <div>{% if n.label %}<strong>{{ n.label }}</strong><br>{% endif %}{{ address(n.address, account_url, n.tag) }}</div>
-          <div class="node-meter" aria-hidden="true"><span style="--share: {{ '%.2f'|format(n.share) }}%"></span></div>
-          <div class="node-figures"><span>{{ n.value }}</span><span class="muted">{{ '%.1f'|format(n.share) }}%</span></div>
-        </div>
-        {% endfor %}
-      </div>
-      {% endfor %}
+  <section class="panel">
+    <div class="panel-head"><h2>Where the stolen funds went</h2><span class="small muted">{{ result.params.stolen }} taken</span></div>
+    {% if flow %}<div class="panel-body">{{ flow }}</div>{% endif %}
+    <div class="chart-legend">
+      <span><i style="background: var(--ink)"></i>Robbed wallet</span>
+      <span><i style="background: var(--ink-2)"></i>Pass-through account</span>
+      <span><i style="background: var(--danger)"></i>Where funds stopped or a known entity</span>
+      <span><i style="background: var(--accent); opacity: .35"></i>Band width = stolen value carried</span>
     </div>
   </section>
 
   <section class="panel">
-    <div class="panel-head"><h2>Endpoints</h2>{% if result.truncated %}<span class="small muted">Some branches stopped at the {{ (result.params.min_ratio|float * 100)|round(1) }}% threshold or {{ result.params.max_hops }} hops</span>{% endif %}</div>
+    <div class="panel-head"><h2>Endpoints</h2>{% if result.truncated %}<span class="small muted">Branches under {{ (result.params.min_ratio|float * 100)|round(1) }}% of the theft or past {{ result.params.max_hops }} hops were not followed</span>{% endif %}</div>
     {% if result.sinks %}
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Account</th><th>Known as</th><th class="num">Tainted value</th><th class="num">Share</th><th>Hop</th><th>Action</th></tr></thead>
+        <thead><tr><th>Account</th><th>Known as</th><th class="num">Stolen value</th><th class="num">Share</th><th class="num">Hop</th><th></th></tr></thead>
         <tbody>
         {% for s in result.sinks %}
           <tr>
@@ -37,7 +30,7 @@
             <td>{{ s.label or "Unlabelled" }}{% if s.address in flagged %} {{ tag("flagged", "flagged") }}{% endif %}</td>
             <td class="num">{{ s.taint }}</td>
             <td class="num">{{ '%.1f'|format(s.share|float * 100) }}%</td>
-            <td>{{ s.hop }}</td>
+            <td class="num">{{ s.hop }}</td>
             <td>{% if s.address not in flagged and not s.label_kind %}<details><summary>Flag</summary>{{ flag_form(s.address, "account", categories, "/analyst/traces/" ~ trace.id) }}</details>{% endif %}</td>
           </tr>
         {% endfor %}
@@ -45,7 +38,7 @@
       </table>
     </div>
     {% else %}
-      <div class="empty"><strong>No endpoint above the threshold</strong>The stolen value spread below the stop threshold or nothing left the wallet after this ledger.</div>
+      <div class="empty"><strong>No endpoint above the threshold</strong>The stolen value spread below the stop threshold, or nothing left the wallet after this ledger.</div>
     {% endif %}
   </section>
 
@@ -53,11 +46,11 @@
     <div class="panel-head"><h2>Tainted transfers</h2><span class="small muted">{{ result.edges|length }}</span></div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Hop</th><th>From</th><th>To</th><th class="num">Amount</th><th class="num">Tainted</th><th class="num">Ratio</th><th>Transaction</th></tr></thead>
+        <thead><tr><th class="num">Hop</th><th>From</th><th>To</th><th class="num">Amount</th><th class="num">Stolen part</th><th class="num">Ratio</th><th>Transaction</th></tr></thead>
         <tbody>
         {% for e in result.edges %}
           <tr>
-            <td>{{ e.hop }}</td>
+            <td class="num">{{ e.hop }}</td>
             <td>{{ address(e.source, account_url) }}</td>
             <td>{{ address(e.destination, account_url, e.destination_tag) }}</td>
             <td class="num">{{ e.amount }}</td>

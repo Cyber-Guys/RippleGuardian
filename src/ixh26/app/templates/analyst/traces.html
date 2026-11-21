@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% from "partials/icons.html" import icon %}
 {% from "macros.html" import address, tag, errors, empty %}
 {% block title %}Traces{% endblock %}
 {% block main %}
-<div class="page-head">
+<div class="page-head" data-enter>
   <div>
     <h1>Traces</h1>
     <p>Follow stolen XRP hop by hop with the haircut model: each outflow carries taint in proportion to the account's tainted share.</p>

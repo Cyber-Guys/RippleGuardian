@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% from "partials/icons.html" import icon %}
 {% from "macros.html" import address, tx, tag, errors, empty %}
 {% block title %}Flagged accounts{% endblock %}
 {% block main %}
-<div class="page-head">
+<div class="page-head" data-enter>
   <div>
     <h1>Flagged accounts</h1>
     <p>Accounts and transactions our analysts consider suspicious, with the reason and who flagged them. Check an address before you send to it.</p>
@@ -19,15 +20,15 @@
     <div class="panel-body" style="border-top: 1px solid var(--line-soft)">
       {% if match %}
         {% for f, analyst in match %}
-        <div class="status-band" data-state="compromised" role="status">
-          <span class="status-dot"></span><strong>Flagged as {{ f.category.replace('_', ' ') }}</strong>
-          <span>{{ f.reason }} (flagged by {{ analyst }} on {{ f.created_at.strftime('%d %b %Y') }})</span>
+        <div class="status-hero glass" data-state="compromised" role="status">
+          <span class="status-icon">{{ icon("shield-alert") }}</span><div><h2>Flagged as {{ f.category.replace('_', ' ') }}</h2>
+          <p>{{ f.reason }} (flagged by {{ analyst }} on {{ f.created_at.strftime('%d %b %Y') }})</p></div>
         </div>
         {% endfor %}
       {% else %}
-        <div class="status-band" data-state="safe" role="status">
-          <span class="status-dot"></span><strong>Not flagged</strong>
-          <span>No analyst has flagged <span class="data">{{ q }}</span>. That is not a guarantee it is safe.</span>
+        <div class="status-hero glass" data-state="safe" role="status">
+          <span class="status-icon">{{ icon("shield-check") }}</span><div><h2>Not flagged</h2>
+          <p>No analyst has flagged <span class="mono">{{ q }}</span>. That is not a guarantee it is safe.</p></div>
         </div>
       {% endif %}
     </div>

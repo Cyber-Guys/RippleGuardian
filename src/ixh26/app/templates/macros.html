@@ -1,9 +1,9 @@
 {% macro address(addr, account_url, tag=None) -%}
-<a class="data" href="{{ account_url(addr) }}" target="_blank" rel="noopener" title="{{ addr }}">{{ addr[:6] }}…{{ addr[-4:] }}</a>{% if tag is not none %} <span class="muted small">tag {{ tag }}</span>{% endif %}
+<a class="mono" href="{{ account_url(addr) }}" target="_blank" rel="noopener" title="{{ addr }}">{{ addr[:6] }}…{{ addr[-4:] }}</a>{% if tag is not none %} <span class="muted small">tag {{ tag }}</span>{% endif %}
 {%- endmacro %}
 
 {% macro tx(hash, tx_url) -%}
-<a class="data" href="{{ tx_url(hash) }}" target="_blank" rel="noopener" title="{{ hash }}">{{ hash[:8] }}…</a>
+<a class="mono" href="{{ tx_url(hash) }}" target="_blank" rel="noopener" title="{{ hash }}">{{ hash[:8] }}…</a>
 {%- endmacro %}
 
 {% macro tag(text, kind) -%}
@@ -38,4 +38,19 @@
     <button class="btn btn-danger" type="submit">Flag {{ "account" if target_type == "account" else "transaction" }}</button>
   </div>
 </form>
+{%- endmacro %}
+
+{% macro status_hero(s, extra_class="") -%}
+{% from "partials/icons.html" import icon %}
+<section class="status-hero glass {{ extra_class }}" data-state="{{ s.state }}" role="status" data-enter>
+  <span class="status-icon">{{ icon(s.icon) }}</span>
+  <div>
+    <h2>{{ s.headline }}</h2>
+    <p>{{ s.detail }}</p>
+    {% if s.steps %}
+    <p class="small" style="margin-top: var(--s-3)"><strong>What to do now</strong></p>
+    <ol class="steps">{% for step in s.steps %}<li>{{ step }}</li>{% endfor %}</ol>
+    {% endif %}
+  </div>
+</section>
 {%- endmacro %}

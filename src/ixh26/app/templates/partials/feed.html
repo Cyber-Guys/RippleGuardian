@@ -1,16 +1,17 @@
+{% from "partials/icons.html" import icon %}
 {% from "macros.html" import tx %}
 {% if alerts %}
 <ul class="feed">
   {% for a in alerts %}
   <li class="feed-item" data-read="{{ 'true' if a.read else 'false' }}">
-    <span class="sev sev-{{ a.severity }}" aria-label="{{ a.severity }}"></span>
+    <span class="sev sev-{{ a.severity }}">{{ icon("shield-alert" if a.severity == "critical" else "triangle-alert" if a.severity == "warning" else "bell", a.severity) }}</span>
     <div>
       <p>{{ a.message }}</p>
-      <p class="small muted">{{ a.created_at.strftime('%d %b %H:%M') }} UTC, wallet <span class="data">{{ short(a.wallet) }}</span>, transaction {{ tx(a.tx_hash, tx_url) }}</p>
+      <p class="feed-meta">{{ a.created_at.strftime('%d %b, %H:%M') }} UTC, wallet <span class="mono">{{ short(a.wallet) }}</span>, {{ tx(a.tx_hash, tx_url) }}</p>
     </div>
   </li>
   {% endfor %}
 </ul>
 {% else %}
-<div class="empty"><strong>Nothing yet</strong>You'll see a notification here when a watched wallet sends funds, changes its keys or touches a flagged account.</div>
+<div class="empty"><strong>Nothing to report</strong>You'll be told here when a watched wallet sends funds, changes its keys or deals with a flagged account.</div>
 {% endif %}

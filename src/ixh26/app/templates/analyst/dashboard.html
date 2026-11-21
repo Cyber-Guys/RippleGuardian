@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% from "macros.html" import address, tx, tag, empty %}
+{% block title %}Overview{% endblock %}
+{% block main %}
+<div class="page-head" data-enter>
+  <div>
+    <h1>Overview</h1>
+    <p>What the detectors raised, what is being traced, and what users can already see as flagged.</p>
+  </div>
+  <a class="btn" href="/analyst/traces">Start a trace</a>
+</div>
+<div class="stack">
+  <dl class="kpis" data-enter style="--i: 1">
+    <div class="kpi"><dt>Open findings</dt><dd>{{ o.open_findings }}</dd><div class="kpi-note">waiting for review</div></div>
+    <div class="kpi"><dt>Active flags</dt><dd>{{ o.active_flags }}</dd><div class="kpi-note">visible to every user</div></div>
+    <div class="kpi"><dt>Traces completed</dt><dd>{{ o.traces_done }}</dd><div class="kpi-note">haircut model</div></div>
+    <div class="kpi"><dt>Wallets watched</dt><dd>{{ o.watched }}</dd><div class="kpi-note">across all users</div></div>
+  </dl>
+
+  <section class="panel" data-enter style="--i: 2">
+    <div class="panel-head">
+      <h2>Latest trace</h2>
+      {% if o.latest_trace %}<a class="small" href="/analyst/traces/{{ o.latest_trace.id }}">Open trace {{ o.latest_trace.id }}</a>{% endif %}
+    </div>
+    {% if flow %}
+      <div class="panel-body">{{ flow }}</div>
+      <div class="chart-legend">
+        <span><i style="background: var(--ink)"></i>Robbed wallet</span>
+        <span><i style="background: var(--ink-2)"></i>Pass-through account</span>
+        <span><i style="background: var(--danger)"></i>Where funds stopped or a known entity</span>
+        <span><i style="background: var(--accent); opacity: .35"></i>Band width = stolen value carried</span>
+      </div>
+    {% else %}
+      {{ empty("No trace yet", "Start one from a robbed wallet or from a takeover finding.") }}
+    {% endif %}
+  </section>
+
+  <div class="grid-2" data-enter style="--i: 3">
+    <section class="panel">
+      <div class="panel-head"><h2>Recent findings</h2><a class="small" href="/analyst/findings">Review all</a></div>
+      {% if o.recent_findings %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Detector</th><th>Subject</th><th>Trigger</th><th>Status</th></tr></thead>
+          <tbody>
+          {% for f in o.recent_findings %}
+            {% set subject = f.subject.split(':')[0] %}
+            <tr>
+              <td>{{ f.kind.replace('_', ' ')|capitalize }}</td>
+              <td>{{ address(subject, account_url, f.subject.split(':')[1] if ':' in f.subject else None) }}</td>
+              <td>{{ tx(f.tx_hash, tx_url) }}</td>
+              <td>{{ tag(f.status, f.status) }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}{{ empty("No findings yet", "They appear when the detectors see a takeover or funds funnelling into one destination.") }}{% endif %}
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Findings by detector</h2></div>
+      {% if o.by_kind %}
+      <ul class="ranked">
+        {% for row in o.by_kind %}
+        <li><span>{{ row.label }}</span><span class="num secondary">{{ row.count }}</span><span class="bar"><span style="--pct: {{ row.pct }}%"></span></span></li>
+        {% endfor %}
+      </ul>
+      {% else %}<div class="empty"><strong>Nothing yet</strong></div>{% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

@@ -1,15 +1,16 @@
 {% extends "base.html" %}
+{% from "partials/icons.html" import icon %}
 {% from "macros.html" import address, tx, tag, errors, empty, flag_form %}
 {% block title %}Findings{% endblock %}
 {% block main %}
-<div class="page-head">
+<div class="page-head" data-enter>
   <div>
     <h1>Findings</h1>
     <p>Signals raised by the detectors on validated ledger activity. Each one is a lead to review, not a verdict.</p>
   </div>
-  <nav class="actions" aria-label="Filter by status">
+  <nav class="segmented" aria-label="Filter by status">
     {% for s in ["open", "flagged", "dismissed", "all"] %}
-      <a class="btn btn-small {{ '' if s == status else 'btn-quiet' }}" href="?status={{ s }}" {% if s == status %}aria-current="page"{% endif %}>{{ s|capitalize }}</a>
+      <a href="?status={{ s }}" {% if s == status %}aria-current="page"{% endif %}>{{ s|capitalize }}</a>
     {% endfor %}
   </nav>
 </div>

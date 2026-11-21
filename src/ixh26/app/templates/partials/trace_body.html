@@ -1,3 +1,3 @@
-<div id="trace-body" {% if trace.status == "pending" %}hx-get="/ui/traces/{{ trace.id }}" hx-trigger="every 2s" hx-swap="outerHTML"{% endif %} data-anim="trace">
+<div id="trace-body" data-enter style="--i: 1" {% if trace.status == "pending" %}hx-get="/ui/traces/{{ trace.id }}" hx-trigger="every 2s" hx-swap="outerHTML"{% endif %}>
   {% include "partials/trace_inner.html" %}
 </div>

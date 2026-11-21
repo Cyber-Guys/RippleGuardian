@@ -14,7 +14,7 @@ from ixh26 import config
 from ixh26.app import auth
 from ixh26.app.auth import CurrentUser
 from ixh26.contracts import Transfer
-from ixh26.store.repo import Store
+from ixh26.store.repo import Store, latest_ledger
 
 HERE = Path(__file__).parent.parent
 templates = Jinja2Templates(directory=HERE / "templates")
@@ -82,6 +82,7 @@ def render(
         "path": request.url.path,
         "network": settings.network.name,
         "unread": store.unread_count(user.id) if user else 0,
+        "pulse_ledger": latest_ledger(store),
         "short": short,
         "xrp": xrp,
         **explorer(settings),

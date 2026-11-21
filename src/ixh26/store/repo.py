@@ -507,3 +507,11 @@ class Store:
 def _exists(s: Session, model: type[Base], **where: Any) -> bool:
     q = select(model).filter_by(**where).limit(1)
     return s.scalar(q) is not None
+
+
+def latest_ledger(store: Store) -> int | None:
+    """Highest ledger the worker has fully processed for any wallet (the live pulse)."""
+    from sqlalchemy import func as sa_func
+
+    with store.session() as s:
+        return s.scalar(select(sa_func.max(Cursor.ledger_index)))

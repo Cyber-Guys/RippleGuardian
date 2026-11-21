@@ -9,8 +9,9 @@ from fastapi.responses import HTMLResponse, Response
 
 from ixh26.app import api
 from ixh26.app.auth import StoreDep
+from ixh26.app.charts import line_chart
 from ixh26.app.views.common import PageUser, amount_text, redirect, render, xrp
-from ixh26.app.views.models import statement, wallet_state
+from ixh26.app.views.models import balance_points, overall_state, statement, wallet_state
 
 router = APIRouter(include_in_schema=False)
 
@@ -18,7 +19,7 @@ router = APIRouter(include_in_schema=False)
 @router.get("/")
 def home(request: Request, user: PageUser, store: StoreDep) -> Response:
     if user.is_analyst:
-        return redirect("/analyst/findings")
+        return redirect("/analyst")
     flagged = store.flagged_targets()
     wallets = [
         {"wallet": w, "status": wallet_state(store, user.id, w.address, flagged)}
@@ -29,6 +30,9 @@ def home(request: Request, user: PageUser, store: StoreDep) -> Response:
         "user/dashboard.html",
         user,
         wallets=wallets,
+        overall=overall_state(
+            [(w["wallet"].label or "One of your wallets", w["status"]) for w in wallets]
+        ),
         alerts=store.alerts(user.id, limit=8),
         error=request.query_params.get("error"),
     )
@@ -64,6 +68,7 @@ def wallet_page(request: Request, address: str, user: PageUser, store: StoreDep)
         wallet=wallet,
         status=wallet_state(store, user.id, address, flagged),
         statement=statement(address, transfers),
+        balance_chart=line_chart(balance_points(address, transfers), unit="XRP"),
         transfers=transfers[::-1][:100],
         amount_text=amount_text,
         flagged=flagged,

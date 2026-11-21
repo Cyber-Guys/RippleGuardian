@@ -9,11 +9,20 @@ from fastapi.responses import Response
 
 from ixh26.app import api
 from ixh26.app.auth import StoreDep
+from ixh26.app.charts import flow_graph
 from ixh26.app.views.common import PageAnalyst, redirect, render
-from ixh26.app.views.models import ribbon
+from ixh26.app.views.models import analyst_overview
 from ixh26.store.repo import Store
 
 router = APIRouter(include_in_schema=False)
+
+
+@router.get("/analyst")
+def dashboard(request: Request, user: PageAnalyst, store: StoreDep) -> Response:
+    overview = analyst_overview(store)
+    latest = overview["latest_trace"]
+    flow = flow_graph(latest.result) if latest and "stolen_value" in latest.result["params"] else ""
+    return render(request, "analyst/dashboard.html", user, o=overview, flow=flow)
 
 
 @router.get("/analyst/findings")
@@ -79,7 +88,7 @@ def _trace_ctx(store: Store, trace_id: int) -> dict[str, Any]:
     return {
         "trace": row,
         "result": result,
-        "ribbon": ribbon(result) if result else [],
+        "flow": flow_graph(result) if result and "stolen_value" in result["params"] else "",
         "flagged": store.flagged_targets(),
         "categories": api.FLAG_CATEGORIES,
     }

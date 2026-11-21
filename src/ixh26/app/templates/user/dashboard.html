@@ -1,49 +1,53 @@
 {% extends "base.html" %}
-{% from "macros.html" import errors, tag, empty %}
+{% from "macros.html" import errors, tag, empty, status_hero %}
+{% from "partials/icons.html" import icon %}
 {% block title %}Your wallets{% endblock %}
 {% block main %}
-<div class="page-head">
+<div class="page-head" data-enter>
   <div>
     <h1>Your wallets</h1>
-    <p>We watch these addresses on the ledger and notify you here. Only you can see this list.</p>
+    <p>We read these addresses on the XRP Ledger as new transactions are validated. Only you can see this list.</p>
   </div>
 </div>
-{{ errors(error) }}
-<div class="split">
-  <section class="panel">
-    <div class="panel-head"><h2>Watched wallets</h2></div>
-    {% if wallets %}
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Wallet</th><th>Address</th><th>Status</th></tr></thead>
-        <tbody>
-        {% for item in wallets %}
-          <tr>
-            <td><a href="/wallets/{{ item.wallet.address }}">{{ item.wallet.label or "Unnamed wallet" }}</a></td>
-            <td class="data">{{ item.wallet.address }}</td>
-            <td>{{ tag(item.status.headline, item.status.state) }}</td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    {% else %}
-      {{ empty("No wallets yet", "Add the address of a wallet you own to start monitoring it.") }}
-    {% endif %}
-    <div class="panel-body" style="border-top: 1px solid var(--line-soft)">
-      <form method="post" action="/wallets" class="form-row">
-        <div class="field"><label for="address">Address</label><input id="address" name="address" type="text" required placeholder="r…" autocomplete="off" spellcheck="false"></div>
-        <div class="field" style="flex: 0 1 12rem"><label for="label">Name (optional)</label><input id="label" name="label" type="text" maxlength="40" placeholder="Savings"></div>
-        <button class="btn" type="submit">Watch wallet</button>
-      </form>
-      <p class="small muted">Addresses are public ledger data. Never enter your secret key or seed here.</p>
-    </div>
-  </section>
-  <section class="panel">
-    <div class="panel-head"><h2>Latest notifications</h2><a class="small" href="/notifications">See all</a></div>
-    <div hx-get="/ui/feed?limit=8" hx-trigger="every 5s" hx-swap="innerHTML" data-anim="feed">
-      {% include "partials/feed.html" %}
-    </div>
-  </section>
+<div class="stack">
+  {{ status_hero(overall) }}
+  {{ errors(error) }}
+  <div class="grid-2" data-enter style="--i: 1">
+    <section class="panel">
+      <div class="panel-head"><h2>Watched wallets</h2><span class="small muted">{{ wallets|length }}</span></div>
+      {% if wallets %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Address</th><th>Status</th></tr></thead>
+          <tbody>
+          {% for item in wallets %}
+            <tr>
+              <td><a href="/wallets/{{ item.wallet.address }}">{{ item.wallet.label or "Unnamed wallet" }}</a></td>
+              <td class="mono small">{{ item.wallet.address }}</td>
+              <td>{{ tag(item.status.headline if item.status.state != "safe" else "All clear", item.status.state) }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        {{ empty("No wallets yet", "Paste the address of a wallet you own below to start watching it.") }}
+      {% endif %}
+      <div class="panel-foot">
+        <form method="post" action="/wallets" class="form-row">
+          <div class="field"><label for="address">Wallet address</label><input id="address" name="address" type="text" required placeholder="r…" autocomplete="off" spellcheck="false"></div>
+          <div class="field" style="flex: 0 1 180px"><label for="label">Name</label><input id="label" name="label" type="text" maxlength="40" placeholder="Savings"></div>
+          <button class="btn" type="submit">Watch wallet</button>
+        </form>
+        <p class="small muted" style="margin-top: var(--s-2)">An address is public. Never type your secret key or seed into any website, this one included.</p>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Latest notifications</h2><a class="small" href="/notifications">See all</a></div>
+      <div hx-get="/ui/feed?limit=6" hx-trigger="every 5s" hx-swap="innerHTML">
+        {% include "partials/feed.html" %}
+      </div>
+    </section>
+  </div>
 </div>
 {% endblock %}
