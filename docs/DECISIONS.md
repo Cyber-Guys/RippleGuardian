@@ -63,3 +63,19 @@ To reverse a decision, add a new entry that supersedes it. Don't edit old entrie
 - Why: Python-first policy (no JS we write), one container, signing stays server-side.
 - Alternatives considered: NiceGUI, Streamlit, a JS SPA (needs the JS exception).
 - Consequences: Jinja2 + python-multipart dependencies; HTMX listed in THIRD_PARTY.md. Live notifications use HTMX polling of the DB; Redis pub/sub is not used for now.
+
+## D-007 · Interface direction: calm glass instrument panel
+- Date: 2026-11-21 01:55 CET · Decided by: nico (drafted by nico/claude)
+- Status: accepted
+- Decision: Cool neutral surfaces, one blue accent, status colours only for state and always with an icon and a word. Apple-style liquid glass (backdrop blur, edge highlight) on the sidebar, status panels and login card only. One easing curve, one entrance animation, charts drawn in on load, reduced motion respected. Charts are server-rendered SVG. The user home leads with a plain-language status and numbered steps; analysts get an overview with KPIs, the latest trace as a flow graph, and findings by detector.
+- Why: Pitch and Impact. A robbed owner must understand the situation in one look; the funds flow is the moment judges remember. Glass was requested by the team; it is kept to a few surfaces so the screens stay readable.
+- Alternatives considered: the first flat navy design (T-008); a JS chart library (needs the JS exception); glass on every card.
+- Consequences: app/charts.py, app/views/, a new store helper `latest_ledger`, Lucide icons in THIRD_PARTY.md.
+
+## D-008 · Idea scope after the Friday-night review
+- Date: 2026-11-20 23:30 CET · Decided by: nico
+- Status: accepted
+- Decision: Keep detection and tracing as the core. Drop the two explorers for one app with two roles, drop email and personal data, define the four notification cases, keep issuer freeze/clawback for the roadmap. Details in docs/CONTEXT.md.
+- Why: Execution in one night, no personal data to protect, notifications an owner can act on.
+- Alternatives considered: building Clawback/Freeze recovery now (declined for time).
+- Consequences: D-005, T-008, T-009.
