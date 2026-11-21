@@ -5,7 +5,7 @@ Last run: 21 Nov 2026, 01:44 to 01:50 CET, on the docker compose stack (api, wor
 ## What was run
 
 1. A fresh stack (`docker compose down -v`, then `up --build`) with two accounts: `alice` (user) and `analyst` (analyst).
-2. `make demo ARGS="--watch-user alice --auto-trace analyst"`. This is a real theft on Testnet: rekey, drain, split across three fresh mules, deposits at our exchange wallet under tag 777001.
+2. `make demo ARGS="--watch-user alice --auto-trace analyst"`. This is a real theft on Testnet: rekey, drain, split across three fresh mules, deposits at our exchange wallet under tag 777001. (Run 1 used the earlier, single-layer version of the demo; see the second run below for the current one.)
 3. `uv run --with playwright python scripts/e2e_browser.py --user alice:… --analyst analyst:…`. It signs in through the login form as each role, opens every page, flags a mule from the trace page as the analyst, and checks as alice that the flag shows up.
 
 ## Results

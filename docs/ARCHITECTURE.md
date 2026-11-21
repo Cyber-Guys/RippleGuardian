@@ -21,9 +21,10 @@ flows/         joins the above
   monitor.py     save activity -> alert owners -> run detectors
   trace.py       trace job: fetch hop by hop, compute taint, alert the victim
   trace_report.py  TraceResult -> the JSON the pages read
+  report.py      incident for a robbed owner: recovery steps, PDF with tx links and a SHA-256 fingerprint
   worker.py      the long-running process: stream, polling, trace jobs
   smoke.py       the same path offline on SIMULATED data (make smoke)
-app/           FastAPI: JSON API, web pages, SVG charts. Reads the store, never XRPL.
+app/           FastAPI: JSON API, web pages, SVG charts (balance line, hop graph). Uses the store, never XRPL.
 ```
 
 `core` never imports `ledger`, `store` or `app`, so every rule can be tested with plain objects. A code graph built with graphify over `src/` (743 nodes, 2,291 edges) has `AccountActivity`, `Amount`, `Asset`, `Settings`, `Monitor` and the page `render()` helper as its most connected nodes, which is the shape we want: the shared contracts in the middle, one orchestrator, one rendering path.

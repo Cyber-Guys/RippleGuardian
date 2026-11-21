@@ -24,7 +24,7 @@ Trust boundaries: the browser is untrusted, the api trusts only its session cook
 | Read value moved | Payment (`delivered_amount`), AccountDelete, CheckCash, EscrowFinish, PaymentChannelClaim | Testnet | real |
 | Spot takeovers | SetRegularKey, SignerListSet, AccountSet (disable master), AccountDelete | Testnet | real |
 | Opening balance for haircut | `account_info` at the ledger before the theft | Testnet | real; falls back to 0 with a note when history is pruned |
-| Exchange identification | destination tag on deposits | Testnet | real tags, our own exchange wallet (SIMULATED label) |
+| Exchange identification | destination tag on deposits | Testnet | real tags, two exchange wallets of our own (SIMULATED labels) |
 | Demo theft | SetRegularKey, Payment, with SourceTag and a memo | Testnet | real |
 
 ## Main flows
@@ -52,7 +52,8 @@ Trust boundaries: the browser is untrusted, the api trusts only its session cook
 
 ## Limitations and simulated parts
 
-- The exchange is our own Testnet wallet with a label. No real exchange receives evidence yet.
+- Exchange and Exchange B are our own Testnet wallets with a label. No real exchange receives evidence yet.
+- Redis is in `docker-compose.yml` and `config.py` reads `REDIS_URL`, but no code uses it yet.
 - Two of the four detectors (wash trading, liquidity drop) get no live data, because DEX fills and AMM withdrawals are not read yet.
 - Detection runs on watched wallets and on accounts visited by traces, not on the whole ledger.
 - Thresholds (15 and 30 minute windows, 70% outflow, 1% taint floor) are starting values, not calibrated on real thefts.
