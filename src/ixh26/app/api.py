@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 from ixh26 import config
 from ixh26.app import auth
 from ixh26.app.auth import AnalystDep, SettingsDep, StoreDep, UserDep
+from ixh26.app.detection_settings import router as detection_settings_router
 from ixh26.contracts import XRP, Asset
 from ixh26.flows.transactions import (
     TX_HASH_PATTERN,
@@ -22,6 +23,7 @@ from ixh26.flows.transactions import (
 from ixh26.store.repo import Store
 
 router = APIRouter(prefix="/api")
+router.include_router(detection_settings_router)
 
 FLAG_CATEGORIES = ("theft", "scam", "phishing", "mixer", "wash_trading", "rug_pull", "other")
 

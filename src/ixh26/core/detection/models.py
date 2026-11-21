@@ -108,6 +108,7 @@ class DetectionSettings:
     liquidity_sale_size: Decimal = Decimal(1_000)
     takeover_window: timedelta = timedelta(minutes=15)
     takeover_min_outflow: Decimal = Decimal("0.7")
+    wash_min_pair_fills: int = 2
 
     def __post_init__(self) -> None:
         windows = (
@@ -126,7 +127,15 @@ class DetectionSettings:
         )
         if any(not 0 < value <= 1 for value in fractions) or not 0 <= self.wash_max_net_ratio <= 1:
             raise ValueError("detection ratios must be within their unit interval")
-        if min(self.funnel_min_senders, self.wash_min_fills, self.wash_max_wallets) < 2:
+        if (
+            min(
+                self.funnel_min_senders,
+                self.wash_min_fills,
+                self.wash_max_wallets,
+                self.wash_min_pair_fills,
+            )
+            < 2
+        ):
             raise ValueError(
                 "funnel and wash thresholds require at least two participants or fills"
             )

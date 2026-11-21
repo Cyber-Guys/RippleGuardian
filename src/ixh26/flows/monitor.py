@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Iterable
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from decimal import Decimal
 
@@ -22,6 +22,7 @@ from ixh26.core.detection import (
     SigningChange,
     detect,
 )
+from ixh26.flows.detection_settings import effective_detection_settings
 from ixh26.store.models import Wallet
 from ixh26.store.repo import FindingInput, Store
 
@@ -79,7 +80,7 @@ def detection_batch(store: Store, accounts: list[str]) -> DetectionBatch:
 @dataclass
 class Monitor:
     store: Store
-    detection: DetectionSettings = field(default_factory=DetectionSettings)
+    detection: DetectionSettings | None = None
 
     def process(self, activity: AccountActivity, *, notify: bool = True) -> list[Alert]:
         """Store ``activity``; alert watchers about what is new; run the detectors."""
@@ -107,7 +108,12 @@ class Monitor:
         accounts = sorted(set(accounts))
         if not accounts:
             return []
-        findings = detect(detection_batch(self.store, accounts), self.detection)
+        settings = (
+            self.detection
+            if self.detection is not None
+            else effective_detection_settings(self.store)
+        )
+        findings = detect(detection_batch(self.store, accounts), settings)
         new = [f for f in findings if self.store.add_finding(to_finding_input(f))]
         for f in new:
             log.info("finding %s on %s (tx %s)", f.kind.value, f.subject, f.trigger.tx_hash)

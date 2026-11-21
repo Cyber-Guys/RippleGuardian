@@ -142,6 +142,7 @@ On WSL, Python DNS lookups can stall on IPv6 and make every Testnet call time ou
 | Testnet is the default. Mainnet is opt-in with `XRPL_NETWORK=mainnet`, needs its own database and never submits a transaction. Any validated transaction can be looked up by hash on either network | `tests/test_config.py`, `tests/app/test_transaction_api.py`, `tests/store/test_network_store.py` |
 | A user can prove control of a watched wallet with a one-drop payment that carries a one-time destination tag, valid for 15 minutes (API only, no web page yet) | `tests/app/test_verification.py` |
 | Amounts are never floats and seeds can't be committed | `tests/test_contracts.py`, `tests/test_secret_scan.py` |
+| Analysts can adjust the four detector rules through the API, and the worker reads saved thresholds on its next run | `tests/app/test_detector_settings_api.py`, [frontend API handoff](docs/FRONTEND-BACKEND-HANDOFF.md) |
 
 ## What is simulated
 
