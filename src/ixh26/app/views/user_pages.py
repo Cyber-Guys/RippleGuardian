@@ -12,7 +12,14 @@ from ixh26.app import api
 from ixh26.app.auth import CurrentUser, SettingsDep, StoreDep
 from ixh26.app.charts import line_chart
 from ixh26.app.views.common import PageUser, amount_text, redirect, render, xrp
-from ixh26.app.views.models import balance_points, overall_state, statement, wallet_state
+from ixh26.app.views.models import (
+    balance_points,
+    last_activity,
+    overall_state,
+    statement,
+    user_kpis,
+    wallet_state,
+)
 from ixh26.contracts import XRP
 from ixh26.flows.report import Incident, build_incident, incident_pdf
 from ixh26.store.repo import Store
@@ -26,7 +33,11 @@ def home(request: Request, user: PageUser, store: StoreDep) -> Response:
         return redirect("/analyst")
     flagged = store.flagged_targets()
     wallets = [
-        {"wallet": w, "status": wallet_state(store, user.id, w.address, flagged)}
+        {
+            "wallet": w,
+            "status": wallet_state(store, user.id, w.address, flagged),
+            "last": last_activity(store, w.address),
+        }
         for w in store.wallets(user.id)
     ]
     return render(
@@ -34,6 +45,7 @@ def home(request: Request, user: PageUser, store: StoreDep) -> Response:
         "user/dashboard.html",
         user,
         wallets=wallets,
+        kpis=user_kpis(store, user.id, [w["wallet"] for w in wallets]),
         overall=overall_state(
             [(w["wallet"].label or "One of your wallets", w["status"]) for w in wallets]
         ),

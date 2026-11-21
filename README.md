@@ -139,7 +139,9 @@ On WSL, Python DNS lookups can stall on IPv6 and make every Testnet call time ou
 | A robbed owner gets a 4-step recovery screen, can ask for a trace, and downloads a PDF report with every tx link and a SHA-256 fingerprint | `tests/flows/test_report.py`, `tests/app/test_web.py::test_owner_can_request_a_trace_of_their_theft`, `artifacts/screenshots/incident-report.pdf` |
 | Users can't open analyst pages; analyst flags are visible to users | `tests/app/test_web.py`, `scripts/e2e_browser.py` run in [docs/E2E.md](docs/E2E.md) |
 | Takeover and funnel detectors fire on live Testnet data | findings in [docs/E2E.md](docs/E2E.md); rules in `tests/core/test_detection.py` |
-| Mainnet is refused, amounts are never floats, seeds can't be committed | `tests/test_config.py`, `tests/test_contracts.py`, `tests/test_secret_scan.py` |
+| Testnet is the default. Mainnet is opt-in with `XRPL_NETWORK=mainnet`, needs its own database and never submits a transaction. Any validated transaction can be looked up by hash on either network | `tests/test_config.py`, `tests/app/test_transaction_api.py`, `tests/store/test_network_store.py` |
+| A user can prove control of a watched wallet with a one-drop payment that carries a one-time destination tag, valid for 15 minutes (API only, no web page yet) | `tests/app/test_verification.py` |
+| Amounts are never floats and seeds can't be committed | `tests/test_contracts.py`, `tests/test_secret_scan.py` |
 
 ## What is simulated
 
@@ -151,10 +153,10 @@ On WSL, Python DNS lookups can stall on IPv6 and make every Testnet call time ou
 ## Roadmap
 
 - Ask the issuer to freeze or claw back stolen tokens (trust line freeze, Clawback), using the trace as evidence.
-- Proof that a user owns a wallet: a small payment carrying a destination tag we assign.
+- A web page for wallet ownership proof. The API is built (`/api/wallets/{address}/verification`); the page and the badge on the wallet card are not.
 - Read DEX fills and AMM withdrawals, so all four detectors run live and taint can follow funds across currencies.
 - Opt-in push or email delivery.
-- Mainnet, once the evidence format has been reviewed with an exchange.
+- Mainnet in the web app. The backend can watch and trace on Mainnet, read-only, but the demo and all evidence stay on Testnet until the evidence format has been reviewed with an exchange.
 
 ## Team
 

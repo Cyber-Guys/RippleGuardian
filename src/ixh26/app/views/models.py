@@ -166,3 +166,31 @@ def exchange_exposure(traces: list[Any]) -> list[dict[str, Any]]:
         {"label": k[0], "address": k[1], "tag": k[2], "xrp": v, "pct": round(v / top * 100)}
         for k, v in sorted(totals.items(), key=lambda kv: -kv[1])
     ]
+
+
+def user_kpis(store: Store, user_id: int, wallets: list[Any]) -> dict[str, Any]:
+    """Four headline numbers for the user home, all from the user's own stored data."""
+    addresses = [w.address for w in wallets]
+    sent = sum(
+        (
+            t.amount.value
+            for t in store.transfers_of(addresses)
+            if t.source in addresses and t.amount.asset.is_xrp
+        ),
+        Decimal(0),
+    )
+    alerts = store.alerts(user_id)
+    return {
+        "wallets": len(wallets),
+        "unread": sum(not a.read for a in alerts),
+        "sent": f"{(sent / XRP1).quantize(Decimal('0.01')):,f}",
+        "flagged": sum(a.kind == AlertKind.FLAGGED_COUNTERPARTY.value for a in alerts),
+    }
+
+
+def last_activity(store: Store, address: str) -> str:
+    """ "Last activity 21 Nov 09:37" or a calm placeholder for a wallet with no transfers."""
+    transfers = store.transfers_of([address], limit=1)
+    if not transfers:
+        return "No activity yet"
+    return f"Last activity {transfers[-1].close_time:%d %b %H:%M}"

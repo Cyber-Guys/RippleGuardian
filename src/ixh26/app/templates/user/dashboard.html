@@ -5,8 +5,14 @@
 {% block main %}
 <div class="stack">
   {% set worst = (wallets|selectattr("status.state", "equalto", "compromised")|first) %}
-  {% set cta %}{% if worst %}<a class="btn btn-danger btn-big beacon" href="/wallets/{{ worst.wallet.address }}/recover">Start recovery</a><a class="btn btn-quiet btn-big" href="/wallets/{{ worst.wallet.address }}/report.pdf">{{ icon("download") }} Report</a>{% endif %}{% endset %}
-  {{ alarm(overall, cta) }}
+  {% set cta %}{% if worst %}<a class="btn btn-danger btn-big beacon" href="/wallets/{{ worst.wallet.address }}/recover">What to do</a><a class="btn btn-quiet btn-big" href="/wallets/{{ worst.wallet.address }}/report.pdf">{{ icon("download") }} Report</a>{% endif %}{% endset %}
+  {{ alarm(overall, cta, worst.wallet.address if worst else "") }}
+  <dl class="kpis" data-enter style="--i: 1">
+    <div class="kpi"><dt>Wallets watched</dt><dd>{{ kpis.wallets }}</dd></div>
+    <div class="kpi {{ 'kpi-lead' if kpis.unread else '' }}"><dt>Unread alerts</dt><dd>{{ kpis.unread }}</dd></div>
+    <div class="kpi"><dt>XRP sent out</dt><dd>{{ kpis.sent }}<small>XRP</small></dd></div>
+    <div class="kpi"><dt>Flagged contacts</dt><dd>{{ kpis.flagged }}</dd></div>
+  </dl>
   {{ errors(error) }}
   <div class="grid-2" data-enter style="--i: 1">
     <section class="panel">
@@ -16,8 +22,9 @@
         {% for item in wallets %}
         <a class="wallet-card" href="/wallets/{{ item.wallet.address }}" data-state="{{ item.status.state }}">
           <strong>{{ item.wallet.label or "Unnamed wallet" }}</strong>
-          <span class="mono small muted">{{ short(item.wallet.address, 8, 6) }}</span>
+          <span class="mono small addr">{{ item.wallet.address }}</span>
           <span>{{ tag("Compromised" if item.status.state == "compromised" else "Check" if item.status.state == "attention" else "Safe", item.status.state) }}</span>
+          <span class="small muted">{{ item.last }}</span>
         </a>
         {% endfor %}
       </div>
@@ -38,7 +45,7 @@
     </section>
     <section class="panel">
       <div class="panel-head"><h2>Notifications</h2><a class="small" href="/notifications">All</a></div>
-      <div hx-get="/ui/feed?limit=6" hx-trigger="every 5s [!this.matches(':hover, :focus-within')]" hx-swap="innerHTML">
+      <div class="scroll" hx-get="/ui/feed?limit=6" hx-trigger="every 5s [!this.matches(':hover, :focus-within')]" hx-swap="innerHTML">
         {% include "partials/feed.html" %}
       </div>
     </section>

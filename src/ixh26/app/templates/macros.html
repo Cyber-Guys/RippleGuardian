@@ -40,11 +40,11 @@
 </form>
 {%- endmacro %}
 
-{% macro alarm(s, actions="") -%}
+{% macro alarm(s, actions="", addr="") -%}
 {% from "partials/icons.html" import icon %}
 <section class="alarm" data-state="{{ s.state }}" role="status" data-enter>
   <span class="alarm-icon">{{ icon(s.icon) }}</span>
-  <div><h2>{{ s.headline }}</h2><p>{{ s.detail }}</p></div>
+  <div><h2>{{ s.headline }}</h2><p>{{ s.detail }}</p>{% if addr %}<p class="mono small addr" title="Click to select">{{ addr }}</p>{% endif %}</div>
   {% if actions %}<div class="actions">{{ actions }}</div>{% endif %}
 </section>
 {%- endmacro %}

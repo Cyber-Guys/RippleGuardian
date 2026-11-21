@@ -21,54 +21,54 @@
   {% endif %}
 
   <div class="grid-even" data-enter style="--i: 3">
-    <section class="panel">
-      <div class="panel-head"><h2>Exchange exposure</h2><span class="small muted">deposit tags to freeze</span></div>
-      {% if o.exposure %}
-      <ul class="ranked ranked-danger">
-        {% for row in o.exposure %}
-        <li><span>{{ row.label }} <span class="mono muted small">tag {{ row.tag }}</span></span><span class="num">{{ "{:,.2f}".format(row.xrp) }} XRP</span><span class="bar"><span style="--pct: {{ row.pct }}%"></span></span></li>
-        {% endfor %}
-      </ul>
-      {% else %}<div class="empty"><strong>Nothing located yet</strong></div>{% endif %}
-    </section>
+    <div class="col">
+      <section class="panel">
+        <div class="panel-head"><h2>Exchange exposure</h2><span class="small muted">deposit tags to freeze</span></div>
+        {% if o.exposure %}
+        <ul class="ranked ranked-danger">
+          {% for row in o.exposure %}
+          <li><span>{{ row.label }} <span class="mono muted small">tag {{ row.tag }}</span></span><span class="num">{{ "{:,.2f}".format(row.xrp) }} XRP</span><span class="bar"><span style="--pct: {{ row.pct }}%"></span></span></li>
+          {% endfor %}
+        </ul>
+        {% else %}<div class="empty"><strong>Nothing located yet</strong></div>{% endif %}
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>By detector</h2></div>
+        {% if o.by_kind %}
+        <ul class="ranked">
+          {% for row in o.by_kind %}
+          <li><span>{{ row.label }}</span><span class="num secondary">{{ row.count }}</span><span class="bar"><span style="--pct: {{ row.pct }}%"></span></span></li>
+          {% endfor %}
+        </ul>
+        {% else %}<div class="empty"><strong>Nothing yet</strong></div>{% endif %}
+      </section>
+    </div>
     <section class="panel">
       <div class="panel-head"><h2>Live ledger</h2><span class="pulse small" data-live="true"><span class="pulse-dot"></span></span></div>
-      <div hx-get="/ui/live" hx-trigger="load, every 5s" hx-swap="innerHTML"><div class="empty"><strong>Loading</strong></div></div>
+      <div class="scroll" hx-get="/ui/live" hx-trigger="load, every 5s" hx-swap="innerHTML"><div class="empty"><strong>Loading</strong></div></div>
     </section>
   </div>
 
-  <div class="grid-2" data-enter style="--i: 4">
-    <section class="panel">
-      <div class="panel-head"><h2>Recent findings</h2><a class="small" href="/analyst/findings">Review</a></div>
-      {% if o.recent_findings %}
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Detector</th><th>Subject</th><th>Trigger</th><th>Status</th></tr></thead>
-          <tbody>
-          {% for f in o.recent_findings %}
-            {% set subject = f.subject.split(':')[0] %}
-            <tr>
-              <td>{{ f.kind.replace('_', ' ')|capitalize }}</td>
-              <td>{{ address(subject, account_url, f.subject.split(':')[1] if ':' in f.subject else None) }}</td>
-              <td>{{ tx(f.tx_hash, tx_url) }}</td>
-              <td>{{ tag(f.status, f.status) }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}{{ empty("No findings yet", "") }}{% endif %}
-    </section>
-    <section class="panel">
-      <div class="panel-head"><h2>By detector</h2></div>
-      {% if o.by_kind %}
-      <ul class="ranked">
-        {% for row in o.by_kind %}
-        <li><span>{{ row.label }}</span><span class="num secondary">{{ row.count }}</span><span class="bar"><span style="--pct: {{ row.pct }}%"></span></span></li>
+  <section class="panel" data-enter style="--i: 4">
+    <div class="panel-head"><h2>Recent findings</h2><a class="small" href="/analyst/findings">Review</a></div>
+    {% if o.recent_findings %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Detector</th><th>Subject</th><th>Trigger</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for f in o.recent_findings %}
+          {% set subject = f.subject.split(':')[0] %}
+          <tr>
+            <td>{{ f.kind.replace('_', ' ')|capitalize }}</td>
+            <td>{{ address(subject, account_url, f.subject.split(':')[1] if ':' in f.subject else None) }}</td>
+            <td>{{ tx(f.tx_hash, tx_url) }}</td>
+            <td>{{ tag(f.status, f.status) }}</td>
+          </tr>
         {% endfor %}
-      </ul>
-      {% else %}<div class="empty"><strong>Nothing yet</strong></div>{% endif %}
-    </section>
-  </div>
+        </tbody>
+      </table>
+    </div>
+    {% else %}{{ empty("No findings yet", "") }}{% endif %}
+  </section>
 </div>
 {% endblock %}

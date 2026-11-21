@@ -77,7 +77,7 @@ Transaction hashes, screenshots and the browser check are in the repo (`docs/E2E
 ## Next
 
 - Use the trace as evidence to ask a token issuer to freeze or claw back stolen tokens.
-- Prove wallet ownership with a small payment carrying a destination tag we assign.
+- Show wallet ownership proof in the web app. The backend already verifies a one-drop payment with a one-time destination tag.
 - Read DEX fills and AMM withdrawals, so all four detectors run live and the trace can follow funds across currencies.
 ```
 

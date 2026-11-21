@@ -9,7 +9,7 @@
   <a class="btn btn-quiet" href="{{ account_url(wallet.address) }}" target="_blank" rel="noopener">Explorer {{ icon("external-link") }}</a>
 </div>
 <div class="stack">
-  {% set cta %}{% if status.state == "compromised" %}<a class="btn btn-danger btn-big beacon" href="/wallets/{{ wallet.address }}/recover">Start recovery</a>{% endif %}<a class="btn btn-quiet btn-big" href="/wallets/{{ wallet.address }}/report.pdf">{{ icon("download") }} Report</a>{% endset %}
+  {% set cta %}{% if status.state == "compromised" %}<a class="btn btn-danger btn-big beacon" href="/wallets/{{ wallet.address }}/recover">What to do</a>{% endif %}<a class="btn btn-quiet btn-big" href="/wallets/{{ wallet.address }}/report.pdf">{{ icon("download") }} Report</a>{% endset %}
   {{ alarm(status, cta) }}
   {% if not synced %}<p class="notice notice-sim">{{ icon("radar") }} Reading history from the ledger</p>{% endif %}
 

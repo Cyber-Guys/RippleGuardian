@@ -59,7 +59,8 @@ def test_user_pages_and_role_enforcement(store: Store) -> None:
         s.get(type(demo), demo.id).password_hash = hash_password("demo-pass")
     client = client_for(store, "demo", "demo-pass")
     home = client.get("/")
-    assert "Savings (SIMULATED) may be compromised" in home.text and "Start recovery" in home.text
+    assert "Savings (SIMULATED) may be compromised" in home.text and "What to do" in home.text
+    assert "Unread alerts" in home.text and smoke.VICTIM in home.text  # full address on the card
     recover = client.get(f"/wallets/{smoke.VICTIM}/recover")
     assert "Lock it down" in recover.text and "Located at Exchange (SIMULATED)" in recover.text
     pdf = client.get(f"/wallets/{smoke.VICTIM}/report.pdf")

@@ -178,7 +178,7 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 340) -
                 )
 
     on_path = _paths(len(pos), pairs)
-    circles = []
+    circles, cards = [], []
     for n in nodes:
         x, y, r = pos[(n.key, n.hop)]
         tag = f", tag {n.key[1]}" if n.key[1] is not None else ""
@@ -190,16 +190,21 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 340) -
             else ""
         )
         i = index[(n.key, n.hop)]
+        # Only the story nodes keep a permanent label; the rest are explained by their card.
+        label = ""
+        if n.kind in ("origin", "sink"):
+            label = (
+                f'<text class="flow-name" x="{x:.1f}" y="{y + r + 15:.1f}" text-anchor="middle">'
+                f"{escape(n.label)}{escape(tag)}</text>"
+                f'<text class="flow-value" x="{x:.1f}" y="{y + r + 29:.1f}" text-anchor="middle">'
+                f"{value} ({share:.0f}%)</text>"
+            )
         circles.append(
-            f'<g id="n-{uid}-{i}" class="flow-node flow-{n.kind} NODE{i}" style="--i:{n.hop}">'
-            f'{ring}<circle class="flow-body" cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}">'
-            f"<title>{escape(n.key[0])}"
-            f"{escape(tag)}: {value}</title></circle>"
-            f'<text class="flow-name" x="{x:.1f}" y="{y + r + 15:.1f}" text-anchor="middle">'
-            f"{escape(n.label)}{escape(tag)}</text>"
-            f'<text class="flow-value" x="{x:.1f}" y="{y + r + 29:.1f}" text-anchor="middle">'
-            f"{value} ({share:.0f}%)</text></g>"
+            f'<g id="n-{uid}-{i}" class="flow-node flow-{n.kind} NODE{i}" tabindex="0" '
+            f'style="--i:{n.hop}" aria-label="{escape(n.label)}: {value}">'
+            f'{ring}<circle class="flow-body" cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}"/>{label}</g>'
         )
+        cards.append(_card(uid, i, n, x, y, r, value, share, tag, width, height))
     hop_labels = "".join(
         f'<text class="chart-label" x="{_scale(h, 0, hops, 90, width - 210):.1f}" y="18" '
         f'text-anchor="middle">{"Victim" if h == 0 else f"Hop {h}"}</text>'
@@ -221,15 +226,19 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 340) -
         s.replace(f"NODE{index[(n.key, n.hop)]}", _owners(uid, on_path, {index[(n.key, n.hop)]}), 1)
         for s, n in zip(circles, nodes, strict=True)
     ]
+    focus = ":is(:hover, :focus)"
     hover = "".join(
-        f".flow:has(#n-{uid}-{i}:hover) :is(.flow-band,.flow-node):not(.p-{uid}-{i}){{opacity:.12}}"
+        f".flow:has(#n-{uid}-{i}{focus}) "
+        f":is(.flow-band,.flow-node):not(.p-{uid}-{i}){{opacity:.12}}"
+        f".flow:has(#n-{uid}-{i}{focus}) #card-{uid}-{i}{{opacity:1;transform:none}}"
         for i in range(len(pos))
     )
     return Markup(
         f'<svg class="chart flow" viewBox="0 0 {width} {height + 30}" role="img" '
         f'aria-label="Funds flow over {hops} hops"><style>{hover}</style>{arrow}{hop_labels}'
         f"{''.join(links)}"
-        f'<g class="flow-particles">{"".join(particles)}</g>{"".join(circles)}</svg>'
+        f'<g class="flow-particles">{"".join(particles)}</g>'
+        f"{''.join(circles)}{''.join(cards)}</svg>"
     )
 
 
@@ -247,6 +256,35 @@ _GRADIENTS = (
     '<stop offset="0" stop-color="#ff8b9b"/>'
     '<stop offset="1" stop-color="#c5283d"/></radialGradient>'
 )
+
+
+def _card(
+    uid: int,
+    i: int,
+    n: FlowNode,
+    x: float,
+    y: float,
+    r: float,
+    value: str,
+    share: Decimal,
+    tag: str,
+    width: int,
+    height: int,
+) -> str:
+    """The detail card of one node: full address, amount, share and hop. Hidden until hover."""
+    w, h = 246, 84
+    cx = min(max(x - w / 2, 8), width - w - 8)
+    cy = y - r - h - 10 if y - r - h - 10 > 24 else y + r + 12
+    title = {"origin": "Robbed wallet", "sink": n.label}.get(n.kind, "Pass-through account")
+    where = "Victim" if n.hop == 0 else f"Hop {n.hop}{tag}"
+    return (
+        f'<g transform="translate({cx:.1f} {cy:.1f})"><g id="card-{uid}-{i}" class="flow-card">'
+        f'<rect width="{w}" height="{h}" rx="12"/>'
+        f'<text class="card-title" x="14" y="23">{escape(title)}</text>'
+        f'<text class="card-addr" x="14" y="41">{escape(n.key[0])}</text>'
+        f'<text class="card-fig" x="14" y="61">{value} · {share:.0f}% of the theft</text>'
+        f'<text class="card-meta" x="14" y="77">{escape(where)}</text></g></g>'
+    )
 
 
 def _paths(count: int, pairs: list[tuple[int, int]]) -> dict[int, set[int]]:

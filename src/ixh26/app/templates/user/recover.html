@@ -5,7 +5,7 @@
 {% block main %}
 <a class="back" href="/wallets/{{ i.wallet }}">{{ i.label }}</a>
 <div class="page-head" data-enter>
-  <div><h1>{{ "Recover from the theft" if i.compromised else "Wallet report" }}</h1><p>Four steps. Tick each one when it's done.</p></div>
+  <div><h1>{{ "What to do now" if i.compromised else "Wallet report" }}</h1><p>Four steps. Tick each one when it's done.</p></div>
   <a class="btn btn-big" href="/wallets/{{ i.wallet }}/report.pdf">{{ icon("download") }} Download report</a>
 </div>
 <div class="stack">
