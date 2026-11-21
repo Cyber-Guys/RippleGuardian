@@ -139,6 +139,7 @@ On WSL, Python DNS lookups can stall on IPv6 and make every Testnet call time ou
 | A robbed owner gets a 4-step recovery screen, can ask for a trace, and downloads a PDF report with every tx link and a SHA-256 fingerprint | `tests/flows/test_report.py`, `tests/app/test_web.py::test_owner_can_request_a_trace_of_their_theft`, `artifacts/screenshots/incident-report.pdf` |
 | Users can't open analyst pages; analyst flags are visible to users | `tests/app/test_web.py`, `scripts/e2e_browser.py` run in [docs/E2E.md](docs/E2E.md) |
 | Takeover and funnel detectors fire on live Testnet data | findings in [docs/E2E.md](docs/E2E.md); rules in `tests/core/test_detection.py` |
+| Analysts can adjust the four detector rules through the API, and the worker reads saved thresholds on its next run | `tests/app/test_detector_settings_api.py`, [frontend API handoff](docs/FRONTEND-BACKEND-HANDOFF.md) |
 | Mainnet is refused, amounts are never floats, seeds can't be committed | `tests/test_config.py`, `tests/test_contracts.py`, `tests/test_secret_scan.py` |
 
 ## What is simulated

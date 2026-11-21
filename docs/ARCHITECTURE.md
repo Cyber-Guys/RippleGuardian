@@ -100,12 +100,14 @@ Several users can watch the same address; each one gets their own copy, filtered
 
 ## 4. Detectors
 
-After storing new activity the monitor rebuilds a `DetectionBatch` from the stored history of the accounts involved and runs `core.detection.detect`. Findings are stored once per (detector, subject, triggering transaction), so running the rules again over the same history adds nothing. Two rules matter for a theft:
+After storing new activity the monitor builds a `DetectionBatch` from the history of the accounts involved and runs `core.detection.detect` with the latest saved settings. Findings are stored once per combination of detector, subject, and triggering transaction. Two rules matter for a theft:
 
-- Possible takeover: a signing change followed within 15 minutes by outflows to new destinations worth at least 70% of the balance.
-- Funds funnel: at least three accounts forward most of what they just received to the same destination and tag within 30 minutes.
+- Possible takeover. The defaults require a signing change followed within 15 minutes by outflows to new destinations worth at least 70% of the starting balance.
+- Funds funnel. The defaults require at least three accounts forwarding recent deposits to the same destination and tag within 30 minutes.
 
-The full rule descriptions and thresholds are in `core/detection/models.py` (`DetectionSettings`) and `tests/core/test_detection.py`.
+Analysts use `GET /api/detection-settings` to read current thresholds and defaults, then send a complete profile with the current version to `PUT /api/detection-settings`. The database records each save as a revision. A stale save returns 409. The next detection run uses the new profile. Saving leaves existing findings in place and does not trigger a replay.
+
+The worker can detect funnels and takeovers on live data. Wash trading and liquidity withdrawal thresholds are saved as well. Those rules require DEX fills and AMM withdrawals that the reader does not yet produce. See `src/ixh26/core/detection/models.py` for defaults and the [frontend handoff](FRONTEND-BACKEND-HANDOFF.md) for units and validation.
 
 ## 5. Tracing the money
 

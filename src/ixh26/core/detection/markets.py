@@ -17,11 +17,11 @@ from ixh26.core.detection.models import (
 )
 
 
-def _repeated_trade_group(window: deque[TradeFill], buyer: str) -> set[str]:
+def _repeated_trade_group(window: deque[TradeFill], buyer: str, min_pair_fills: int) -> set[str]:
     pair_counts = Counter(frozenset((fill.buyer, fill.seller)) for fill in window)
     neighbors: defaultdict[str, set[str]] = defaultdict(set)
     for pair, count in pair_counts.items():
-        if count >= 2:
+        if count >= min_pair_fills:
             first, second = pair
             neighbors[first].add(second)
             neighbors[second].add(first)
@@ -52,7 +52,7 @@ def detect_wash_trading(fills: Sequence[TradeFill], settings: DetectionSettings)
         if len(window) < settings.wash_min_fills:
             continue
 
-        group = _repeated_trade_group(window, fill.buyer)
+        group = _repeated_trade_group(window, fill.buyer, settings.wash_min_pair_fills)
         if fill.seller not in group or len(group) > settings.wash_max_wallets:
             continue
         internal = [trade for trade in window if {trade.buyer, trade.seller} <= group]

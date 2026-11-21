@@ -16,6 +16,7 @@ from ixh26.contracts import (
 from ixh26.core.detection import (
     BalanceBefore,
     DetectionBatch,
+    DetectionSettings,
     FindingKind,
     LedgerPoint,
     PoolWithdrawal,
@@ -110,6 +111,13 @@ def test_wash_trading_requires_individual_balances_to_return_near_start():
     assert detect(DetectionBatch(fills=fills)) == ()
     amm = tuple(replace(fill, from_amm=True) for fill in fills)
     assert detect(DetectionBatch(fills=amm)) == ()
+
+
+def test_wash_trading_uses_configurable_fill_count_per_pair():
+    fills = tuple(_fill(i, *pair) for i, pair in enumerate([("a", "b"), ("b", "a")] * 3))
+    batch = DetectionBatch(fills=fills)
+    assert detect(batch, DetectionSettings(wash_min_pair_fills=6))
+    assert detect(batch, DetectionSettings(wash_min_pair_fills=7)) == ()
 
 
 def _withdrawal() -> PoolWithdrawal:

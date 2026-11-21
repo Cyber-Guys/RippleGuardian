@@ -129,6 +129,16 @@ class FindingRow(Base):
     created_at: Mapped[datetime] = mapped_column(default=utcnow)
 
 
+class DetectorSettingsRow(Base):
+    """An immutable revision of the shared detector thresholds."""
+
+    __tablename__ = "detector_settings"
+    version: Mapped[int] = mapped_column(primary_key=True, autoincrement=False)
+    thresholds: Mapped[dict[str, Any]]
+    analyst_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    updated_at: Mapped[datetime] = mapped_column(default=utcnow)
+
+
 class FlagRow(Base):
     """An analyst's public, accountable statement that an account or tx is suspicious."""
 
