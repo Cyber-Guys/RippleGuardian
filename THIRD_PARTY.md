@@ -22,3 +22,4 @@ Every library, copied snippet (>5 lines), dataset, image, font or icon used in t
 | Lucide icons 0.460.0 (12 icons, path data inlined) | https://github.com/lucide-icons/lucide | ISC | app/templates/partials/icons.html |
 | fpdf2 | https://github.com/py-pdf/fpdf2 | LGPL-3.0 | flows/report.py: incident report PDF (used as unmodified library) |
 | Pillow, fontTools | https://github.com/python-pillow/Pillow , https://github.com/fonttools/fonttools | MIT-CMU (HPND), MIT | installed by fpdf2 (transitive) |
+| Montserrat ExtraBold, Inter Medium (fonts) | https://fonts.google.com/specimen/Montserrat , https://fonts.google.com/specimen/Inter | OFL-1.1 | docs/assets/banner.png: text rendered into the README banner image |
