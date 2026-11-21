@@ -94,7 +94,7 @@
         {"name": "member5", "bar": 44, "beat": 3},
         {"name": "member6", "bar": 44, "beat": 4},
         {"name": "venue", "bar": 45, "beat": 1},
-        {"name": "fadeOut", "bar": 45, "beat": 3}
+        {"name": "fadeOut", "bar": 45, "beat": 3.5}
       ]
     },
     "short": {
@@ -151,7 +151,7 @@
         {"name": "member5", "bar": 14, "beat": 4},
         {"name": "member6", "bar": 14, "beat": 4.5},
         {"name": "venue", "bar": 15, "beat": 1},
-        {"name": "fadeOut", "bar": 15, "beat": 3}
+        {"name": "fadeOut", "bar": 15, "beat": 3.5}
       ]
     }
   }
