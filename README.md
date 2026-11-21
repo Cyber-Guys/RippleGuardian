@@ -14,6 +14,18 @@
   <img alt="IXH26 Track 2" src="https://img.shields.io/badge/IXH26-Track%202-E0533A">
 </p>
 
+## Built at IXH26
+
+<p align="center">
+  <img src="docs/assets/ixh26.png" width="100%" alt="IXH26 Italian XRPL Hackathon, University of Bari Aldo Moro, 20–21 November 2026, Track 2: XRPL Applications">
+</p>
+
+Ripple Guardian was built in 24 hours at **IXH26**, the Italian XRPL Hackathon, held at the University of Bari Aldo Moro on 20 and 21 November 2026 and organised by XRPL Commons and De Componendis Cifris. Teams picked one of three tracks: advanced cryptography, XRPL applications and tokenisation.
+
+We competed in **Track 2: XRPL applications**, the open track. There is no fixed theme: the brief is to *build something that meaningfully leverages the XRP Ledger*, whether payments, tokenisation, DeFi, identity or something new. Projects are judged on idea, implementation, demo quality and real-world potential. Prizes, rules and how we address each criterion are in [The hackathon](#the-hackathon).
+
+## What Ripple Guardian does
+
 When an XRPL seed leaks, a thief adds their own signing key, empties the wallet and pushes the money through fresh accounts to an exchange, often within minutes. Tracing services exist, but they are sold to exchanges and police, so the owner finds out late and has nothing to show anyone. Ripple Guardian is a blockchain forensics framework for the XRP Ledger, and it watches wallets for the people who own them. It tells the owner in plain words when a key changes or funds leave, walks them through recovery, and follows the stolen XRP hop by hop to the exchange and the destination tag that received it: the one number an exchange needs to find the customer. Analysts review what the detectors raise and publish accountable flags that every user can check before sending money.
 
 Everything in the demo runs on XRPL Testnet with real, validated transactions.
