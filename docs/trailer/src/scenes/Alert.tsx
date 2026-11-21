@@ -46,6 +46,8 @@ export const Alert: React.FC<SceneProps> = (p) => {
   if (feedAt !== null)
     keys.push({ at: feedAt, cam: fit(box(DASH, "feed"), page, VIEW, 0.12) });
   keys.push({ at: spot, cam: fit(actions, page, VIEW, 0.2, 1.5) });
+  // The click opens the recovery page: pull back so it lands full frame for scene 4.
+  keys.push({ at: click + 12, cam: whole(page), dur: 42 });
 
   const pulse = Math.exp(-(frame % (2 * BEAT)) / 10); // kick on beats 1 and 3
   const ring =
