@@ -55,7 +55,9 @@ async def wait_for_backfill(store: Store, address: str, timeout_s: int = 120) ->
 
 async def main(args: argparse.Namespace) -> int:
     settings = config.load_settings()
-    store = Store.from_url(settings.database_url)
+    if settings.network.name not in ("testnet", "devnet"):
+        raise SystemExit("the live demo requires a test network")
+    store = Store.for_network(settings.database_url, network=settings.network.name)
     reader = XrplReader(settings.network.json_rpc_url)
     reserve = await base_reserve_drops(settings)
 

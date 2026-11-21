@@ -20,7 +20,11 @@ def create_app(settings: config.Settings | None = None, store: Store | None = No
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         if getattr(app.state, "store", None) is None:
-            app.state.store = Store.from_url(settings.database_url)
+            app.state.store = Store.for_network(
+                settings.database_url, network=settings.network.name
+            )
+        else:
+            app.state.store.bind_network(settings.network.name)
         yield
 
     app = FastAPI(title="Ripple Guardian", version=__version__, lifespan=lifespan)

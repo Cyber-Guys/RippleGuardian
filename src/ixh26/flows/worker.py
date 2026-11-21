@@ -84,7 +84,7 @@ async def stream_loop(stream: XrplStream, monitor: Monitor, refresh_s: float = 5
 
 
 async def run(settings: config.Settings) -> None:
-    store = Store.from_url(settings.database_url)
+    store = Store.for_network(settings.database_url, network=settings.network.name)
     reader = XrplReader(settings.network.json_rpc_url)
     stream = XrplStream(settings.network.websocket_url)
     monitor = Monitor(store)

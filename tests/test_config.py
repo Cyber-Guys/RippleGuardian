@@ -12,10 +12,32 @@ def test_defaults_are_testnet_and_one_percent_threshold() -> None:
     assert s.source_tag == config.TEAM_SOURCE_TAG
 
 
-@pytest.mark.parametrize("net", ["mainnet", "MAINNET", "livenet", "foo"])
-def test_mainnet_and_unknown_networks_are_refused(net: str) -> None:
+@pytest.mark.parametrize("net", ["livenet", "foo"])
+def test_unknown_networks_are_refused(net: str) -> None:
     with pytest.raises(config.ConfigError, match="not allowed"):
         config.load_settings({"XRPL_NETWORK": net})
+
+
+def test_mainnet_requires_its_own_database_url() -> None:
+    with pytest.raises(config.ConfigError, match="XRPL_MAINNET_DATABASE_URL"):
+        config.load_settings({"XRPL_NETWORK": "mainnet"})
+    with pytest.raises(config.ConfigError, match="separate database"):
+        config.load_settings(
+            {
+                "XRPL_NETWORK": "mainnet",
+                "DATABASE_URL": "sqlite:///testnet.db",
+                "XRPL_MAINNET_DATABASE_URL": "sqlite:///testnet.db",
+            }
+        )
+    settings = config.load_settings(
+        {
+            "XRPL_NETWORK": "MAINNET",
+            "DATABASE_URL": "sqlite:///testnet.db",
+            "XRPL_MAINNET_DATABASE_URL": "sqlite:///mainnet.db",
+        }
+    )
+    assert settings.network == config.NETWORKS["mainnet"]
+    assert settings.database_url == "sqlite:///mainnet.db"
 
 
 @pytest.mark.parametrize("ratio", ["0", "1", "-0.1", "abc"])

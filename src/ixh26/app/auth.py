@@ -62,6 +62,7 @@ def issue_token(user: CurrentUser, settings: config.Settings) -> str:
     claims = {
         "sub": str(user.id),
         "role": user.role,
+        "network": settings.network.name,
         "iat": now,
         "exp": now + timedelta(minutes=settings.jwt_ttl_minutes),
     }
@@ -88,6 +89,9 @@ def optional_user(
     try:
         claims = jwt.decode(token, config.jwt_secret(), algorithms=["HS256"])
     except jwt.PyJWTError:
+        return None
+    # Pre-switch tokens were issued for the default Testnet deployment.
+    if claims.get("network", "testnet") != get_settings(request).network.name:
         return None
     user = store.user(int(claims["sub"]))
     return CurrentUser(user.id, user.username, user.role) if user else None
