@@ -161,12 +161,16 @@ On WSL, Python DNS lookups can stall on IPv6 and make every Testnet call time ou
 
 ## Team
 
+Team CyberGuys on the IXH26 platform.
+
 | Member | Contribution |
 |---|---|
-| Tommaso Casti | repo skeleton, policy, shared contracts, Docker |
-| Daniele Orrù | fraud detectors |
+| Tommaso Casti (t0mm1) | repo skeleton, agent policy, shared contracts, Docker |
+| Daniele Orrù (DenInDev) | fraud detectors, network switch, wallet verification |
 | Nico (NicoXVI) | ledger reader, taint tracer, API, worker, web app, Testnet demo, docs |
+| unickz | README, docs and submission texts, agent policy 1.1, repository setup |
 | doliv | first commit, brainstorming notes, first agent policy |
+| percyghost | team member |
 
 Built with AI coding assistants, declared in [docs/SUBMISSION.md](docs/SUBMISSION.md).
 

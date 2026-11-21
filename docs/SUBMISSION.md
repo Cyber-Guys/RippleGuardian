@@ -127,7 +127,9 @@ Commits carry no AI co-author trailer (policy 1.1, rule 17); this section is the
 
 | Name | Role |
 |---|---|
-| Tommaso Casti | repo skeleton, policy, shared contracts, docker |
-| Daniele Orrù | fraud detectors |
+| Tommaso Casti (t0mm1) | repo skeleton, agent policy, shared contracts, Docker |
+| Daniele Orrù (DenInDev) | fraud detectors, network switch, wallet verification |
 | Nico (NicoXVI) | ledger reader, taint tracer, API, worker, web app, Testnet demo, docs |
+| unickz | README, docs and submission texts, agent policy 1.1, repository setup |
 | doliv | first commit, brainstorming notes, first agent policy |
+| percyghost | team member |
