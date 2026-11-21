@@ -196,8 +196,9 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 340) -
     )
     arrow = (
         f'<defs><marker id="arrow-{uid}" viewBox="0 0 10 10" refX="8" refY="5" '
-        'markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse">'<path d="M0,0 L10,5 L0,10 z" '
-        'class="flow-arrow"/></marker></defs>'
+        'markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" '
+        'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="flow-arrow"/>'
+        "</marker></defs>"
     )
     return Markup(
         f'<svg class="chart flow" viewBox="0 0 {width} {height + 30}" role="img" '
