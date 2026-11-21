@@ -39,7 +39,7 @@ The review also suggested using XRPL's own tools to get money back: an issuer ca
 
 - A worker that subscribes to watched wallets over WebSocket, catches up with `account_tx` polling, stores every transfer and key change, sends alerts, runs the detectors, and runs trace jobs.
 - A haircut taint tracer that follows stolen XRP hop by hop, takes each account's clean balance into account, and stops at labelled entities such as exchanges, reporting the destination tag.
-- Four detectors (daniele, T-006). Two of them, possible takeover and funds funnel, fire on live data. The other two need DEX and AMM data we don't read yet.
+- Four detectors (T-006). Two of them, possible takeover and funds funnel, fire on live data. The other two need DEX and AMM data we don't read yet.
 - A web app. Users see a status for each wallet, a balance chart, history, notifications, per-wallet alert settings and a page to check any address against the flags. A robbed owner gets a four-step recovery screen, can request a trace and downloads a PDF incident report. Analysts see an overview with counts, the findings queue, traces drawn as an animated hop graph (hovering an account highlights its money path), and the flags page.
 - A Testnet demo that performs a real theft and launders it through two relays and five mules into two exchanges, and an end-to-end check that compares the app's numbers with the ledger ([E2E.md](E2E.md)).
 

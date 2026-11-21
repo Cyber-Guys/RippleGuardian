@@ -162,14 +162,14 @@ On WSL, Python DNS lookups can stall on IPv6 and make every Testnet call time ou
 
 Team CyberGuys on the IXH26 platform.
 
-| Member | Contribution |
-|---|---|
-| Tommaso Casti (t0mm1) | repo skeleton, agent policy, shared contracts, Docker |
-| Daniele Orrù (DenInDev) | fraud detectors, network switch, wallet verification |
-| Nico (NicoXVI) | ledger reader, taint tracer, API, worker, web app, Testnet demo, docs |
-| unickz | README, docs and submission texts, agent policy 1.1, repository setup |
-| doliv | first commit, brainstorming notes, first agent policy |
-| percyghost | team member |
+- Nicola Ghisu (NicoXVI)
+- Tommaso Casti (t0mm1)
+- Daniele Orrù (DenInDev)
+- Andrea Cerolini (percyghost)
+- Diego Oliva (doliv)
+- Nicholas Meli (uNickz)
+
+We all worked on every part of the project. The commit history comes from fewer laptops than people, so it does not show who did what.
 
 Built with AI coding assistants, declared in [docs/SUBMISSION.md](docs/SUBMISSION.md).
 

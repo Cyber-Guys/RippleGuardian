@@ -125,11 +125,11 @@ Commits carry no AI co-author trailer (policy 1.1, rule 17); this section is the
 
 ## Team
 
-| Name | Role |
-|---|---|
-| Tommaso Casti (t0mm1) | repo skeleton, agent policy, shared contracts, Docker |
-| Daniele Orrù (DenInDev) | fraud detectors, network switch, wallet verification |
-| Nico (NicoXVI) | ledger reader, taint tracer, API, worker, web app, Testnet demo, docs |
-| unickz | README, docs and submission texts, agent policy 1.1, repository setup |
-| doliv | first commit, brainstorming notes, first agent policy |
-| percyghost | team member |
+- Nicola Ghisu (NicoXVI)
+- Tommaso Casti (t0mm1)
+- Daniele Orrù (DenInDev)
+- Andrea Cerolini (percyghost)
+- Diego Oliva (doliv)
+- Nicholas Meli (uNickz)
+
+We all worked on every part of the project. The commit history comes from fewer laptops than people, so it does not show who did what.
