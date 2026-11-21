@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import Any
@@ -102,77 +103,112 @@ def _delivered(meta: Json) -> Amount | None:
     return parse_amount(raw)
 
 
-def _transfers(tx: Json, meta: Json, base: dict[str, Any]) -> list[Transfer]:
-    kind = tx["TransactionType"]
-    _, xrp_delta = _xrp_balances(meta)
-    fee = Decimal(tx.get("Fee", "0"))
+@dataclass(frozen=True)
+class TxContext:
+    """One validated transaction, with what every extractor needs."""
 
-    def transfer(k: TransferKind, src: str, dst: str, amount: Amount, **kw: Any) -> Transfer:
-        return Transfer(kind=k, source=src, destination=dst, amount=amount, **base, **kw)
+    tx: Json
+    meta: Json
+    base: dict[str, Any]  # tx_hash, ledger_index, tx_index, close_time
 
-    if kind == "Payment":
-        amount = _delivered(meta)
-        if amount is None:
-            raise NormalizeError("payment without delivered_amount")
-        src, dst = tx["Account"], tx["Destination"]
-        source_amount = None
-        if not amount.asset.is_xrp and src in xrp_delta and xrp_delta[src] + fee < 0:
-            # cross-currency payment paid in XRP: what actually left the sender
-            source_amount = Amount(XRP, -(xrp_delta[src] + fee))
-        return [
-            transfer(
-                TransferKind.PAYMENT,
-                src,
-                dst,
-                amount,
-                destination_tag=tx.get("DestinationTag"),
-                source_amount=source_amount,
-            )
-        ]
-    if kind == "AccountDelete":
-        dst = tx["Destination"]
-        amount = _delivered(meta) or Amount(XRP, xrp_delta.get(dst, Decimal(0)))
-        return [
-            transfer(
-                TransferKind.ACCOUNT_DELETE,
-                tx["Account"],
-                dst,
-                amount,
-                destination_tag=tx.get("DestinationTag"),
-            )
-        ]
-    if kind == "CheckCash":
-        check = _deleted_fields(meta, "Check")
-        dst = tx["Account"]
-        amount = _delivered(meta) or Amount(XRP, xrp_delta.get(dst, Decimal(0)) + fee)
-        return [transfer(TransferKind.CHECK_CASH, check["Account"], dst, amount)]
-    if kind == "EscrowFinish":
-        escrow = _deleted_fields(meta, "Escrow")
-        return [
-            transfer(
-                TransferKind.ESCROW_FINISH,
-                escrow["Account"],
-                escrow["Destination"],
-                parse_amount(escrow["Amount"]),
-                destination_tag=escrow.get("DestinationTag"),
-            )
-        ]
-    if kind == "PaymentChannelClaim":
-        for _, node in _nodes(meta, "PayChannel"):
-            final, prev = node.get("FinalFields", {}), node.get("PreviousFields", {})
-            if "Balance" in prev:
-                paid = Decimal(final["Balance"]) - Decimal(prev["Balance"])
-                return [
-                    transfer(
-                        TransferKind.CHANNEL_CLAIM,
-                        final["Account"],
-                        final["Destination"],
-                        Amount(XRP, paid),
-                        destination_tag=final.get("DestinationTag"),
-                    )
-                ]
-        return []
+    @property
+    def fee(self) -> Decimal:
+        return Decimal(self.tx.get("Fee", "0"))
+
+    def xrp_delta(self, account: str) -> Decimal:
+        return _xrp_balances(self.meta)[1].get(account, Decimal(0))
+
+    def transfer(
+        self, kind: TransferKind, src: str, dst: str, amount: Amount, **kw: Any
+    ) -> Transfer:
+        return Transfer(kind=kind, source=src, destination=dst, amount=amount, **self.base, **kw)
+
+
+def _payment(c: TxContext) -> list[Transfer]:
+    """Payments: always the delivered amount, so partial payments cannot lie."""
+    amount = _delivered(c.meta)
+    if amount is None:
+        raise NormalizeError("payment without delivered_amount")
+    src, dst = c.tx["Account"], c.tx["Destination"]
+    paid_xrp = -(c.xrp_delta(src) + c.fee)
+    source_amount = None
+    if not amount.asset.is_xrp and paid_xrp > 0:
+        source_amount = Amount(XRP, paid_xrp)  # cross-currency payment funded with XRP
+    return [
+        c.transfer(
+            TransferKind.PAYMENT,
+            src,
+            dst,
+            amount,
+            destination_tag=c.tx.get("DestinationTag"),
+            source_amount=source_amount,
+        )
+    ]
+
+
+def _account_delete(c: TxContext) -> list[Transfer]:
+    """Deleting an account sends its remaining XRP to the destination."""
+    dst = c.tx["Destination"]
+    amount = _delivered(c.meta) or Amount(XRP, c.xrp_delta(dst))
+    kind = TransferKind.ACCOUNT_DELETE
+    return [
+        c.transfer(kind, c.tx["Account"], dst, amount, destination_tag=c.tx.get("DestinationTag"))
+    ]
+
+
+def _check_cash(c: TxContext) -> list[Transfer]:
+    """The check's writer pays the casher."""
+    writer = _deleted_fields(c.meta, "Check")["Account"]
+    casher = c.tx["Account"]
+    amount = _delivered(c.meta) or Amount(XRP, c.xrp_delta(casher) + c.fee)
+    return [c.transfer(TransferKind.CHECK_CASH, writer, casher, amount)]
+
+
+def _escrow_finish(c: TxContext) -> list[Transfer]:
+    """Escrowed XRP moves from the escrow owner to its destination."""
+    escrow = _deleted_fields(c.meta, "Escrow")
+    return [
+        c.transfer(
+            TransferKind.ESCROW_FINISH,
+            escrow["Account"],
+            escrow["Destination"],
+            parse_amount(escrow["Amount"]),
+            destination_tag=escrow.get("DestinationTag"),
+        )
+    ]
+
+
+def _channel_claim(c: TxContext) -> list[Transfer]:
+    """A channel claim pays the increase of the channel's Balance field."""
+    for _, node in _nodes(c.meta, "PayChannel"):
+        final, prev = node.get("FinalFields", {}), node.get("PreviousFields", {})
+        if "Balance" in prev:
+            paid = Decimal(final["Balance"]) - Decimal(prev["Balance"])
+            return [
+                c.transfer(
+                    TransferKind.CHANNEL_CLAIM,
+                    final["Account"],
+                    final["Destination"],
+                    Amount(XRP, paid),
+                    destination_tag=final.get("DestinationTag"),
+                )
+            ]
     return []
+
+
+# Transaction type -> how value moved. Types not listed here move no value we trace.
+EXTRACTORS: dict[str, Callable[[TxContext], list[Transfer]]] = {
+    "Payment": _payment,
+    "AccountDelete": _account_delete,
+    "CheckCash": _check_cash,
+    "EscrowFinish": _escrow_finish,
+    "PaymentChannelClaim": _channel_claim,
+}
+
+
+def _transfers(c: TxContext) -> list[Transfer]:
+    extractor = EXTRACTORS.get(c.tx["TransactionType"])
+    return extractor(c) if extractor else []
 
 
 def _security_events(tx: Json, base: dict[str, Any]) -> list[SecurityEvent]:
@@ -217,7 +253,7 @@ def normalize(entry: Json) -> AccountActivity:
         "tx_index": int(meta["TransactionIndex"]),
         "close_time": _close_time(entry, tx),
     }
-    transfers = _transfers(tx, meta, base)
+    transfers = _transfers(TxContext(tx, meta, base))
     before, _ = _xrp_balances(meta)
     # shortcut: pre-tx balances only for XRP senders; add RippleState balances for IOU takeovers
     balances = tuple(
@@ -225,5 +261,5 @@ def normalize(entry: Json) -> AccountActivity:
         for t in transfers
         if (t.source_amount or t.amount).asset.is_xrp and t.source in before
     )
-    security = _security_events(tx, {k: base[k] for k in base})
+    security = _security_events(tx, base)
     return AccountActivity(tuple(transfers), tuple(security), balances)

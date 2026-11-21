@@ -92,7 +92,7 @@ def test_analyst_findings_trace_and_flag_visible_to_users(store: Store) -> None:
 
 
 def test_ribbon_marks_only_stops_and_known_entities() -> None:
-    from ixh26.app.web import ribbon
+    from ixh26.app.views.models import ribbon
 
     edge = {"destination_tag": None, "taint": "5 XRP"}
     result = {
