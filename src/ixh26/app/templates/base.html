@@ -4,18 +4,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Wallet Guardian{% endblock %} | Wallet Guardian</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%229%22 fill=%22%23111827%22/%3E%3C/svg%3E">
+  <title>{% block title %}{{ brand }}{% endblock %} | {{ brand }}</title>
+  <link rel="icon" href="/static/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/app.css">
   <script src="/static/htmx.min.js" defer></script>
 </head>
 <body>
 {% block body %}
 <div class="shell">
-  <aside class="sidebar glass">
+  <aside class="sidebar">
     <a class="brand" href="/">
-      {% include "partials/mark.html" %}
-      <span class="brand-name">Wallet Guardian<small>{{ "Analyst desk" if user.is_analyst else "Your wallets" }}</small></span>
+      {% with mark_id="nav" %}{% include "partials/mark.html" %}{% endwith %}
+      <span class="brand-name">{{ brand }}<small>{{ "Analyst desk" if user.is_analyst else "Wallet protection" }}</small></span>
     </a>
     <nav class="nav" aria-label="Main">
       {% if user.is_analyst %}
@@ -29,13 +29,13 @@
         <a href="/" {% if path == '/' or path.startswith('/wallets') %}aria-current="page"{% endif %}>{{ icon("wallet") }} Wallets</a>
         <a href="/notifications" {% if path == '/notifications' %}aria-current="page"{% endif %}>{{ icon("bell") }} Notifications
           <span class="count" hx-get="/ui/unread" hx-trigger="every 5s" hx-swap="outerHTML" aria-label="unread notifications">{{ unread or "" }}</span></a>
-        <a href="/flags" {% if path == '/flags' %}aria-current="page"{% endif %}>{{ icon("search") }} Check an address</a>
+        <a href="/flags" {% if path == '/flags' %}aria-current="page"{% endif %}>{{ icon("search") }} Check address</a>
       {% endif %}
     </nav>
     <div class="sidebar-foot">
       <span class="pulse" data-live="{{ 'true' if pulse_ledger else 'false' }}" title="Last ledger fully read by the monitor">
         <span class="pulse-dot"></span>
-        <span>{% if pulse_ledger %}Watching XRPL {{ network|capitalize }}<br><span class="mono small">ledger {{ "{:,}".format(pulse_ledger) }}</span>{% else %}XRPL {{ network|capitalize }}<br><span class="small">waiting for the monitor</span>{% endif %}</span>
+        <span>{% if pulse_ledger %}Live on XRPL {{ network|capitalize }}<br><span class="mono small">#{{ "{:,}".format(pulse_ledger) }}</span>{% else %}XRPL {{ network|capitalize }}<br><span class="small">monitor starting</span>{% endif %}</span>
       </span>
       <div class="signout">
         <span>{{ user.username }}</span>

@@ -2,7 +2,7 @@
 
 ## Problem and users
 
-People who hold XRP or tokens in their own wallet have no one watching it for them. When a seed leaks, the thief usually adds a signing key, drains the wallet and moves the money through a few new accounts to an exchange, all in a few minutes. Wallet Guardian is for two groups: the owner, who needs to know at once and in plain words what happened and what to do, and an analyst, who needs to follow the money and tell the exchange which deposit tag to freeze.
+People who hold XRP or tokens in their own wallet have no one watching it for them. When a seed leaks, the thief usually adds a signing key, drains the wallet and moves the money through a few new accounts to an exchange, all in a few minutes. Ripple Guardian is for two groups: the owner, who needs to know at once and in plain words what happened and what to do, and an analyst, who needs to follow the money and tell the exchange which deposit tag to freeze.
 
 XRPL fits this better than most chains for two reasons. Every payment records what it actually delivered (`delivered_amount`), so amounts can be trusted. And deposits to exchanges carry a destination tag that identifies one customer account, so a trace can end at "this exchange, this customer" rather than "a big exchange wallet".
 

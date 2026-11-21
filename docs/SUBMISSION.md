@@ -6,7 +6,7 @@ Draft text for the hackathon app. A human submits it before Sat 21 Nov 12:00 CET
 
 | Field | Value |
 |---|---|
-| Project name | XRPL Wallet Guardian |
+| Project name | Ripple Guardian |
 | Track | XRPL applications |
 | Short description | Watches XRPL wallets for their owners, tells them in plain words when a key changes or funds leave, and traces stolen XRP hop by hop to the exchange and destination tag that received it. |
 | Repository | https://github.com/Cyber-Guys/xrpl_hackathon (TODO: make it accessible to the judges) |
@@ -18,7 +18,7 @@ Draft text for the hackathon app. A human submits it before Sat 21 Nov 12:00 CET
 
 When an XRPL seed leaks, the thief adds a signing key, empties the wallet and pushes the money through new accounts to an exchange in a few minutes. Tracing services exist, but they are sold to exchanges and police; the owner finds out late and has nothing to show anyone.
 
-Wallet Guardian is one web app with two roles. Owners add the addresses they want watched, with only a username and no personal data. A worker follows those wallets over WebSocket and polling. When a signing key changes, money leaves above the owner's threshold, or the wallet deals with an account an analyst has flagged, the owner gets a notification and a status with the steps to take now.
+Ripple Guardian is one web app with two roles. Owners add the addresses they want watched, with only a username and no personal data. A worker follows those wallets over WebSocket and polling. When a signing key changes, money leaves above the owner's threshold, or the wallet deals with an account an analyst has flagged, the owner gets a notification and a status with the steps to take now.
 
 Analysts see what the detectors raised: a takeover (key change followed by a drain to new destinations) or a funnel (several accounts forwarding to the same exchange tag). They can start a trace. The tracer uses a haircut taint model in ledger order, reads `delivered_amount` so partial payments can't fake amounts, accounts for clean balances, and stops at known exchanges, reporting the destination tag: the one number an exchange needs to find the customer. The victim is notified with the exchange, the tag and the amount. Analysts publish flags with their name and reason, and every user can check an address against them before paying.
 

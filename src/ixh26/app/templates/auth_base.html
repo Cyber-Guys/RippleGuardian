@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="auth">
-  <div class="auth-card glass">
+  <div class="auth-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="auth-card">
     <section class="auth-story">
-      {% include "partials/mark.html" %}
+      {% with mark_id="auth" %}{% include "partials/mark.html" %}{% endwith %}
       <h1>Know the moment your wallet moves</h1>
-      <p>Wallet Guardian watches your XRP Ledger wallets and tells you in plain words when something looks wrong: a key change, a drain, a payment to an account our analysts flagged.</p>
-      <p class="small muted">XRPL {{ network|capitalize }}. A username is all we ask for, no email and no personal data.</p>
+      <p>Live protection for XRP Ledger wallets. If yours is drained, we show you where the money went.</p>
+      <p class="small">XRPL {{ network|capitalize }}. Username only, no personal data.</p>
     </section>
     <section class="auth-form">
       {% block form %}{% endblock %}

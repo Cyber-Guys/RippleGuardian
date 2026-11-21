@@ -50,22 +50,33 @@ def main(args: argparse.Namespace) -> int:
         shoot(analyst, args.base, "/analyst", "analyst-1-overview")
         shoot(analyst, args.base, "/analyst/findings", "analyst-2-findings")
         shoot(analyst, args.base, "/analyst/traces/1", "analyst-3-trace")
-        row = analyst.locator("tr:has(summary)").first  # first unflagged, unlabelled endpoint
-        flagged = row.locator("a.mono").first.get_attribute("title")
-        row.locator("summary").click()
-        row.locator("select[name=category]").select_option("theft")
-        row.locator("input[name=reason]").fill("Mule account: forwarded stolen XRP to an exchange")
-        row.locator("button[type=submit]").click()
-        analyst.wait_for_load_state("networkidle")
+        rows = analyst.locator("tr:has(summary)")
+        if rows.count():  # flag the first unflagged, unlabelled endpoint
+            row = rows.first
+            flagged = row.locator("a.mono").first.get_attribute("title")
+            row.locator("summary").click()
+            row.locator("select[name=category]").select_option("theft")
+            row.locator("input[name=reason]").fill("Mule account: forwarded stolen XRP")
+            row.locator("button[type=submit]").click()
+            analyst.wait_for_load_state("networkidle")
+        else:  # every endpoint already flagged by an earlier run: reuse one
+            analyst.goto(f"{args.base}/flags")
+            flagged = analyst.locator("table a.mono").first.get_attribute("title")
         print(f"ok  analyst flagged {flagged}")
 
         user = browser.new_page(viewport={"width": 1440, "height": 900})
         user.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
         login(user, args.base, args.user)
         shoot(user, args.base, "/", "user-1-wallets")
-        wallet = user.locator("table a").first.get_attribute("href")
+        wallet = user.locator("a.wallet-card").first.get_attribute("href")
         shoot(user, args.base, wallet or "/", "user-2-wallet")
-        shoot(user, args.base, "/notifications", "user-3-notifications")
+        shoot(user, args.base, f"{wallet}/recover", "user-3-recover")
+        pdf = user.request.get(f"{args.base}{wallet}/report.pdf")
+        if not pdf.body().startswith(b"%PDF"):
+            raise SystemExit("incident report is not a PDF")
+        (OUT / "incident-report.pdf").write_bytes(pdf.body())
+        print(f"ok  incident report -> {OUT / 'incident-report.pdf'}")
+        shoot(user, args.base, "/notifications", "user-3b-notifications")
         shoot(user, args.base, f"/flags?q={flagged}", "user-4-check-address")
         if "Flagged as theft" not in user.content():
             raise SystemExit("the analyst's flag is not visible to the user")

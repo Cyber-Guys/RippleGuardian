@@ -1,6 +1,8 @@
-# XRPL Wallet Guardian
+# Ripple Guardian
 
-Wallet Guardian watches XRP Ledger wallets for the people who own them. When a wallet's signing keys change or its funds leave, the owner gets a notification in plain words with a short list of what to do next. Behind the scenes, analysts see what the detectors raised, trace stolen XRP hop by hop with a haircut taint model until it reaches an exchange and the exact destination tag, and publish flags that every user can look up before sending money. It runs on XRPL Testnet, and every demo transaction is real.
+<img src="src/ixh26/app/static/logo.svg" width="72" alt="Ripple Guardian mark">
+
+Ripple Guardian watches XRP Ledger wallets for the people who own them. When a wallet's signing keys change or its funds leave, the owner gets a notification in plain words with a short list of what to do next. Behind the scenes, analysts see what the detectors raised, trace stolen XRP hop by hop with a haircut taint model until it reaches an exchange and the exact destination tag, and publish flags that every user can look up before sending money. It runs on XRPL Testnet, and every demo transaction is real.
 
 IXH26 Bari, Track 2 (XRPL applications). Built during the hackathon, 20 to 21 November 2026.
 
@@ -58,6 +60,7 @@ On WSL, Python DNS lookups can stall on IPv6 and make every Testnet call time ou
 | Haircut taint follows time order, dilutes with clean funds and stops at 1% or the hop limit | `tests/core/test_taint.py` |
 | The owner hears about key changes, outgoing payments and flagged counterparties, within their own settings | `tests/core/test_alerts.py`, `tests/flows/test_flows.py` |
 | A missed WebSocket message is caught up by polling, without alerting on old history | `tests/flows/test_flows.py::test_polling_backfills_silently_then_catches_up_with_alerts` |
+| A robbed owner gets a 4-step recovery screen, can ask for a trace, and downloads a PDF incident report with every tx link and a SHA-256 evidence fingerprint | `tests/flows/test_report.py`, `tests/app/test_web.py::test_owner_can_request_a_trace_of_their_theft` |
 | Users can't open analyst pages; analyst flags are visible to users | `tests/app/test_web.py`, `scripts/e2e_browser.py` run in [docs/E2E.md](docs/E2E.md) |
 | Takeover and funnel detectors fire on live Testnet data | findings in [docs/E2E.md](docs/E2E.md); rules in `tests/core/test_detection.py` |
 | Mainnet is refused, amounts are never floats, seeds can't be committed | `tests/test_config.py`, `tests/test_contracts.py`, `tests/test_secret_scan.py` |

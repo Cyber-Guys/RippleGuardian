@@ -1,80 +1,71 @@
 {% extends "base.html" %}
-{% from "macros.html" import address, tx, tag, empty, status_hero %}
+{% from "macros.html" import address, tx, tag, empty, alarm %}
 {% from "partials/icons.html" import icon %}
 {% block title %}{{ wallet.label or "Wallet" }}{% endblock %}
 {% block main %}
+<a class="back" href="/">Wallets</a>
 <div class="page-head" data-enter>
-  <div>
-    <h1>{{ wallet.label or "Unnamed wallet" }}</h1>
-    <p class="mono small">{{ wallet.address }}</p>
-  </div>
-  <a class="btn btn-quiet" href="{{ account_url(wallet.address) }}" target="_blank" rel="noopener">Open in explorer {{ icon("external-link") }}</a>
+  <div><h1>{{ wallet.label or "Unnamed wallet" }}</h1><p class="mono small">{{ wallet.address }}</p></div>
+  <a class="btn btn-quiet" href="{{ account_url(wallet.address) }}" target="_blank" rel="noopener">Explorer {{ icon("external-link") }}</a>
 </div>
 <div class="stack">
-  {{ status_hero(status) }}
-  {% if not synced %}<p class="notice notice-sim">{{ icon("radar") }} Reading this wallet's history from the ledger. This page fills in within a minute.</p>{% endif %}
+  {% set cta %}{% if status.state == "compromised" %}<a class="btn btn-danger btn-big" href="/wallets/{{ wallet.address }}/recover">Start recovery</a>{% endif %}<a class="btn btn-quiet btn-big" href="/wallets/{{ wallet.address }}/report.pdf">{{ icon("download") }} Report</a>{% endset %}
+  {{ alarm(status, cta) }}
+  {% if not synced %}<p class="notice notice-sim">{{ icon("radar") }} Reading history from the ledger</p>{% endif %}
 
   <section class="panel" data-enter style="--i: 1">
-    <div class="panel-head"><h2>Balance from recorded transfers</h2><span class="small muted">XRP, fees and reserves not included</span></div>
-    {% if balance_chart %}<div class="panel-body">{{ balance_chart }}</div>{% else %}<div class="empty"><strong>Not enough history yet</strong>The chart appears after two transfers.</div>{% endif %}
+    <div class="panel-head"><h2>Balance</h2><span class="small muted">XRP from recorded transfers</span></div>
+    {% if balance_chart %}<div class="panel-body">{{ balance_chart }}</div>{% else %}<div class="empty"><strong>Not enough history yet</strong></div>{% endif %}
     {% if statement.assets %}
-    <dl class="stats" style="border-top: 1px solid var(--hairline)">
+    <dl class="stats">
       {% for a in statement.assets %}
-      <div class="stat"><dt>{{ a.asset }} received</dt><dd>{{ "{:,f}".format(a.received.normalize()) }}</dd></div>
-      <div class="stat"><dt>{{ a.asset }} sent</dt><dd>{{ "{:,f}".format(a.sent.normalize()) }}</dd></div>
+      <div class="stat"><dt>{{ a.asset }} in</dt><dd>{{ "{:,f}".format(a.received.normalize()) }}</dd></div>
+      <div class="stat"><dt>{{ a.asset }} out</dt><dd>{{ "{:,f}".format(a.sent.normalize()) }}</dd></div>
       {% endfor %}
       <div class="stat"><dt>Counterparties</dt><dd>{{ statement.counterparties }}</dd></div>
-      <div class="stat"><dt>Last activity</dt><dd class="small">{{ statement.last.strftime('%d %b, %H:%M') }} UTC</dd></div>
+      <div class="stat"><dt>Last activity</dt><dd class="small">{{ statement.last.strftime('%d %b, %H:%M') }}</dd></div>
     </dl>
     {% endif %}
   </section>
 
-  <div class="grid-2" data-enter style="--i: 2">
-    <section class="panel">
-      <div class="panel-head"><h2>History</h2><span class="small muted">Latest 100</span></div>
-      {% if transfers %}
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>When (UTC)</th><th>Counterparty</th><th class="num">Amount</th><th>Transaction</th></tr></thead>
-          <tbody>
-          {% for t in transfers %}
-            {% set outgoing = t.source == wallet.address %}
-            {% set other = t.destination if outgoing else t.source %}
-            <tr {% if other in flagged or t.tx_hash in flagged %}data-flagged{% endif %}>
-              <td class="small">{{ t.close_time.strftime('%d %b, %H:%M') }}</td>
-              <td>{{ "To" if outgoing else "From" }} {{ address(other, account_url, t.destination_tag if outgoing else None) }}
-                {% if other in flagged %} {{ tag("flagged as " ~ flagged[other].category.replace('_', ' '), "flagged") }}{% endif %}</td>
-              <td class="num {{ 'dir-out' if outgoing else 'dir-in' }}">{{ "−" if outgoing else "+" }}{{ amount_text(t) }}</td>
-              <td>{{ tx(t.tx_hash, tx_url) }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-        {{ empty("No transfers yet", "Payments in and out of this wallet will appear here.") }}
-      {% endif %}
-    </section>
+  <section class="panel" data-enter style="--i: 2">
+    <div class="panel-head"><h2>History</h2><span class="small muted">latest 100</span></div>
+    {% if transfers %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>When (UTC)</th><th>Counterparty</th><th class="num">Amount</th><th>Tx</th></tr></thead>
+        <tbody>
+        {% for t in transfers %}
+          {% set outgoing = t.source == wallet.address %}
+          {% set other = t.destination if outgoing else t.source %}
+          <tr {% if other in flagged or t.tx_hash in flagged %}data-flagged{% endif %}>
+            <td class="small">{{ t.close_time.strftime('%d %b, %H:%M') }}</td>
+            <td>{{ "To" if outgoing else "From" }} {{ address(other, account_url, t.destination_tag if outgoing else None) }}
+              {% if other in flagged %} {{ tag(flagged[other].category.replace('_', ' '), "flagged") }}{% endif %}</td>
+            <td class="num {{ '' if outgoing else 'dir-in' }}">{{ "−" if outgoing else "+" }}{{ amount_text(t) }}</td>
+            <td>{{ tx(t.tx_hash, tx_url) }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}{{ empty("No transfers yet", "") }}{% endif %}
+  </section>
 
-    <section class="panel">
-      <div class="panel-head"><h2>Notify me when</h2></div>
-      <form class="panel-body" method="post" action="/wallets/{{ wallet.address }}/settings">
-        {% if saved %}<p class="notice notice-ok" role="status">Settings saved</p>{% endif %}
-        <div class="field"><label for="label">Name</label><input id="label" name="label" type="text" maxlength="40" value="{{ wallet.label }}"></div>
-        <label class="check"><input type="checkbox" name="notify_security" value="true" {% if wallet.notify_security %}checked{% endif %}> its signing keys change</label>
-        <label class="check"><input type="checkbox" name="notify_flagged" value="true" {% if wallet.notify_flagged %}checked{% endif %}> it deals with a flagged account</label>
-        <label class="check"><input type="checkbox" name="notify_outgoing" value="true" {% if wallet.notify_outgoing %}checked{% endif %}> it sends XRP</label>
-        <div class="field">
-          <label for="min_outgoing_xrp">Only payments of at least (XRP)</label>
-          <input id="min_outgoing_xrp" name="min_outgoing_xrp" type="text" inputmode="decimal" value="{{ min_outgoing_xrp }}">
-          <span class="hint">0 means every outgoing payment</span>
-        </div>
-        <button class="btn" type="submit">Save settings</button>
-      </form>
-      <form class="panel-foot" method="post" action="/wallets/{{ wallet.address }}/remove">
-        <button class="btn btn-quiet btn-small" type="submit">Stop watching this wallet</button>
-      </form>
-    </section>
-  </div>
+  <details class="panel disclose" data-enter style="--i: 3" {% if saved %}open{% endif %}>
+    <summary>Notification settings {{ icon("chevron-down", cls="x-chev") }}</summary>
+    <form method="post" action="/wallets/{{ wallet.address }}/settings" style="display: grid; gap: var(--s-3); padding: 0 var(--s-5) var(--s-5)">
+      {% if saved %}<p class="notice notice-ok" role="status">{{ icon("check") }} Saved</p>{% endif %}
+      <div class="field"><label for="label">Name</label><input id="label" name="label" type="text" maxlength="40" value="{{ wallet.label }}"></div>
+      <label class="check"><input type="checkbox" name="notify_security" value="true" {% if wallet.notify_security %}checked{% endif %}> Key changes</label>
+      <label class="check"><input type="checkbox" name="notify_flagged" value="true" {% if wallet.notify_flagged %}checked{% endif %}> Contact with flagged accounts</label>
+      <label class="check"><input type="checkbox" name="notify_outgoing" value="true" {% if wallet.notify_outgoing %}checked{% endif %}> Outgoing XRP</label>
+      <div class="field" style="max-width: 240px"><label for="min_outgoing_xrp">From (XRP)</label><input id="min_outgoing_xrp" name="min_outgoing_xrp" type="text" inputmode="decimal" value="{{ min_outgoing_xrp }}"></div>
+      <div class="actions"><button class="btn" type="submit">Save</button></div>
+    </form>
+    <form method="post" action="/wallets/{{ wallet.address }}/remove" style="padding: 0 var(--s-5) var(--s-5)">
+      <button class="btn btn-quiet btn-small" type="submit">Stop watching</button>
+    </form>
+  </details>
 </div>
 {% endblock %}

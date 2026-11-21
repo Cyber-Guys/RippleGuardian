@@ -9,6 +9,7 @@ Colours come from CSS classes (``app.css``), so charts follow the design tokens.
 
 from __future__ import annotations
 
+import zlib
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
@@ -129,7 +130,7 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 320) -
     scale = Decimal(usable) * Decimal("0.85") / stolen
 
     def col_x(hop: int) -> float:
-        return _scale(hop, 0, hops, 130, width - 250)
+        return _scale(hop, 0, hops, 170, width - 300)
 
     pos: dict[tuple[tuple[str, int | None], int], tuple[float, float, float]] = {}
     for hop in range(hops + 1):
@@ -143,7 +144,9 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 320) -
 
     out_used: dict[tuple, float] = defaultdict(float)
     in_used: dict[tuple, float] = defaultdict(float)
-    bands = []
+    bands: list[str] = []
+    particles: list[str] = []
+    uid = zlib.crc32(f"{report['params']['origin']}{report.get('computed_at')}".encode()) % 10**6
     for e in sorted(report["edges"], key=lambda e: (e["hop"], -Decimal(e["taint_value"]))):
         src_key = next((k for k in pos if k[0][0] == e["source"] and k[1] == e["hop"] - 1), None)
         dst_key = next((k for k in pos if k[0][0] == e["destination"] and k[1] == e["hop"]), None)
@@ -157,12 +160,23 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 320) -
         out_used[src_key] += thick
         in_used[dst_key] += thick
         mid = (sx + col_w + dx) / 2
+        d = f"M{sx + col_w:.1f},{y0:.1f} C{mid:.1f},{y0:.1f} {mid:.1f},{y1:.1f} {dx:.1f},{y1:.1f}"
+        band_id = f"band-{uid}-{len(bands)}"
         bands.append(
-            f'<path class="flow-band" style="--i:{e["hop"]}" stroke-width="{thick:.1f}" '
-            f'd="M{sx + col_w:.1f},{y0:.1f} C{mid:.1f},{y0:.1f} {mid:.1f},{y1:.1f} '
-            f'{dx:.1f},{y1:.1f}"><title>{escape(e["taint"])} via {escape(e["tx_hash"][:12])}…'
-            f"</title></path>"
+            f'<path id="{band_id}" class="flow-band" style="--i:{e["hop"]}" pathLength="1" '
+            f'stroke-width="{thick:.1f}" d="{d}"><title>{escape(e["taint"])} via '
+            f"{escape(e['tx_hash'][:12])}…</title></path>"
         )
+        # value "particles": bigger flows carry more dots; they start once their hop has drawn
+        dots = 1 + min(int(thick // 14), 3)
+        for k in range(dots):
+            begin = 0.35 * e["hop"] + 1.2 + k * 1.6 / dots
+            particles.append(
+                f'<circle class="flow-particle" opacity="0" r="{min(2 + thick / 18, 4.5):.1f}">'
+                f'<set attributeName="opacity" to="1" begin="{begin:.2f}s"/>'
+                f'<animateMotion dur="1.6s" begin="{begin:.2f}s" repeatCount="indefinite">'
+                f'<mpath href="#{band_id}"/></animateMotion></circle>'
+            )
     rects = []
     for n in nodes:
         x, top, h = pos[(n.key, n.hop)]
@@ -187,7 +201,7 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 320) -
     return Markup(
         f'<svg class="chart flow" viewBox="0 0 {width} {height}" role="img" '
         f'aria-label="Funds flow over {hops} hops">{hop_labels}{"".join(bands)}'
-        f"{''.join(rects)}</svg>"
+        f'<g class="flow-particles">{"".join(particles)}</g>{"".join(rects)}</svg>'
     )
 
 

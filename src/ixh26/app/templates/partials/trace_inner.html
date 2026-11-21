@@ -1,21 +1,12 @@
 {% from "macros.html" import address, tx, tag, flag_form %}
 {% from "partials/icons.html" import icon %}
 {% if trace.status == "pending" %}
-  <section class="status-hero glass" data-state="attention" role="status"><span class="status-icon">{{ icon("radar") }}</span><div><h2>Tracing</h2><p>Reading each hop from the ledger. This usually takes under a minute.</p></div></section>
+  <section class="alarm" data-state="attention" role="status"><span class="alarm-icon">{{ icon("radar") }}</span><div><h2>Tracing</h2><p>Reading each hop from the ledger</p></div></section>
 {% elif trace.status == "failed" %}
-  <section class="status-hero glass" data-state="compromised" role="alert"><span class="status-icon">{{ icon("shield-alert") }}</span><div><h2>Trace failed</h2><p>{{ trace.error }}</p></div></section>
+  <section class="alarm" data-state="compromised" role="alert"><span class="alarm-icon">{{ icon("shield-alert") }}</span><div><h2>Trace failed</h2><p>{{ trace.error }}</p></div></section>
 {% else %}
 <div class="stack">
-  <section class="panel">
-    <div class="panel-head"><h2>Where the stolen funds went</h2><span class="small muted">{{ result.params.stolen }} taken</span></div>
-    {% if flow %}<div class="panel-body">{{ flow }}</div>{% endif %}
-    <div class="chart-legend">
-      <span><i style="background: var(--ink)"></i>Robbed wallet</span>
-      <span><i style="background: var(--ink-2)"></i>Pass-through account</span>
-      <span><i style="background: var(--danger)"></i>Where funds stopped or a known entity</span>
-      <span><i style="background: var(--accent); opacity: .35"></i>Band width = stolen value carried</span>
-    </div>
-  </section>
+  {% with title="Where the stolen funds went", subtitle=result.params.stolen ~ " stolen", trace_id=trace.id, link="" %}{% include "partials/flow_panel.html" %}{% endwith %}
 
   <section class="panel">
     <div class="panel-head"><h2>Endpoints</h2>{% if result.truncated %}<span class="small muted">Branches under {{ (result.params.min_ratio|float * 100)|round(1) }}% of the theft or past {{ result.params.max_hops }} hops were not followed</span>{% endif %}</div>

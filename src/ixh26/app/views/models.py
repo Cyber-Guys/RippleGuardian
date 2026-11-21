@@ -46,7 +46,7 @@ def wallet_state(store: Store, user_id: int, address: str, flagged: dict[str, An
         return WalletState(
             "compromised",
             "This wallet may be compromised",
-            "Its signing keys changed or its funds were traced to an exchange.",
+            "Its keys changed and funds left. Act now.",
             COMPROMISED_STEPS,
         )
     if address in flagged:
@@ -59,20 +59,20 @@ def wallet_state(store: Store, user_id: int, address: str, flagged: dict[str, An
     if any(a.kind == AlertKind.FLAGGED_COUNTERPARTY.value for a in unread):
         return WalletState(
             "attention",
-            "This wallet dealt with a flagged account",
-            "Check the notification before sending more funds to that account.",
+            "This wallet touched a flagged account",
+            "Don't send it more funds until you check.",
         )
-    return WalletState("safe", "All clear", "Nothing unusual since you started watching it.")
+    return WalletState("safe", "All clear", "Nothing unusual.")
 
 
 def overall_state(named: list[tuple[str, WalletState]]) -> WalletState:
     """The dashboard headline: the most serious state among the user's wallets, by name."""
     order = {"compromised": 0, "attention": 1, "safe": 2}
     if not named:
-        return WalletState("safe", "No wallets yet", "Add a wallet address to start watching it.")
+        return WalletState("safe", "No wallets yet", "Add one to start watching it.")
     name, worst = min(named, key=lambda ns: order[ns[1].state])
     if worst.state == "safe":
-        return WalletState("safe", "Your wallets look safe", "No warnings on any watched wallet.")
+        return WalletState("safe", "All wallets safe", "We're watching the ledger for you.")
     headline = worst.headline.replace("This wallet", name, 1)
     return WalletState(worst.state, headline, worst.detail, worst.steps)
 
@@ -134,7 +134,10 @@ def analyst_overview(store: Store) -> dict[str, Any]:
     for f in findings:
         by_kind[f.kind.replace("_", " ").capitalize()] += 1
     latest_done = next((t for t in traces if t.status == "done" and t.result), None)
+    exposure = exchange_exposure(traces)
     return {
+        "xrp_located": sum((e["xrp"] for e in exposure), Decimal(0)),
+        "exposure": exposure,
         "open_findings": sum(f.status == "open" for f in findings),
         "active_flags": len(store.flags()),
         "watched": len(store.watched_addresses()),
@@ -143,3 +146,23 @@ def analyst_overview(store: Store) -> dict[str, Any]:
         "recent_findings": findings[:6],
         "latest_trace": latest_done,
     }
+
+
+def exchange_exposure(traces: list[Any]) -> list[dict[str, Any]]:
+    """Stolen XRP that reached each known entity and deposit tag, summed over finished traces.
+
+    This is the list an exchange acts on: which customer account (tag) to freeze.
+    """
+    totals: dict[tuple[str, str, int | None], Decimal] = defaultdict(Decimal)
+    for row in traces:
+        if row.status != "done" or not row.result or row.currency != "XRP":
+            continue
+        for s in row.result["sinks"]:
+            if s.get("label") and "taint_value" in s:
+                key = (s["label"], s["address"], s["destination_tag"])
+                totals[key] += Decimal(s["taint_value"]) / XRP1
+    top = max(totals.values(), default=Decimal(1)) or Decimal(1)
+    return [
+        {"label": k[0], "address": k[1], "tag": k[2], "xrp": v, "pct": round(v / top * 100)}
+        for k, v in sorted(totals.items(), key=lambda kv: -kv[1])
+    ]

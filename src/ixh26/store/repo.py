@@ -511,7 +511,21 @@ def _exists(s: Session, model: type[Base], **where: Any) -> bool:
 
 def latest_ledger(store: Store) -> int | None:
     """Highest ledger the worker has fully processed for any wallet (the live pulse)."""
-    from sqlalchemy import func as sa_func
-
     with store.session() as s:
-        return s.scalar(select(sa_func.max(Cursor.ledger_index)))
+        return s.scalar(select(func.max(Cursor.ledger_index)))
+
+
+def recent_transfers(store: Store, limit: int = 8) -> list[Transfer]:
+    """Newest stored transfers across every account the worker has seen."""
+    with store.session() as s:
+        q = select(TransferRow).order_by(
+            TransferRow.ledger_index.desc(), TransferRow.tx_index.desc()
+        )
+        return [to_transfer(r) for r in s.scalars(q.limit(limit))]
+
+
+def traces_of(store: Store, origin: str) -> list[TraceRow]:
+    """Traces started from ``origin``, newest first."""
+    with store.session() as s:
+        q = select(TraceRow).where(TraceRow.origin == origin).order_by(TraceRow.id.desc())
+        return list(s.scalars(q))

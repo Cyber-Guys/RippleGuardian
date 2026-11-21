@@ -3,41 +3,43 @@
 {% block title %}Overview{% endblock %}
 {% block main %}
 <div class="page-head" data-enter>
-  <div>
-    <h1>Overview</h1>
-    <p>What the detectors raised, what is being traced, and what users can already see as flagged.</p>
-  </div>
-  <a class="btn" href="/analyst/traces">Start a trace</a>
+  <h1>Overview</h1>
+  <a class="btn" href="/analyst/traces">New trace</a>
 </div>
 <div class="stack">
   <dl class="kpis" data-enter style="--i: 1">
-    <div class="kpi"><dt>Open findings</dt><dd>{{ o.open_findings }}</dd><div class="kpi-note">waiting for review</div></div>
-    <div class="kpi"><dt>Active flags</dt><dd>{{ o.active_flags }}</dd><div class="kpi-note">visible to every user</div></div>
-    <div class="kpi"><dt>Traces completed</dt><dd>{{ o.traces_done }}</dd><div class="kpi-note">haircut model</div></div>
-    <div class="kpi"><dt>Wallets watched</dt><dd>{{ o.watched }}</dd><div class="kpi-note">across all users</div></div>
+    <div class="kpi kpi-lead"><dt>Located at exchanges</dt><dd>{{ "{:,.2f}".format(o.xrp_located) }}<small>XRP</small></dd></div>
+    <div class="kpi"><dt>Open findings</dt><dd>{{ o.open_findings }}</dd></div>
+    <div class="kpi"><dt>Traces</dt><dd>{{ o.traces_done }}</dd></div>
+    <div class="kpi"><dt>Active flags</dt><dd>{{ o.active_flags }}</dd></div>
   </dl>
 
-  <section class="panel" data-enter style="--i: 2">
-    <div class="panel-head">
-      <h2>Latest trace</h2>
-      {% if o.latest_trace %}<a class="small" href="/analyst/traces/{{ o.latest_trace.id }}">Open trace {{ o.latest_trace.id }}</a>{% endif %}
-    </div>
-    {% if flow %}
-      <div class="panel-body">{{ flow }}</div>
-      <div class="chart-legend">
-        <span><i style="background: var(--ink)"></i>Robbed wallet</span>
-        <span><i style="background: var(--ink-2)"></i>Pass-through account</span>
-        <span><i style="background: var(--danger)"></i>Where funds stopped or a known entity</span>
-        <span><i style="background: var(--accent); opacity: .35"></i>Band width = stolen value carried</span>
-      </div>
-    {% else %}
-      {{ empty("No trace yet", "Start one from a robbed wallet or from a takeover finding.") }}
-    {% endif %}
-  </section>
+  {% if flow %}
+    {% with title="Latest trace", subtitle=o.latest_trace.result.params.stolen ~ " stolen", trace_id=o.latest_trace.id, link="/analyst/traces/" ~ o.latest_trace.id, attrs='data-enter style="--i: 2"' %}{% include "partials/flow_panel.html" %}{% endwith %}
+  {% else %}
+    <section class="panel" data-enter style="--i: 2">{{ empty("No trace yet", "Start one from a takeover finding.") }}</section>
+  {% endif %}
 
-  <div class="grid-2" data-enter style="--i: 3">
+  <div class="grid-even" data-enter style="--i: 3">
     <section class="panel">
-      <div class="panel-head"><h2>Recent findings</h2><a class="small" href="/analyst/findings">Review all</a></div>
+      <div class="panel-head"><h2>Exchange exposure</h2><span class="small muted">deposit tags to freeze</span></div>
+      {% if o.exposure %}
+      <ul class="ranked ranked-danger">
+        {% for row in o.exposure %}
+        <li><span>{{ row.label }} <span class="mono muted small">tag {{ row.tag }}</span></span><span class="num">{{ "{:,.2f}".format(row.xrp) }} XRP</span><span class="bar"><span style="--pct: {{ row.pct }}%"></span></span></li>
+        {% endfor %}
+      </ul>
+      {% else %}<div class="empty"><strong>Nothing located yet</strong></div>{% endif %}
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Live ledger</h2><span class="pulse small" data-live="true"><span class="pulse-dot"></span></span></div>
+      <div hx-get="/ui/live" hx-trigger="load, every 5s" hx-swap="innerHTML"><div class="empty"><strong>Loading</strong></div></div>
+    </section>
+  </div>
+
+  <div class="grid-2" data-enter style="--i: 4">
+    <section class="panel">
+      <div class="panel-head"><h2>Recent findings</h2><a class="small" href="/analyst/findings">Review</a></div>
       {% if o.recent_findings %}
       <div class="table-wrap">
         <table>
@@ -55,10 +57,10 @@
           </tbody>
         </table>
       </div>
-      {% else %}{{ empty("No findings yet", "They appear when the detectors see a takeover or funds funnelling into one destination.") }}{% endif %}
+      {% else %}{{ empty("No findings yet", "") }}{% endif %}
     </section>
     <section class="panel">
-      <div class="panel-head"><h2>Findings by detector</h2></div>
+      <div class="panel-head"><h2>By detector</h2></div>
       {% if o.by_kind %}
       <ul class="ranked">
         {% for row in o.by_kind %}

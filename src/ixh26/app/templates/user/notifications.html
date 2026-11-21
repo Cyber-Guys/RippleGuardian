@@ -4,11 +4,11 @@
 <div class="page-head" data-enter>
   <div>
     <h1>Notifications</h1>
-    <p>Everything that happened on your watched wallets, newest first. New ones appear on their own.</p>
+    
   </div>
   <form method="post" action="/notifications/read"><button class="btn btn-quiet" type="submit">Mark all as read</button></form>
 </div>
-<section class="panel" data-enter style="--i: 1" hx-get="/ui/feed?limit=100" hx-trigger="every 5s" hx-swap="innerHTML">
+<section class="panel" data-enter style="--i: 1" hx-get="/ui/feed?limit=100" hx-trigger="every 5s [!this.matches(':hover, :focus-within')]" hx-swap="innerHTML">
   {% include "partials/feed.html" %}
 </section>
 {% endblock %}

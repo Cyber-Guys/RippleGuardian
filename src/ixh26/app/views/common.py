@@ -19,6 +19,15 @@ from ixh26.store.repo import Store, latest_ledger
 HERE = Path(__file__).parent.parent
 templates = Jinja2Templates(directory=HERE / "templates")
 XRP1 = Decimal(1_000_000)
+BRAND = "Ripple Guardian"  # the product name, in one place
+
+# Short notification titles; the full message is shown when the item expands.
+ALERT_TITLES = {
+    "security_change": "Signing key changed",
+    "outgoing_payment": "XRP sent",
+    "flagged_counterparty": "Flagged account contact",
+    "taint_at_exchange": "Stolen funds located",
+}
 
 
 class LoginRequired(Exception):
@@ -78,6 +87,8 @@ def render(
     settings: config.Settings = request.app.state.settings
     store: Store = request.app.state.store
     base = {
+        "brand": BRAND,
+        "alert_titles": ALERT_TITLES,
         "user": user,
         "path": request.url.path,
         "network": settings.network.name,

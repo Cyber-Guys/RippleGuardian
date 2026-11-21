@@ -1,50 +1,44 @@
 {% extends "base.html" %}
-{% from "macros.html" import errors, tag, empty, status_hero %}
+{% from "macros.html" import errors, tag, empty, alarm %}
 {% from "partials/icons.html" import icon %}
 {% block title %}Your wallets{% endblock %}
 {% block main %}
-<div class="page-head" data-enter>
-  <div>
-    <h1>Your wallets</h1>
-    <p>We read these addresses on the XRP Ledger as new transactions are validated. Only you can see this list.</p>
-  </div>
-</div>
 <div class="stack">
-  {{ status_hero(overall) }}
+  {% set worst = (wallets|selectattr("status.state", "equalto", "compromised")|first) %}
+  {% set cta %}{% if worst %}<a class="btn btn-danger btn-big" href="/wallets/{{ worst.wallet.address }}/recover">Start recovery</a><a class="btn btn-quiet btn-big" href="/wallets/{{ worst.wallet.address }}/report.pdf">{{ icon("download") }} Report</a>{% endif %}{% endset %}
+  {{ alarm(overall, cta) }}
   {{ errors(error) }}
   <div class="grid-2" data-enter style="--i: 1">
     <section class="panel">
-      <div class="panel-head"><h2>Watched wallets</h2><span class="small muted">{{ wallets|length }}</span></div>
+      <div class="panel-head"><h2>Wallets</h2><span class="small muted">{{ wallets|length }} watched</span></div>
       {% if wallets %}
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Name</th><th>Address</th><th>Status</th></tr></thead>
-          <tbody>
-          {% for item in wallets %}
-            <tr>
-              <td><a href="/wallets/{{ item.wallet.address }}">{{ item.wallet.label or "Unnamed wallet" }}</a></td>
-              <td class="mono small">{{ item.wallet.address }}</td>
-              <td>{{ tag(item.status.headline if item.status.state != "safe" else "All clear", item.status.state) }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
+      <div class="wallets">
+        {% for item in wallets %}
+        <a class="wallet-card" href="/wallets/{{ item.wallet.address }}" data-state="{{ item.status.state }}">
+          <strong>{{ item.wallet.label or "Unnamed wallet" }}</strong>
+          <span class="mono small muted">{{ short(item.wallet.address, 8, 6) }}</span>
+          <span>{{ tag("Compromised" if item.status.state == "compromised" else "Check" if item.status.state == "attention" else "Safe", item.status.state) }}</span>
+        </a>
+        {% endfor %}
       </div>
       {% else %}
-        {{ empty("No wallets yet", "Paste the address of a wallet you own below to start watching it.") }}
+        {{ empty("No wallets yet", "Add the address of a wallet you own.") }}
       {% endif %}
-      <div class="panel-foot">
-        <form method="post" action="/wallets" class="form-row">
-          <div class="field"><label for="address">Wallet address</label><input id="address" name="address" type="text" required placeholder="r…" autocomplete="off" spellcheck="false"></div>
-          <div class="field" style="flex: 0 1 180px"><label for="label">Name</label><input id="label" name="label" type="text" maxlength="40" placeholder="Savings"></div>
-          <button class="btn" type="submit">Watch wallet</button>
-        </form>
-        <p class="small muted" style="margin-top: var(--s-2)">An address is public. Never type your secret key or seed into any website, this one included.</p>
-      </div>
+      <details class="disclose" style="border-top: 1px solid var(--hairline)" {% if not wallets %}open{% endif %}>
+        <summary>Watch a wallet {{ icon("chevron-down", cls="x-chev") }}</summary>
+        <div>
+          <form method="post" action="/wallets" class="form-row">
+            <div class="field"><label for="address">Address</label><input id="address" name="address" type="text" required placeholder="r…" autocomplete="off" spellcheck="false"></div>
+            <div class="field" style="flex: 0 1 160px"><label for="label">Name</label><input id="label" name="label" type="text" maxlength="40" placeholder="Savings"></div>
+            <button class="btn" type="submit">Watch</button>
+          </form>
+          <p class="small muted">Address only. Never type your secret key anywhere.</p>
+        </div>
+      </details>
     </section>
     <section class="panel">
-      <div class="panel-head"><h2>Latest notifications</h2><a class="small" href="/notifications">See all</a></div>
-      <div hx-get="/ui/feed?limit=6" hx-trigger="every 5s" hx-swap="innerHTML">
+      <div class="panel-head"><h2>Notifications</h2><a class="small" href="/notifications">All</a></div>
+      <div hx-get="/ui/feed?limit=6" hx-trigger="every 5s [!this.matches(':hover, :focus-within')]" hx-swap="innerHTML">
         {% include "partials/feed.html" %}
       </div>
     </section>

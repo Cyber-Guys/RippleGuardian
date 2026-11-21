@@ -79,3 +79,11 @@ To reverse a decision, add a new entry that supersedes it. Don't edit old entrie
 - Why: Execution in one night, no personal data to protect, notifications an owner can act on.
 - Alternatives considered: building Clawback/Freeze recovery now (declined for time).
 - Consequences: D-005, T-008, T-009.
+
+## D-009 · Name: Ripple Guardian, with an original mark
+- Date: 2026-11-21 09:55 CET · Decided by: nico
+- Status: accepted
+- Decision: The product is called Ripple Guardian. The mark is original: a shield around a ledger node whose ripples spread outward (the funds moving hop by hop). No Ripple or XRP logo is used. The name lives in one constant (`BRAND` in app/views/common.py and flows/report.py).
+- Why: Pitch: a memorable name tied to the XRP Ledger community.
+- Risk: "Ripple" is a trademark of Ripple Labs and the contest disqualifies IP violations. To be confirmed with the organisers; renaming is one constant.
+- Alternatives considered: XRPL Wallet Guardian (previous name).

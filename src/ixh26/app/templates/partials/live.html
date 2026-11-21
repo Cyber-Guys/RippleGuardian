@@ -1,0 +1,13 @@
+{% from "partials/icons.html" import icon %}
+{% if transfers %}
+<ul class="live">
+  {% for t in transfers %}
+  <li {% if t.source in flagged or t.destination in flagged %}data-flagged{% endif %}>
+    <span class="route"><span class="mono">{{ short(t.source) }}</span>{{ icon("arrow-left-right") }}<span class="mono">{{ short(t.destination) }}</span>{% if t.destination_tag is not none %}<span class="muted">:{{ t.destination_tag }}</span>{% endif %}</span>
+    <span class="num">{{ amount_text(t) }}</span>
+    <span class="x-time">{{ t.close_time.strftime('%H:%M:%S') }}, #{{ "{:,}".format(t.ledger_index) }}</span>
+    <a class="small" href="{{ tx_url(t.tx_hash) }}" target="_blank" rel="noopener">{{ t.tx_hash[:8] }}…</a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}<div class="empty"><strong>No transfers yet</strong></div>{% endif %}

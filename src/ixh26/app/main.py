@@ -23,7 +23,7 @@ def create_app(settings: config.Settings | None = None, store: Store | None = No
             app.state.store = Store.from_url(settings.database_url)
         yield
 
-    app = FastAPI(title="XRPL Wallet Guardian", version=__version__, lifespan=lifespan)
+    app = FastAPI(title="Ripple Guardian", version=__version__, lifespan=lifespan)
     app.state.settings = settings
     app.state.store = store
     app.include_router(api.router)

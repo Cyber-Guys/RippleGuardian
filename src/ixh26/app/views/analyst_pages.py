@@ -10,9 +10,9 @@ from fastapi.responses import Response
 from ixh26.app import api
 from ixh26.app.auth import StoreDep
 from ixh26.app.charts import flow_graph
-from ixh26.app.views.common import PageAnalyst, redirect, render
+from ixh26.app.views.common import PageAnalyst, amount_text, redirect, render
 from ixh26.app.views.models import analyst_overview
-from ixh26.store.repo import Store
+from ixh26.store.repo import Store, recent_transfers
 
 router = APIRouter(include_in_schema=False)
 
@@ -23,6 +23,30 @@ def dashboard(request: Request, user: PageAnalyst, store: StoreDep) -> Response:
     latest = overview["latest_trace"]
     flow = flow_graph(latest.result) if latest and "stolen_value" in latest.result["params"] else ""
     return render(request, "analyst/dashboard.html", user, o=overview, flow=flow)
+
+
+@router.get("/ui/live")
+def live_fragment(request: Request, user: PageAnalyst, store: StoreDep) -> Response:
+    """Newest transfers the worker stored, refreshed every few seconds on the dashboard."""
+    return render(
+        request,
+        "partials/live.html",
+        user,
+        transfers=recent_transfers(store, 8),
+        flagged=store.flagged_targets(),
+        amount_text=amount_text,
+    )
+
+
+@router.get("/ui/flow/{trace_id}")
+def flow_fragment(request: Request, trace_id: int, user: PageAnalyst, store: StoreDep) -> Response:
+    """The animated graph alone, so the Replay button can restart its animation."""
+    row = store.trace(trace_id)
+    if row is None or not row.result:
+        raise HTTPException(404, "no finished trace")
+    return render(
+        request, "partials/flow.html", user, flow=flow_graph(row.result), trace_id=trace_id
+    )
 
 
 @router.get("/analyst/findings")

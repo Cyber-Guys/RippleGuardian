@@ -1,17 +1,22 @@
 {% from "partials/icons.html" import icon %}
 {% from "macros.html" import tx %}
 {% if alerts %}
-<ul class="feed">
+<ul class="xlist">
   {% for a in alerts %}
-  <li class="feed-item" data-read="{{ 'true' if a.read else 'false' }}">
-    <span class="sev sev-{{ a.severity }}">{{ icon("shield-alert" if a.severity == "critical" else "triangle-alert" if a.severity == "warning" else "bell", a.severity) }}</span>
-    <div>
-      <p>{{ a.message }}</p>
-      <p class="feed-meta">{{ a.created_at.strftime('%d %b, %H:%M') }} UTC, wallet <span class="mono">{{ short(a.wallet) }}</span>, {{ tx(a.tx_hash, tx_url) }}</p>
+  <li class="x-item" tabindex="0" data-read="{{ 'true' if a.read else 'false' }}">
+    <div class="x-head">
+      <span class="sev sev-{{ a.severity }}">{{ icon("key-round" if a.kind == "security_change" else "send" if a.kind == "outgoing_payment" else "route" if a.kind == "taint_at_exchange" else "flag", a.severity) }}</span>
+      <strong>{{ alert_titles.get(a.kind, a.kind) }}</strong>
+      <span class="x-time">{{ a.created_at.strftime('%d %b %H:%M') }} {{ icon("chevron-down", cls="x-chev") }}</span>
     </div>
+    <div class="x-more"><div>
+      <p>{{ a.message }}</p>
+      <dl class="kv"><dt>Wallet</dt><dd class="mono">{{ short(a.wallet) }}</dd><dt>Transaction</dt><dd>{{ tx(a.tx_hash, tx_url) }}</dd></dl>
+      {% if a.kind in ("security_change", "taint_at_exchange") %}<div><a class="btn btn-small" href="/wallets/{{ a.wallet }}/recover">Start recovery</a></div>{% endif %}
+    </div></div>
   </li>
   {% endfor %}
 </ul>
 {% else %}
-<div class="empty"><strong>Nothing to report</strong>You'll be told here when a watched wallet sends funds, changes its keys or deals with a flagged account.</div>
+<div class="empty"><strong>All quiet</strong>Nothing has happened on your wallets yet.</div>
 {% endif %}

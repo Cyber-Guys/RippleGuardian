@@ -40,17 +40,11 @@
 </form>
 {%- endmacro %}
 
-{% macro status_hero(s, extra_class="") -%}
+{% macro alarm(s, actions="") -%}
 {% from "partials/icons.html" import icon %}
-<section class="status-hero glass {{ extra_class }}" data-state="{{ s.state }}" role="status" data-enter>
-  <span class="status-icon">{{ icon(s.icon) }}</span>
-  <div>
-    <h2>{{ s.headline }}</h2>
-    <p>{{ s.detail }}</p>
-    {% if s.steps %}
-    <p class="small" style="margin-top: var(--s-3)"><strong>What to do now</strong></p>
-    <ol class="steps">{% for step in s.steps %}<li>{{ step }}</li>{% endfor %}</ol>
-    {% endif %}
-  </div>
+<section class="alarm" data-state="{{ s.state }}" role="status" data-enter>
+  <span class="alarm-icon">{{ icon(s.icon) }}</span>
+  <div><h2>{{ s.headline }}</h2><p>{{ s.detail }}</p></div>
+  {% if actions %}<div class="actions">{{ actions }}</div>{% endif %}
 </section>
 {%- endmacro %}

@@ -7,11 +7,15 @@ from typing import Annotated
 from fastapi import APIRouter, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, Response
 
+from ixh26 import config
 from ixh26.app import api
-from ixh26.app.auth import StoreDep
+from ixh26.app.auth import CurrentUser, SettingsDep, StoreDep
 from ixh26.app.charts import line_chart
 from ixh26.app.views.common import PageUser, amount_text, redirect, render, xrp
 from ixh26.app.views.models import balance_points, overall_state, statement, wallet_state
+from ixh26.contracts import XRP
+from ixh26.flows.report import Incident, build_incident, incident_pdf
+from ixh26.store.repo import Store
 
 router = APIRouter(include_in_schema=False)
 
@@ -129,3 +133,44 @@ def feed_fragment(request: Request, user: PageUser, store: StoreDep, limit: int 
     return render(
         request, "partials/feed.html", user, alerts=store.alerts(user.id, limit=min(limit, 100))
     )
+
+
+def _incident(store: Store, user: CurrentUser, address: str, settings: config.Settings) -> Incident:
+    try:
+        return build_incident(store, user.id, address, settings)
+    except LookupError:
+        raise HTTPException(404, "not one of your wallets") from None
+
+
+@router.get("/wallets/{address}/recover")
+def recover_page(
+    request: Request, address: str, user: PageUser, store: StoreDep, settings: SettingsDep
+) -> Response:
+    """The step-by-step screen for an owner whose wallet was taken over."""
+    incident = _incident(store, user, address, settings)
+    return render(request, "user/recover.html", user, i=incident, stolen=xrp(incident.stolen_drops))
+
+
+@router.get("/wallets/{address}/report.pdf")
+def report_pdf(address: str, user: PageUser, store: StoreDep, settings: SettingsDep) -> Response:
+    incident = _incident(store, user, address, settings)
+    return Response(
+        incident_pdf(incident, settings),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{incident.reference}.pdf"'},
+    )
+
+
+@router.post("/wallets/{address}/trace")
+def request_trace(address: str, user: PageUser, store: StoreDep, settings: SettingsDep) -> Response:
+    """Owners can queue one trace of their own theft; the worker runs it like an analyst's."""
+    incident = _incident(store, user, address, settings)
+    if (
+        incident.compromised
+        and incident.stolen_drops > 0
+        and not (incident.trace_id or incident.trace_pending)
+    ):
+        store.create_trace(
+            user.id, address, XRP, incident.stolen_drops, incident.first_theft_ledger or 1
+        )
+    return redirect(f"/wallets/{address}/recover")

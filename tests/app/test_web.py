@@ -59,27 +59,28 @@ def test_user_pages_and_role_enforcement(store: Store) -> None:
         s.get(type(demo), demo.id).password_hash = hash_password("demo-pass")
     client = client_for(store, "demo", "demo-pass")
     home = client.get("/")
-    assert (
-        "Savings (SIMULATED) may be compromised" in home.text and "What to do now" in home.text
-    )  # unread security alert on the victim
+    assert "Savings (SIMULATED) may be compromised" in home.text and "Start recovery" in home.text
+    recover = client.get(f"/wallets/{smoke.VICTIM}/recover")
+    assert "Lock it down" in recover.text and "Located at Exchange (SIMULATED)" in recover.text
+    pdf = client.get(f"/wallets/{smoke.VICTIM}/report.pdf")
+    assert pdf.headers["content-type"] == "application/pdf" and pdf.content.startswith(b"%PDF")
     wallet = client.get(f"/wallets/{smoke.VICTIM}")
-    assert (
-        wallet.status_code == 200
-        and "Balance from recorded transfers" in wallet.text
-        and "<svg" in wallet.text
-    )
+    assert wallet.status_code == 200 and "Balance" in wallet.text and "<svg" in wallet.text
     assert client.get("/notifications").status_code == 200
     assert re.search(r'class="count"[^>]*>\s*\d', client.get("/ui/unread").text)
     assert client.get("/analyst/findings").status_code == 403
     assert client.post("/flags", data={"target": smoke.VICTIM, "reason": "nope"}).status_code == 403
     r = client.post(f"/wallets/{smoke.VICTIM}/settings", data={"min_outgoing_xrp": "5"})
-    assert "Settings saved" in r.text
+    assert "Saved" in r.text
 
 
 def test_analyst_findings_trace_and_flag_visible_to_users(store: Store) -> None:
     ana = client_for(store, "ana", "analyst-pass")
     overview = ana.get("/analyst")
     assert "Open findings" in overview.text and 'class="flow-band"' in overview.text
+    assert "animateMotion" in overview.text and "Exchange exposure" in overview.text
+    assert ":777" in ana.get("/ui/live").text
+    assert ana.get("/ui/flow/1").status_code == 200
     findings = ana.get("/analyst/findings")
     assert "Possible takeover" in findings.text and "Funds funnel" in findings.text
     trace = ana.get("/analyst/traces/1")
@@ -152,3 +153,17 @@ def test_balance_line_follows_transfers() -> None:
     points = balance_points("rMe", [pay(1, "rFaucet", "rMe", 100), pay(2, "rMe", "rThief", 99)])
     assert [p.value for p in points] == [Decimal(100), Decimal(1)]
     assert "<svg" in str(line_chart(points, unit="XRP"))
+
+
+async def test_owner_can_request_a_trace_of_their_theft() -> None:
+    store = Store.from_url("sqlite://")
+    await smoke.run_scenario(store)
+    demo = store.user_by_name("demo")
+    with store.session() as s:
+        s.get(type(demo), demo.id).password_hash = hash_password("demo-pass")
+    client = client_for(store, "demo", "demo-pass")
+    assert "Trace my 95 XRP" in client.get(f"/wallets/{smoke.VICTIM}/recover").text
+    client.post(f"/wallets/{smoke.VICTIM}/trace")
+    client.post(f"/wallets/{smoke.VICTIM}/trace")  # a second click queues nothing
+    assert [t.status for t in store.traces()] == ["pending"]
+    assert "Tracing on the ledger" in client.get(f"/wallets/{smoke.VICTIM}/recover").text

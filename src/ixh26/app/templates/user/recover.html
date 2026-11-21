@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% from "macros.html" import address, tx %}
+{% from "partials/icons.html" import icon %}
+{% block title %}Recovery{% endblock %}
+{% block main %}
+<a class="back" href="/wallets/{{ i.wallet }}">{{ i.label }}</a>
+<div class="page-head" data-enter>
+  <div><h1>{{ "Recover from the theft" if i.compromised else "Wallet report" }}</h1><p>Four steps. Tick each one when it's done.</p></div>
+  <a class="btn btn-big" href="/wallets/{{ i.wallet }}/report.pdf">{{ icon("download") }} Download report</a>
+</div>
+<div class="stack">
+  <section class="panel" data-enter style="--i: 1">
+    <div class="panel-head"><h2>What happened</h2><span class="small muted mono">{{ i.reference }}</span></div>
+    {% if i.timeline %}
+    <div class="timeline">
+      {% for s in i.timeline[-5:] %}
+      <div class="t-step" data-kind="{{ s.kind }}" style="--i: {{ loop.index0 }}">
+        <span class="t-dot">{{ icon("key-round" if s.kind == "key" else "send" if s.kind == "out" else "wallet") }}</span>
+        <strong>{{ s.title }}</strong>
+        <span class="x-time">{{ s.when.strftime('%d %b %H:%M:%S') }}</span>
+        {{ tx(s.tx_hash, tx_url) }}
+      </div>
+      {% endfor %}
+      {% for ex in i.exchanges[:1] %}
+      <div class="t-step" data-kind="sink" style="--i: {{ i.timeline[-5:]|length }}">
+        <span class="t-dot">{{ icon("route") }}</span>
+        <strong>Located at {{ ex.label }}</strong>
+        <span class="x-time">tag {{ ex.destination_tag }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}<div class="empty"><strong>Nothing recorded yet</strong></div>{% endif %}
+  </section>
+
+  <section class="recover" data-enter style="--i: 2">
+    <div class="progress"><span>Progress</span><span class="progress-bar"><i></i><i></i><i></i><i></i></span></div>
+    <ol class="steps-list">
+      <li class="r-step">
+        <span class="r-num">{{ icon("lock-keyhole") }}</span>
+        <div class="r-body"><div><h3>Lock it down</h3><p>Stop using this wallet. Its key is in someone else's hands.</p></div>
+          <p class="small muted">Create a new wallet in your wallet app, on a device you trust, with a fresh secret.</p></div>
+        <label class="done-toggle"><input id="done-1" type="checkbox"> Done</label>
+      </li>
+      <li class="r-step">
+        <span class="r-num">{{ icon("send") }}</span>
+        <div class="r-body"><div><h3>Save what's left</h3><p>Send anything still in it to the new wallet, now.</p></div>
+          <p class="small muted">The thief can sign too. Speed matters more than fees.</p></div>
+        <label class="done-toggle"><input id="done-2" type="checkbox"> Done</label>
+      </li>
+      <li class="r-step" id="step-find" {% if i.trace_pending %}hx-get="/wallets/{{ i.wallet }}/recover" hx-select="#step-find" hx-swap="outerHTML" hx-trigger="every 3s"{% endif %}>
+        <span class="r-num">{{ icon("route") }}</span>
+        <div class="r-body">
+          <div><h3>Find the money</h3><p>We follow it hop by hop on the ledger.</p></div>
+          {% if i.exchanges %}
+            {% set ex = i.exchanges[0] %}
+            <dl class="located">
+              <div><dt>Stolen</dt><dd>{{ stolen }} XRP</dd></div>
+              <div><dt>At</dt><dd>{{ ex.label }}</dd></div>
+              <div><dt>Deposit tag</dt><dd class="mono">{{ ex.destination_tag }}</dd></div>
+            </dl>
+            <p class="small muted">{{ ex.taint }} ({{ '%.0f'|format(ex.share|float * 100) }}%) reached {{ address(ex.address, account_url) }}</p>
+          {% elif i.trace_pending %}
+            <p class="notice notice-sim">{{ icon("radar") }} Tracing on the ledger…</p>
+          {% elif i.trace_id %}
+            <p class="small muted">Traced. No known exchange received the funds yet.</p>
+          {% elif i.compromised and i.stolen_drops > 0 %}
+            <form method="post" action="/wallets/{{ i.wallet }}/trace"><button class="btn" type="submit">{{ icon("route") }} Trace my {{ stolen }} XRP</button></form>
+          {% else %}
+            <p class="small muted">No theft detected on this wallet.</p>
+          {% endif %}
+        </div>
+        <label class="done-toggle"><input id="done-3" type="checkbox"> Done</label>
+      </li>
+      <li class="r-step">
+        <span class="r-num">{{ icon("file-text") }}</span>
+        <div class="r-body">
+          <div><h3>Report it</h3><p>Send the report to the exchange and the police.</p></div>
+          <div class="actions"><a class="btn" href="/wallets/{{ i.wallet }}/report.pdf">{{ icon("download") }} Incident report (PDF)</a></div>
+          {% if i.exchanges %}
+          {% set ex = i.exchanges[0] %}
+          <p class="copybox">Funds stolen from {{ i.wallet }} reached your deposit address {{ ex.address }} with destination tag {{ ex.destination_tag }}. Please freeze that customer account and keep its records for the police. Reference {{ i.reference }}.</p>
+          {% endif %}
+        </div>
+        <label class="done-toggle"><input id="done-4" type="checkbox"> Done</label>
+      </li>
+    </ol>
+  </section>
+</div>
+{% endblock %}
