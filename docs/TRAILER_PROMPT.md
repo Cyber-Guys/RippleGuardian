@@ -1,4 +1,4 @@
-# Trailer prompt: Ripple Guardian (60 s, 16:9)
+# Trailer prompt: Ripple Guardian (66 s, 16:9)
 
 Prompt for generating the demo trailer.
 
@@ -6,21 +6,23 @@ Notes before using it:
 
 - **Fully animated.** No live footage, no screen recordings, no filmed people. Every frame is animated motion graphics: the app UI, the phone, the graph and the explorer are all redrawn as clean vector animation.
 - **Recommended tool:** code-driven motion graphics (Remotion, After Effects, Rive, or an HTML/GSAP page rendered at 60 fps). Text-to-video models (Sora, Veo, Runway) garble text and numbers: use them only for the cold open, never for the graph or the notifications.
-- **Music:** every cut and every animation lands on the beat of a 120 BPM track (1 beat = 0.5 s, 1 bar = 2 s, 30 bars in total). The scene timings below are already aligned to bars. Use a licensed or royalty-free track and list it in `THIRD_PARTY.md` (CLAUDE.md §7).
+- **Music:** every cut and every animation lands on the beat of a 120 BPM track (1 beat = 0.5 s, 1 bar = 2 s, 33 bars in total). The scene timings below are already aligned to bars. Use a licensed or royalty-free track and list it in `THIRD_PARTY.md` (CLAUDE.md §7).
 - **Numbers:** all taken from run 2 in `docs/E2E.md`, the run `make demo` produces today. The trailer must match what the live demo shows.
 - **Name:** the product is Ripple Guardian.
 - **Screenshots:** the real screens are in `artifacts/screenshots/`. Give them to the tool as a visual reference so the animated UI matches the demo.
 - **SIMULATED:** Exchange and Exchange B are Testnet wallets we control. The "SIMULATED" label stays visible on the graph, as in the app (CLAUDE.md §8).
-- **Check before rendering:** the app may show the exact value 54.939982 XRP instead of 54.94; compare with a real screenshot. Confirm that hash `7758D5E4…` is the deposit to tag 777001.
+- **Verified values:** the app prints XRP with 6 decimals (`flows/trace_report.py::value_text`), so the notification reads 54.939982 XRP, as in `artifacts/screenshots/analyst-hop-graph.png`. Hash `7758D5E4…` was checked on Testnet: tag 777001, 25.107992 XRP delivered, `tesSUCCESS`, destination `rQs8mJ…gqNG`. It is the first of the three deposits to that tag, which is the link the notification opens.
+- **Positioning:** "blockchain forensics framework" is the category keyword. It appears in the subtitle, the lower third of the trace scene and the end card.
+- **Team photos:** the end card uses animated initials avatars. If the team provides portraits, swap them in as flat illustrated avatars to keep the trailer fully animated.
 
 ---
 
 ## Prompt
 
 ```text
-Create a 60-second, 16:9 (1920x1080, 60 fps), fully animated product trailer for
-"Ripple Guardian", a wallet protection and theft tracing app for the XRP Ledger,
-built at the IXH26 hackathon. All on-screen text, voice and labels are in English.
+Create a 66-second, 16:9 (1920x1080, 60 fps), fully animated product trailer for
+"Ripple Guardian", a blockchain forensics framework for the XRP Ledger: wallet
+protection and theft tracing, built at the IXH26 Italian XRPL Hackathon. All on-screen text, voice and labels are in English.
 Audience: a hackathon jury judging Innovation, Execution, Impact and Pitch.
 Goal: in one minute, a judge understands the problem, sees every feature working,
 and remembers the closing line.
@@ -47,7 +49,7 @@ STYLE
 SOUNDTRACK (beat-synced)
 - Original-sounding modern electronic score, 120 BPM, 4/4, minor key,
   tense but clean: soft pulse, warm sub bass, crisp percussion, no vocals.
-- 1 beat = 0.5 s, 1 bar = 2 s. Every scene cut lands on a downbeat.
+- 1 beat = 0.5 s, 1 bar = 2 s, 33 bars in total. Every scene cut lands on a downbeat.
   Every text line, node and card appears on a beat or an eighth note.
 - Structure:
   Bars 1-3   (0:00-0:06)  near silence, one notification chime on beat 1,
@@ -64,7 +66,10 @@ SOUNDTRACK (beat-synced)
   Bars 24-27 (0:46-0:54)  confident groove, one card per bar.
   Bars 28-30 (0:54-1:00)  music cuts to silence on bar 28 beat 1. Logo appears
                           in silence; one final sustained chord under the
-                          closing line, ringing out to the end.
+                          closing line.
+  Bars 31-33 (1:00-1:06)  the chord resolves into a soft, warm outro loop;
+                          each team member card lands on a beat, then the
+                          music rings out to silence.
 
 ON-SCREEN TEXT MUST BE EXACT. Do not invent numbers, names or UI labels.
 
@@ -101,26 +106,34 @@ Step 4 shows a PDF icon labelled "Incident report · SHA-256 fingerprint".
 SCENE 5 - THE TRACE (0:26-0:40, bars 14-20)  <- hero shot, give it the most care
 Switch to the analyst view. Caption top-left: "Analyst · Taint trace".
 On the drop, a hop graph draws itself left to right, one hop per bar, link width
-proportional to value, a small XRP amount riding each link as it draws:
-  Hop 0: "Victim"
-  Hop 1: "Attacker"
-  Hop 2: "Relay 1", "Relay 2"
-  Hop 3: five nodes "Mule"
-  Hop 4: "Exchange · tag 777001" and "Exchange B · tag 4242",
-         both with a small grey label "SIMULATED"
-One mule stays an endpoint, labelled "Held by mule · 15%".
-On the impact hit (bar 20, beat 1): the "Exchange · tag 777001" node fills red and
-scales up slightly, with "55% of the theft" under it.
-"Exchange B · tag 4242" shows "22%".
-Lower third: "12 tainted transfers · 4 hops · every amount from delivered_amount".
+proportional to value, a small XRP amount riding each link as it draws.
+Column headers: "Victim", "Hop 1", "Hop 2", "Hop 3", "Hop 4".
+Each node shows a short address and its tainted amount, exactly as in the app:
+  Victim:  "Victim"            "99.99997 XRP (100%)"
+  Hop 1:   "rhHc1P…9Uew"       "99.99997 XRP (100%)"   (the attacker)
+  Hop 2:   "rNYg2Q…URvi"       "59.339982 XRP (59%)"
+           "rKBgDa…pC6z"       "39.559988 XRP (40%)"
+  Hop 3:   "rUNGZv…Upti"       "26.207992 XRP (26%)"
+           "rD5qcB…wkFq"       "23.075993 XRP (23%)"
+           "rfAm7G…VUH9"       "20.383994 XRP (20%)"
+           "rPm7F5…ieAr"       "15.383995 XRP (15%)"   (red: keeps its share)
+           "rEDHuU…uayN"       "11.647996 XRP (12%)"
+  Hop 4:   "Exchange (SIMULATED), tag 777001"    "54.939982 XRP (55%)"
+           "Exchange B (SIMULATED), tag 4242"    "21.975993 XRP (22%)"
+On the impact hit (bar 20, beat 1): the "Exchange (SIMULATED), tag 777001" node
+fills red and scales up slightly, with a glowing ring.
+Lower third: "Blockchain forensics · 12 tainted transfers · 4 hops ·
+every amount from delivered_amount".
 Then the cursor hovers one mule: everything off its money path dims to 20%.
 
 SCENE 6 - THE OWNER KNOWS (0:40-0:46, bars 21-23)
 Back to the animated phone. A critical notification slides in on the downbeat:
-  "Traced 54.94 XRP of your stolen funds to Exchange with destination tag 777001.
-   Share this with the exchange and the police."
+  "Stolen funds located"
+  "Traced 54.939982 XRP of your stolen funds to Exchange (SIMULATED) (rQs8mJ…gqNG)
+   with destination tag 777001. Share this with the exchange and the police."
 The cursor taps "View on XRPL Testnet explorer". An animated browser window opens
-on testnet.xrpl.org showing transaction hash "7758D5E4…" and a green "tesSUCCESS".
+on testnet.xrpl.org showing transaction hash "7758D5E4…", destination tag
+"777001", delivered "25.107992 XRP" and a green "tesSUCCESS".
 
 SCENE 7 - WHY XRPL (0:46-0:54, bars 24-27)
 Four cards in a 2x2 grid, one per bar, blue icon + one line each:
@@ -131,10 +144,30 @@ Four cards in a 2x2 grid, one per bar, blue icon + one line each:
 
 SCENE 8 - CLOSE (0:54-1:00, bars 28-30)
 Music cuts to silence. Everything fades to #0b1220. The Ripple Guardian logo
-fades in, centered. On the final chord, under it, white, semibold:
+fades in, centered. Under it, small caps in trust blue:
+  "BLOCKCHAIN FORENSICS FRAMEWORK FOR THE XRP LEDGER"
+On the final chord, under it, white, semibold:
   "Know the moment your wallet moves."
-Small grey line at the bottom: "Live on XRPL Testnet · IXH26 Bari · Track 2".
-Hold until the chord rings out. Cut to black.
+
+SCENE 9 - TEAM END CARD (1:00-1:06, bars 31-33)
+The logo shrinks and glides to the top center. A clean, centered credits layout
+builds on the beat:
+  Line 1 (white, semibold, large): "Ripple Guardian"
+  Line 2 (blue): "by Team CyberGuys"
+Six member cards in one row (two rows of three on narrow layouts), each a round
+animated avatar with initials, the full name and the handle in monospace,
+landing one per beat, left to right:
+  "NG"  "Nicola Ghisu"      "NicoXVI"
+  "TC"  "Tommaso Casti"     "t0mm1"
+  "DO"  "Daniele Orrù"      "DenInDev"
+  "AC"  "Andrea Cerolini"   "percyghost"
+  "DO"  "Diego Oliva"       "doliv"
+  "NM"  "Nicholas Meli"     "uNickz"
+Bottom block, grey, three centered lines:
+  "IXH26 Italian XRPL Hackathon"
+  "Track: XRPL applications"
+  "Department of Mathematics, University of Bari Aldo Moro · Bari, Italy · 20-21 November 2026"
+Hold, then fade to black as the music rings out.
 
 DO NOT
 - use live-action footage, screen recordings or real people;
@@ -149,7 +182,7 @@ DO NOT
 
 ## Short cut (30 s)
 
-For social media or a tight 3-minute pitch: keep scenes 1, 3, 5, 6 and 8, at 120 BPM: 0:00-0:04 (bars 1-2), 0:04-0:08 (bars 3-4), 0:08-0:20 (bars 5-10, one hop per bar, impact on bar 10), 0:20-0:26 (bars 11-13), 0:26-0:30 (bars 14-15, silence then final chord).
+For social media or a tight 3-minute pitch: keep scenes 1, 3, 5, 6, 8 and 9, at 120 BPM: 0:00-0:04 (bars 1-2), 0:04-0:08 (bars 3-4), 0:08-0:18 (bars 5-9, one hop per bar, impact on bar 9), 0:18-0:22 (bars 10-11), 0:22-0:26 (bars 12-13, silence then final chord), 0:26-0:30 (bars 14-15, team end card with all six names).
 
 ## References
 
@@ -157,3 +190,4 @@ For social media or a tight 3-minute pitch: keep scenes 1, 3, 5, 6 and 8, at 120
 - Notification text: `src/ixh26/core/alerts.py`, `src/ixh26/app/views/common.py`.
 - Recovery steps: `src/ixh26/app/templates/user/recover.html`.
 - Logo: `docs/assets/logo.jpeg`.
+- Team: `README.md` (Team section). Event, track and venue: hackathon platform, event `ixh26-italian-xrpl-hackathon-4b11386b`.

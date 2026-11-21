@@ -5,7 +5,7 @@
 <h1 align="center">Ripple Guardian</h1>
 
 <p align="center">
-  Wallet protection and theft tracing for the XRP Ledger.<br>
+  A blockchain forensics framework for the XRP Ledger: wallet protection and theft tracing.<br>
   IXH26 Bari · Track 2, XRPL applications · built 20 to 21 November 2026 
 </p>
 
@@ -15,7 +15,7 @@
   <img alt="Tests" src="https://img.shields.io/badge/tests-75%20offline-2EA44F">
 </p>
 
-When an XRPL seed leaks, a thief adds their own signing key, empties the wallet and pushes the money through fresh accounts to an exchange, often within minutes. Tracing services exist, but they are sold to exchanges and police, so the owner finds out late and has nothing to show anyone. Ripple Guardian watches wallets for the people who own them. It tells the owner in plain words when a key changes or funds leave, walks them through recovery, and follows the stolen XRP hop by hop to the exchange and the destination tag that received it: the one number an exchange needs to find the customer. Analysts review what the detectors raise and publish accountable flags that every user can check before sending money.
+When an XRPL seed leaks, a thief adds their own signing key, empties the wallet and pushes the money through fresh accounts to an exchange, often within minutes. Tracing services exist, but they are sold to exchanges and police, so the owner finds out late and has nothing to show anyone. Ripple Guardian is a blockchain forensics framework for the XRP Ledger, and it watches wallets for the people who own them. It tells the owner in plain words when a key changes or funds leave, walks them through recovery, and follows the stolen XRP hop by hop to the exchange and the destination tag that received it: the one number an exchange needs to find the customer. Analysts review what the detectors raise and publish accountable flags that every user can check before sending money.
 
 Everything in the demo runs on XRPL Testnet with real, validated transactions.
 
