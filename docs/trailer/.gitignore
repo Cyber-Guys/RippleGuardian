@@ -2,3 +2,4 @@ node_modules/
 out/
 captures/
 *.wav
+package-lock.json
