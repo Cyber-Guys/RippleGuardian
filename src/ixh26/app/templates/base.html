@@ -35,7 +35,7 @@
     <div class="sidebar-foot">
       <span class="pulse" data-live="{{ 'true' if pulse_ledger else 'false' }}" title="Last ledger fully read by the monitor">
         <span class="pulse-dot"></span>
-        {% if pulse_ledger %}XRPL {{ network|capitalize }}, ledger <span class="mono">{{ "{:,}".format(pulse_ledger) }}</span>{% else %}XRPL {{ network|capitalize }}, waiting for the monitor{% endif %}
+        <span>{% if pulse_ledger %}Watching XRPL {{ network|capitalize }}<br><span class="mono small">ledger {{ "{:,}".format(pulse_ledger) }}</span>{% else %}XRPL {{ network|capitalize }}<br><span class="small">waiting for the monitor</span>{% endif %}</span>
       </span>
       <div class="signout">
         <span>{{ user.username }}</span>

@@ -167,7 +167,7 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 320) -
     for n in nodes:
         x, top, h = pos[(n.key, n.hop)]
         share = n.value / stolen * 100
-        value = f"{_fmt(n.value / per_unit)} {unit}"
+        value = f"{(n.value / per_unit).quantize(Decimal('0.000001')).normalize():,f} {unit}"
         anchor, tx = ("end", x - 8) if n.hop == 0 else ("start", x + col_w + 8)
         tag = f", tag {n.key[1]}" if n.key[1] is not None else ""
         rects.append(
