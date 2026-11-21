@@ -5,7 +5,7 @@ import { CameraMove, camAt, fit, type Key } from "../components/CameraMove";
 import { Caption } from "../components/Caption";
 import { FloatingWindow, VIEW } from "../components/FloatingWindow";
 import { Spotlight } from "../components/Spotlight";
-import { ramp } from "../theme";
+import { glide, ramp } from "../theme";
 import { at, FPS, type SceneProps } from "../timing";
 
 const REC = "rec-notification.webm";
@@ -43,7 +43,7 @@ export const OwnerKnows: React.FC<SceneProps> = (p) => {
     {
       at: expand + 4,
       cam: fit(box(STILL, "message"), PAGE, VIEW, 0.3),
-      dur: 40,
+      dur: 72,
     },
   ];
   const row = box(EXPLORER, "row");
@@ -52,14 +52,18 @@ export const OwnerKnows: React.FC<SceneProps> = (p) => {
       at: explorer,
       cam: fit(union(box(EXPLORER, "status"), row), PAGE, EXP, 0.12),
     },
-    { at: tagAt, cam: fit(row, PAGE, EXP, 0.25), dur: 30 },
+    { at: tagAt, cam: fit(row, PAGE, EXP, 0.25), dur: 60 },
   ];
-  const slide = ramp(frame, explorer, 40);
+  const slide = glide(frame, explorer, 54);
 
   return (
     <>
       <FloatingWindow opacity={1 - 0.35 * slide} scale={1 - 0.02 * slide}>
-        <CameraMove cam={camAt(frame, keys)} page={PAGE} view={VIEW}>
+        <CameraMove
+          cam={camAt(frame, keys, PAGE, VIEW)}
+          page={PAGE}
+          view={VIEW}
+        >
           {() => (
             <>
               <OffthreadVideo
@@ -89,7 +93,11 @@ export const OwnerKnows: React.FC<SceneProps> = (p) => {
           width={EXP.w}
           enter={slide}
         >
-          <CameraMove cam={camAt(frame, expKeys)} page={PAGE} view={EXP}>
+          <CameraMove
+            cam={camAt(frame, expKeys, PAGE, EXP)}
+            page={PAGE}
+            view={EXP}
+          >
             {(s) => (
               <>
                 <Img

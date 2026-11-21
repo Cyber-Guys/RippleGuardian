@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
-import { C, INTER, MONO, ramp } from "../theme";
+import { C, glide, INTER, MONO, ramp } from "../theme";
 import { at, type SceneProps } from "../timing";
 import { CLOSING, Logo, LOGO, Tagline } from "./Close";
 
@@ -27,7 +27,7 @@ const rise = (e: number): React.CSSProperties => ({
 /** Scene 10: the logo glides up, the credits build on the beat, fade to black. */
 export const Team: React.FC<SceneProps> = (p) => {
   const frame = useCurrentFrame();
-  const glide = ramp(frame, at(p, "logoGlide"), 42);
+  const lift = glide(frame, at(p, "logoGlide"), 66);
   const leave = 1 - ramp(frame, 0, 14); // tagline and closing line from scene 9
   const fadeAt = at(p, "fadeOut");
   const black = interpolate(frame, [fadeAt, p.duration - 1], [0, 1], {
@@ -38,8 +38,8 @@ export const Team: React.FC<SceneProps> = (p) => {
   return (
     <AbsoluteFill style={{ fontFamily: INTER, alignItems: "center" }}>
       <Logo
-        size={LOGO.size + (150 - LOGO.size) * glide}
-        top={LOGO.top + (40 - LOGO.top) * glide}
+        size={LOGO.size + (150 - LOGO.size) * lift}
+        top={LOGO.top + (40 - LOGO.top) * lift}
       />
       <Tagline opacity={leave} />
       <div

@@ -43,10 +43,10 @@ export const Trace: React.FC<SceneProps> = (p) => {
     return {
       at: at(p, `hop${h}`),
       cam: within(cam, panel, PAGE, VIEW),
-      dur: 54,
+      dur: 96,
     };
   });
-  keys.push({ at: impact, cam: fit(focus, PAGE, VIEW, 0.3), dur: 26 });
+  keys.push({ at: impact, cam: fit(focus, PAGE, VIEW, 0.3), dur: 54 });
 
   const trim = Math.round(mark(REC, "flowStart") * FPS) - LAG;
   const hit = Math.exp(-Math.max(0, frame - impact) / 14);
@@ -55,7 +55,11 @@ export const Trace: React.FC<SceneProps> = (p) => {
   return (
     <>
       <FloatingWindow>
-        <CameraMove cam={camAt(frame, keys)} page={PAGE} view={VIEW}>
+        <CameraMove
+          cam={camAt(frame, keys, PAGE, VIEW)}
+          page={PAGE}
+          view={VIEW}
+        >
           {(s) => (
             <>
               <OffthreadVideo

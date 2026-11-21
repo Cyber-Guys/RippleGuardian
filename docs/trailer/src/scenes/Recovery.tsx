@@ -30,11 +30,11 @@ export const Recovery: React.FC<SceneProps> = (p) => {
       ),
     },
     {
-      at: stepAt[0] - 60,
+      at: stepAt[0] - 90,
       cam: fit(union(...steps), page, VIEW, 0.05),
-      dur: 60,
+      dur: 90,
     },
-    { at: report, cam: fit(grow(pdf, 150, 90), page, VIEW, 0.1), dur: 30 },
+    { at: report, cam: fit(grow(pdf, 150, 90), page, VIEW, 0.1), dur: 60 },
   ];
   let ring = steps[0];
   for (let i = 1; i < steps.length; i++)
@@ -43,7 +43,11 @@ export const Recovery: React.FC<SceneProps> = (p) => {
   return (
     <>
       <FloatingWindow>
-        <CameraMove cam={camAt(frame, keys)} page={page} view={VIEW}>
+        <CameraMove
+          cam={camAt(frame, keys, page, VIEW)}
+          page={page}
+          view={VIEW}
+        >
           {(s) => (
             <>
               <Img

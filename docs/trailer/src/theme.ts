@@ -22,8 +22,12 @@ export const C = {
   blue2: "#4a9be0",
 } as const;
 
-export const EASE = Easing.bezier(0.16, 1, 0.3, 1);
-export const MOVE = 36; // frames per camera move (600 ms)
+export const EASE = Easing.bezier(0.16, 1, 0.3, 1); // captions and UI, from the brief
+export const MOVE = 36; // frames per UI move (600 ms)
+
+// The camera starts and lands at zero speed, so pushes and pans never jerk.
+export const CAM_EASE = Easing.bezier(0.42, 0, 0.2, 1);
+export const CAM_MOVE = 72; // frames per camera move (1.2 s)
 
 /** 0 until `start`, then eased to 1 over `dur` frames. */
 export const ramp = (frame: number, start: number, dur = MOVE): number =>
@@ -31,6 +35,14 @@ export const ramp = (frame: number, start: number, dur = MOVE): number =>
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: EASE,
+  });
+
+/** Like `ramp`, with the camera's ease-in-out. */
+export const glide = (frame: number, start: number, dur = CAM_MOVE): number =>
+  interpolate(frame, [start, start + dur], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: CAM_EASE,
   });
 
 /** Visible between `start` and `end`, with short fades on both sides. */

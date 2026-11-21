@@ -10,6 +10,7 @@ import {
 } from "../components/CameraMove";
 import { Caption } from "../components/Caption";
 import { FloatingWindow, VIEW } from "../components/FloatingWindow";
+import { glide } from "../theme";
 import { at, type SceneProps } from "../timing";
 
 // `left`: frame only the left part of a full-width panel, where its labels are, so the push-in
@@ -84,12 +85,20 @@ export const Tour: React.FC<SceneProps> = (p) => {
     x: target.x - widen,
     w: target.w * f.left + widen,
   };
+  // Each shot opens already halfway in and closes in slowly, so no big zoom follows the cut.
+  const end = fit(focus, page, VIEW, 0.16);
+  const open = whole(page);
+  const start = {
+    x: open.x + (end.x - open.x) * 0.6,
+    y: open.y + (end.y - open.y) * 0.6,
+    z: Math.exp(Math.log(end.z) * 0.55),
+  };
   const keys: Key[] = [
-    { at: from, cam: whole(page) },
-    { at: from + 4, cam: fit(focus, page, VIEW, 0.16), dur: 42 },
+    { at: from, cam: start },
+    { at: from, cam: end, dur: Math.min(110, to - from - 10) },
   ];
-  const cam = camAt(frame, keys);
-  const drift = 1 + 0.04 * Math.max(0, (frame - from - 46) / (to - from)); // slow push-in
+  const cam = camAt(frame, keys, page, VIEW);
+  const drift = 1 + 0.03 * glide(frame, from, to - from); // keeps creeping in until the cut
   // Hard cut on the downbeat (the whoosh peaks there), then the push-in.
   return (
     <>

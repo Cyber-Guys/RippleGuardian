@@ -17,7 +17,7 @@ import {
 import { Caption } from "../components/Caption";
 import { FloatingWindow, VIEW } from "../components/FloatingWindow";
 import { Spotlight } from "../components/Spotlight";
-import { C, during, ramp } from "../theme";
+import { C, during, glide, ramp } from "../theme";
 import { at, BEAT, FPS, has, type SceneProps } from "../timing";
 
 const DASH = "owner-dashboard.png";
@@ -41,13 +41,18 @@ export const Alert: React.FC<SceneProps> = (p) => {
 
   const keys: Key[] = [
     { at: 0, cam: whole(page) },
-    { at: 8, cam: fit(words, page, VIEW, 0.12), dur: 52 },
+    { at: 8, cam: fit(words, page, VIEW, 0.12), dur: 90 },
   ];
   if (feedAt !== null)
     keys.push({ at: feedAt, cam: fit(box(DASH, "feed"), page, VIEW, 0.12) });
-  keys.push({ at: spot, cam: fit(actions, page, VIEW, 0.2, 1.5) });
+  keys.push({ at: spot, cam: fit(actions, page, VIEW, 0.2, 1.5), dur: 66 });
   // The click opens the recovery page: pull back so it lands full frame for scene 4.
-  keys.push({ at: click + 12, cam: whole(page), dur: 42 });
+  const back = click + 12;
+  keys.push({
+    at: back,
+    cam: whole(page),
+    dur: Math.min(72, p.duration - back),
+  });
 
   const pulse = Math.exp(-(frame % (2 * BEAT)) / 10); // kick on beats 1 and 3
   const ring =
@@ -56,7 +61,7 @@ export const Alert: React.FC<SceneProps> = (p) => {
       : lerpBox(
           box(DASH, "alertKey"),
           box(DASH, "alertSent"),
-          sentAt === null ? 0 : ramp(frame, sentAt, 18),
+          sentAt === null ? 0 : glide(frame, sentAt, 24),
         );
   // The recording starts at `spot`, trimmed so that its click lands on the downbeat.
   const trim = Math.round(mark(REC, "click") * FPS - (click - spot));
@@ -64,7 +69,11 @@ export const Alert: React.FC<SceneProps> = (p) => {
   return (
     <>
       <FloatingWindow enter={ramp(frame, 0, 30)}>
-        <CameraMove cam={camAt(frame, keys)} page={page} view={VIEW}>
+        <CameraMove
+          cam={camAt(frame, keys, page, VIEW)}
+          page={page}
+          view={VIEW}
+        >
           {(s) => (
             <>
               <Img

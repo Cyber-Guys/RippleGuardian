@@ -1,7 +1,6 @@
 import React from "react";
-import { interpolate } from "remotion";
 import type { Box, Size } from "../captures";
-import { EASE, MOVE } from "../theme";
+import { CAM_MOVE, glide } from "../theme";
 
 /** Centre of the view in page pixels, and zoom (1 = the page width fills the window). */
 export type Cam = { x: number; y: number; z: number };
@@ -56,15 +55,19 @@ const clamp = (c: Cam, page: Size, view: Size): Cam => {
   return { x, y, z: c.z };
 };
 
-/** Eased moves from key to key; zoom is interpolated in log space so it feels even. */
-export const camAt = (frame: number, keys: Key[]): Cam => {
-  let cam = keys[0].cam;
-  for (const k of keys.slice(1)) {
-    const p = interpolate(frame, [k.at, k.at + (k.dur ?? MOVE)], [0, 1], {
-      extrapolateLeft: "clamp",
-      extrapolateRight: "clamp",
-      easing: EASE,
-    });
+/** Eased moves from key to key; zoom is interpolated in log space so it feels even. Keys are
+ * kept inside the page first: a path between two valid cameras stays valid, so the per-frame
+ * clamp never kicks in halfway through a move. */
+export const camAt = (
+  frame: number,
+  keys: Key[],
+  page: Size,
+  view: Size,
+): Cam => {
+  const inside = keys.map((k) => ({ ...k, cam: clamp(k.cam, page, view) }));
+  let cam = inside[0].cam;
+  for (const k of inside.slice(1)) {
+    const p = glide(frame, k.at, k.dur ?? CAM_MOVE);
     if (p === 0) break;
     cam = {
       x: cam.x + (k.cam.x - cam.x) * p,
