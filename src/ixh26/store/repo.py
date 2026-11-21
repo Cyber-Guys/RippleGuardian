@@ -13,8 +13,9 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import create_engine, delete, func, or_, select, update
+from sqlalchemy import create_engine, delete, func, or_, select, text, update
 from sqlalchemy.engine import Engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
@@ -37,6 +38,7 @@ from ixh26.store.models import (
     BalanceRow,
     Base,
     Cursor,
+    DatabaseNetwork,
     FindingRow,
     FlagRow,
     LabelRow,
@@ -48,6 +50,10 @@ from ixh26.store.models import (
 )
 
 ROLES = ("user", "analyst")
+
+
+class NetworkMismatch(RuntimeError):
+    """The database contains data belonging to a different ledger."""
 
 
 def aware(dt: datetime) -> datetime:
@@ -122,8 +128,43 @@ class Store:
         elif url.startswith("sqlite"):
             kwargs = {"connect_args": {"check_same_thread": False}}
         store = cls(create_engine(url, **kwargs))
-        Base.metadata.create_all(store.engine)  # shortcut: no migrations; add Alembic later
+        with store.engine.begin() as connection:
+            if connection.dialect.name == "postgresql":
+                # The API and worker can start together against a freshly provisioned database.
+                connection.execute(text("SELECT pg_advisory_xact_lock(26112026)"))
+            Base.metadata.create_all(connection)
         return store
+
+    @classmethod
+    def for_network(cls, url: str, *, network: str) -> Store:
+        store = cls.from_url(url)
+        store.bind_network(network)
+        return store
+
+    def bind_network(self, network: str) -> None:
+        with self.session() as s:
+            binding = s.get(DatabaseNetwork, 1)
+            if binding is None:
+                # A pre-switch database could contain Testnet or Devnet data with no marker.
+                if network == "mainnet" and any(
+                    s.execute(select(1).select_from(table).limit(1)).first() is not None
+                    for table in Base.metadata.sorted_tables
+                    if table is not DatabaseNetwork.__table__
+                ):
+                    raise NetworkMismatch("Mainnet requires a fresh or Mainnet-bound database")
+                try:
+                    with s.begin_nested():
+                        s.add(DatabaseNetwork(id=1, network=network))
+                        s.flush()
+                except IntegrityError:  # Another API/worker process may have bound it first.
+                    binding = s.get(DatabaseNetwork, 1)
+                    if binding is None:
+                        raise
+            if binding is not None and binding.network != network:
+                raise NetworkMismatch(
+                    f"database is bound to {binding.network}. "
+                    f"{network} requires a separate database"
+                )
 
     @contextmanager
     def session(self) -> Iterator[Session]:

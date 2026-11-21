@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import re
 from collections.abc import AsyncIterator, Awaitable, Callable, Sequence
 from dataclasses import replace
 from datetime import UTC, datetime
@@ -14,10 +15,11 @@ from typing import Any
 
 import httpx
 from xrpl.asyncio.clients import AsyncJsonRpcClient, AsyncWebsocketClient
+from xrpl.asyncio.clients.exceptions import XRPLRequestFailureException
 from xrpl.asyncio.transaction import submit_and_wait
 from xrpl.asyncio.wallet import generate_faucet_wallet
 from xrpl.models import Memo, Response
-from xrpl.models.requests import AccountInfo, AccountTx, Ledger, Request, Subscribe
+from xrpl.models.requests import AccountInfo, AccountTx, Ledger, Request, Subscribe, Tx
 from xrpl.models.transactions import Transaction
 from xrpl.utils import str_to_hex
 from xrpl.wallet import Wallet
@@ -30,10 +32,19 @@ log = logging.getLogger(__name__)
 
 TX_LOG = Path("artifacts/tx_log.jsonl")
 Requester = Callable[[Request], Awaitable[Response]]
+TX_HASH_PATTERN = r"^[0-9A-Fa-f]{64}$"
 
 
 class LedgerError(RuntimeError):
     """The ledger answered with an error, or a submission did not reach tesSUCCESS."""
+
+
+class TransactionNotFound(LedgerError):
+    """The selected server could not find the transaction."""
+
+
+class TransactionNotValidated(LedgerError):
+    """The transaction is present but is not final."""
 
 
 async def request_with_retry(send: Requester, req: Request, *, attempts: int = 4) -> dict[str, Any]:
@@ -41,17 +52,54 @@ async def request_with_retry(send: Requester, req: Request, *, attempts: int = 4
     for attempt in range(attempts):
         try:
             response = await send(req)
-        except (httpx.HTTPError, OSError) as exc:
+        except (httpx.HTTPError, OSError, XRPLRequestFailureException) as exc:
             if attempt == attempts - 1:
                 raise LedgerError(f"{req.method} failed after {attempts} attempts") from exc
             delay = 0.5 * 2**attempt
-            log.warning("%s transport error (%s), retry in %.1fs", req.method, exc, delay)
+            log.warning(
+                "%s transport error (%s), retry in %.1fs", req.method, type(exc).__name__, delay
+            )
             await asyncio.sleep(delay)
             continue
         if not response.is_successful():
             raise LedgerError(f"{req.method} error: {response.result}")
         return response.result
     raise AssertionError("unreachable")
+
+
+async def read_transaction(
+    url: str, tx_hash: str, *, send: Requester | None = None
+) -> dict[str, Any]:
+    """Read a final transaction by hash, including failed transactions and their metadata."""
+    if not re.fullmatch(TX_HASH_PATTERN, tx_hash):
+        raise ValueError("expected a 64-character hexadecimal transaction hash")
+    tx_hash = tx_hash.upper()
+    request = send or AsyncJsonRpcClient(url).request
+
+    async def send_tx(req: Request) -> Response:
+        response = await request(req)
+        if not response.is_successful() and response.result.get("error") == "txnNotFound":
+            raise TransactionNotFound(tx_hash)
+        return response
+
+    result = await request_with_retry(send_tx, Tx(transaction=tx_hash, api_version=2))
+    if result.get("validated") is not True:
+        raise TransactionNotValidated(tx_hash)
+    tx = result.get("tx_json")
+    meta = result.get("meta")
+    returned_hash = result.get("hash")
+    ledger_index = result.get("ledger_index")
+    if (
+        not isinstance(tx, dict)
+        or not isinstance(meta, dict)
+        or not isinstance(meta.get("TransactionResult"), str)
+        or not isinstance(returned_hash, str)
+        or returned_hash.upper() != tx_hash
+        or type(ledger_index) is not int
+        or ledger_index <= 0
+    ):
+        raise LedgerError("invalid response to tx lookup")
+    return result
 
 
 class XrplReader:
@@ -139,6 +187,8 @@ async def submit(
     tx_log: Path = TX_LOG,
 ) -> TxResult:
     """The ONLY submission path: SourceTag + memo, submit_and_wait, require tesSUCCESS, log."""
+    if settings.network.name not in ("testnet", "devnet"):
+        raise LedgerError("transaction submission is only available on test networks")
     memo = Memo(
         memo_type=str_to_hex("ixh26/purpose"),
         memo_data=str_to_hex(f"{config.APP_ID}:{purpose}"[:120]),

@@ -44,6 +44,13 @@ NETWORKS: Final[dict[str, NetworkEndpoints]] = {
         explorer_tx_url="https://devnet.xrpl.org/transactions/{hash}",
         faucet_host=None,
     ),
+    "mainnet": NetworkEndpoints(
+        name="mainnet",
+        json_rpc_url="https://xrplcluster.com/",
+        websocket_url="wss://xrplcluster.com/",
+        explorer_tx_url="https://livenet.xrpl.org/transactions/{hash}",
+        faucet_host=None,
+    ),
 }
 
 
@@ -80,14 +87,21 @@ def _int(env: dict[str, str], key: str, default: int, *, minimum: int = 0) -> in
 
 
 def load_settings(env: dict[str, str] | None = None) -> Settings:
-    """Build settings from ``env`` (defaults to ``os.environ``). Mainnet is refused."""
+    """Build settings from ``env`` (defaults to ``os.environ``)."""
     env = dict(os.environ) if env is None else env
     network_name = _get(env, "XRPL_NETWORK", "testnet").lower()
     if network_name not in NETWORKS:
         raise ConfigError(
-            f"XRPL_NETWORK={network_name!r} is not allowed; use one of {sorted(NETWORKS)} "
-            "(mainnet is forbidden by CLAUDE.md §5)"
+            f"XRPL_NETWORK={network_name!r} is not allowed; use one of {sorted(NETWORKS)}"
         )
+    database_url = _get(
+        env, "DATABASE_URL", "postgresql+psycopg://ixh26:ixh26@localhost:5432/ixh26"
+    )
+    if network_name == "mainnet":
+        mainnet_url = _get(env, "XRPL_MAINNET_DATABASE_URL", "")
+        if mainnet_url == database_url:
+            raise ConfigError("XRPL_MAINNET_DATABASE_URL must use a separate database")
+        database_url = mainnet_url
     ratio_raw = _get(env, "TAINT_MIN_RATIO", "0.01")
     try:
         ratio = Decimal(ratio_raw)
@@ -98,9 +112,7 @@ def load_settings(env: dict[str, str] | None = None) -> Settings:
     return Settings(
         network=NETWORKS[network_name],
         source_tag=_int(env, "SOURCE_TAG", TEAM_SOURCE_TAG),
-        database_url=_get(
-            env, "DATABASE_URL", "postgresql+psycopg://ixh26:ixh26@localhost:5432/ixh26"
-        ),
+        database_url=database_url,
         redis_url=_get(env, "REDIS_URL", "redis://localhost:6379/0"),
         poll_interval_s=_int(env, "POLL_INTERVAL_S", 30, minimum=1),
         taint_min_ratio=ratio,

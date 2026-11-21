@@ -50,6 +50,14 @@ class Cursor(Base):
     ledger_index: Mapped[int]
 
 
+class DatabaseNetwork(Base):
+    """Singleton recording which ledger owns the network-dependent rows."""
+
+    __tablename__ = "database_network"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    network: Mapped[str] = mapped_column(String(16))
+
+
 class TransferRow(Base):
     __tablename__ = "transfers"
     __table_args__ = (

@@ -99,7 +99,7 @@ def cmd_create_user(
 
     password = sys.stdin.readline().rstrip("\n") if password_stdin else getpass.getpass()
     validate_credentials(username, password)
-    store = Store.from_url(settings.database_url)
+    store = Store.for_network(settings.database_url, network=settings.network.name)
     if store.user_by_name(username):
         print(f"user {username} already exists")
         return 1
@@ -113,7 +113,7 @@ def cmd_label(settings: config.Settings, address: str, kind: str, name: str) -> 
     from ixh26.contracts import AccountLabel, AccountLabelKind
     from ixh26.store.repo import Store
 
-    Store.from_url(settings.database_url).upsert_label(
+    Store.for_network(settings.database_url, network=settings.network.name).upsert_label(
         AccountLabel(address, AccountLabelKind(kind), name)
     )
     print(f"labelled {address} as {kind} '{name}'")

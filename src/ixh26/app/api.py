@@ -3,14 +3,22 @@
 from __future__ import annotations
 
 from decimal import Decimal, InvalidOperation
-from typing import Any
+from typing import Annotated, Any, Literal
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Path, Response
 from pydantic import BaseModel, Field
 
+from ixh26 import config
 from ixh26.app import auth
 from ixh26.app.auth import AnalystDep, SettingsDep, StoreDep, UserDep
 from ixh26.contracts import XRP, Asset
+from ixh26.flows.transactions import (
+    TX_HASH_PATTERN,
+    LedgerError,
+    TransactionNotFound,
+    TransactionNotValidated,
+    lookup_transaction,
+)
 from ixh26.store.repo import Store
 
 router = APIRouter(prefix="/api")
@@ -275,3 +283,21 @@ def get_trace(trace_id: int, user: AnalystDep, store: StoreDep) -> dict[str, Any
     if row is None:
         raise HTTPException(404, "no such trace")
     return {"id": row.id, "status": row.status, "error": row.error, "result": row.result}
+
+
+@router.get("/transactions/{tx_hash}")
+async def get_transaction(
+    tx_hash: Annotated[str, Path(pattern=TX_HASH_PATTERN)],
+    user: UserDep,
+    settings: SettingsDep,
+    network: Literal["testnet", "mainnet", "devnet"] | None = None,
+) -> dict[str, Any]:
+    endpoints = settings.network if network is None else config.NETWORKS[network]
+    try:
+        return await lookup_transaction(endpoints, tx_hash)
+    except TransactionNotFound as exc:
+        raise HTTPException(404, f"transaction not found on {endpoints.name}") from exc
+    except TransactionNotValidated as exc:
+        raise HTTPException(409, "transaction is not yet validated") from exc
+    except LedgerError as exc:
+        raise HTTPException(502, "transaction lookup failed") from exc
