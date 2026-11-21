@@ -116,8 +116,12 @@ def flow_nodes(report: dict[str, Any]) -> list[FlowNode]:
     return nodes
 
 
-def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 320) -> Markup:
-    """Columns by hop; each band is one tainted transfer, as thick as the value it carried."""
+def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 340) -> Markup:
+    """Node-link graph: one circle per account and hop, one curved arrow per tainted transfer.
+
+    Circle size and line width follow the stolen value carried. Hops appear one after the
+    other, then value particles keep flowing along the links (SVG animation, no JavaScript).
+    """
     nodes = flow_nodes(report)
     if len(nodes) < 2:
         return Markup("")
@@ -125,83 +129,80 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 320) -
     unit = report["params"]["stolen"].split()[-1]
     per_unit = Decimal(10**6) if unit == "XRP" else Decimal(1)
     hops = max(n.hop for n in nodes)
-    col_w, gap, pad = 14, 10, 28
-    usable = height - 2 * pad
-    scale = Decimal(usable) * Decimal("0.85") / stolen
+    uid = zlib.crc32(f"{report['params']['origin']}{report.get('computed_at')}".encode()) % 10**6
+    pad_y = 48
 
-    def col_x(hop: int) -> float:
-        return _scale(hop, 0, hops, 170, width - 300)
+    def radius(value: Decimal) -> float:
+        return 9 + 17 * float(min(value / stolen, Decimal(1)))
 
     pos: dict[tuple[tuple[str, int | None], int], tuple[float, float, float]] = {}
     for hop in range(hops + 1):
         column = [n for n in nodes if n.hop == hop]
-        total = sum(float(n.value * scale) for n in column) + gap * (len(column) - 1)
-        top = pad + (usable - total) / 2
-        for n in column:
-            h = max(float(n.value * scale), 3.0)
-            pos[(n.key, n.hop)] = (col_x(hop), top, h)
-            top += h + gap
+        x = _scale(hop, 0, hops, 90, width - 210)
+        for row, n in enumerate(column):
+            y = _scale(row + 0.5, 0, len(column), pad_y, height - 24)
+            pos[(n.key, n.hop)] = (x, y, radius(n.value))
 
-    out_used: dict[tuple, float] = defaultdict(float)
-    in_used: dict[tuple, float] = defaultdict(float)
-    bands: list[str] = []
-    particles: list[str] = []
-    uid = zlib.crc32(f"{report['params']['origin']}{report.get('computed_at')}".encode()) % 10**6
-    for e in sorted(report["edges"], key=lambda e: (e["hop"], -Decimal(e["taint_value"]))):
-        src_key = next((k for k in pos if k[0][0] == e["source"] and k[1] == e["hop"] - 1), None)
-        dst_key = next((k for k in pos if k[0][0] == e["destination"] and k[1] == e["hop"]), None)
-        if src_key is None or dst_key is None:
+    links, particles = [], []
+    for e in report["edges"]:
+        src = next((k for k in pos if k[0][0] == e["source"] and k[1] == e["hop"] - 1), None)
+        dst = next((k for k in pos if k[0][0] == e["destination"] and k[1] == e["hop"]), None)
+        if src is None or dst is None:
             continue
-        thick = max(float(Decimal(e["taint_value"]) * scale), 1.5)
-        sx, sy, _ = pos[src_key]
-        dx, dy, _ = pos[dst_key]
-        y0 = sy + out_used[src_key] + thick / 2
-        y1 = dy + in_used[dst_key] + thick / 2
-        out_used[src_key] += thick
-        in_used[dst_key] += thick
-        mid = (sx + col_w + dx) / 2
-        d = f"M{sx + col_w:.1f},{y0:.1f} C{mid:.1f},{y0:.1f} {mid:.1f},{y1:.1f} {dx:.1f},{y1:.1f}"
-        band_id = f"band-{uid}-{len(bands)}"
-        bands.append(
-            f'<path id="{band_id}" class="flow-band" style="--i:{e["hop"]}" pathLength="1" '
-            f'stroke-width="{thick:.1f}" d="{d}"><title>{escape(e["taint"])} via '
-            f"{escape(e['tx_hash'][:12])}…</title></path>"
+        (sx, sy, sr), (dx, dy, dr) = pos[src], pos[dst]
+        x0, x1 = sx + sr + 2, dx - dr - 6
+        mid = (x0 + x1) / 2
+        d = f"M{x0:.1f},{sy:.1f} C{mid:.1f},{sy:.1f} {mid:.1f},{dy:.1f} {x1:.1f},{dy:.1f}"
+        share = float(Decimal(e["taint_value"]) / stolen)
+        link_id = f"link-{uid}-{len(links)}"
+        links.append(
+            f'<path id="{link_id}" class="flow-band" style="--i:{e["hop"]}" pathLength="1" '
+            f'stroke-width="{1.5 + 4.5 * share:.1f}" marker-end="url(#arrow-{uid})" d="{d}">'
+            f"<title>{escape(e['taint'])} via {escape(e['tx_hash'][:12])}…</title></path>"
         )
-        # value "particles": bigger flows carry more dots; they start once their hop has drawn
-        dots = 1 + min(int(thick // 14), 3)
-        for k in range(dots):
-            begin = 0.35 * e["hop"] + 1.2 + k * 1.6 / dots
+        for k in range(1 + round(share * 2)):  # bigger flows carry more particles
+            begin = 0.45 * e["hop"] + 1.0 + k * 0.7
             particles.append(
-                f'<circle class="flow-particle" opacity="0" r="{min(2 + thick / 18, 4.5):.1f}">'
+                f'<circle class="flow-particle" opacity="0" r="{2.5 + 2 * share:.1f}">'
                 f'<set attributeName="opacity" to="1" begin="{begin:.2f}s"/>'
-                f'<animateMotion dur="1.6s" begin="{begin:.2f}s" repeatCount="indefinite">'
-                f'<mpath href="#{band_id}"/></animateMotion></circle>'
+                f'<animateMotion dur="1.4s" begin="{begin:.2f}s" repeatCount="indefinite">'
+                f'<mpath href="#{link_id}"/></animateMotion></circle>'
             )
-    rects = []
+
+    circles = []
     for n in nodes:
-        x, top, h = pos[(n.key, n.hop)]
-        share = n.value / stolen * 100
-        value = f"{(n.value / per_unit).quantize(Decimal('0.000001')).normalize():,f} {unit}"
-        anchor, tx = ("end", x - 8) if n.hop == 0 else ("start", x + col_w + 8)
+        x, y, r = pos[(n.key, n.hop)]
         tag = f", tag {n.key[1]}" if n.key[1] is not None else ""
-        rects.append(
-            f'<g class="flow-node flow-{n.kind}" style="--i:{n.hop}"><rect x="{x:.1f}" '
-            f'y="{top:.1f}" width="{col_w}" height="{h:.1f}" rx="4"><title>{escape(n.key[0])}'
-            f"{escape(tag)}: {value}</title></rect>"
-            f'<text class="flow-name" x="{tx:.1f}" y="{top + h / 2 - 2:.1f}" '
-            f'text-anchor="{anchor}">{escape(n.label)}{escape(tag)}</text>'
-            f'<text class="flow-value" x="{tx:.1f}" y="{top + h / 2 + 13:.1f}" '
-            f'text-anchor="{anchor}">{value} ({share:.0f}%)</text></g>'
+        value = f"{(n.value / per_unit).quantize(Decimal('0.000001')).normalize():,f} {unit}"
+        share = n.value / stolen * 100
+        ring = (
+            f'<circle class="flow-ring" cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}"/>'
+            if n.kind == "sink"
+            else ""
+        )
+        circles.append(
+            f'<g class="flow-node flow-{n.kind}" style="--i:{n.hop}">{ring}'
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}"><title>{escape(n.key[0])}'
+            f"{escape(tag)}: {value}</title></circle>"
+            f'<text class="flow-name" x="{x:.1f}" y="{y + r + 15:.1f}" text-anchor="middle">'
+            f"{escape(n.label)}{escape(tag)}</text>"
+            f'<text class="flow-value" x="{x:.1f}" y="{y + r + 29:.1f}" text-anchor="middle">'
+            f"{value} ({share:.0f}%)</text></g>"
         )
     hop_labels = "".join(
-        f'<text class="chart-label" x="{col_x(h) + col_w / 2:.1f}" y="14" text-anchor="middle">'
-        f"{'Victim' if h == 0 else f'Hop {h}'}</text>"
+        f'<text class="chart-label" x="{_scale(h, 0, hops, 90, width - 210):.1f}" y="18" '
+        f'text-anchor="middle">{"Victim" if h == 0 else f"Hop {h}"}</text>'
         for h in range(hops + 1)
     )
+    arrow = (
+        f'<defs><marker id="arrow-{uid}" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" '
+        'markerHeight="11" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" '
+        'class="flow-arrow"/></marker></defs>'
+    )
     return Markup(
-        f'<svg class="chart flow" viewBox="0 0 {width} {height}" role="img" '
-        f'aria-label="Funds flow over {hops} hops">{hop_labels}{"".join(bands)}'
-        f'<g class="flow-particles">{"".join(particles)}</g>{"".join(rects)}</svg>'
+        f'<svg class="chart flow" viewBox="0 0 {width} {height + 30}" role="img" '
+        f'aria-label="Funds flow over {hops} hops">{arrow}{hop_labels}{"".join(links)}'
+        f'<g class="flow-particles">{"".join(particles)}</g>{"".join(circles)}</svg>'
     )
 
 

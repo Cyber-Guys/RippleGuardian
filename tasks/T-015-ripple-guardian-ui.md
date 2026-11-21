@@ -26,3 +26,4 @@ Mainnet, Clawback/Freeze.
 ## Evidence
 - make check 75 passed; tests/flows/test_report.py; tests/app/test_web.py (recovery, PDF, trace request, live feed, flow replay)
 - scripts/e2e_browser.py on the docker stack: both roles, PDF download, 0 console errors; artifacts/screenshots/ and incident-report.pdf
+- 10:10 nico/claude: hop graph redone as a node-link graph (circles per account, curved arrows per transfer, value particles), on nico's request.

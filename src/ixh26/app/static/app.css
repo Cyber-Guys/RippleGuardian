@@ -360,13 +360,15 @@ dl.kv dd { margin: 0; overflow-wrap: anywhere; }
 /* animated hop graph on ink */
 .flow-stage { background: radial-gradient(120% 120% at 50% 0%, #142039 0%, var(--ink) 70%); border-radius: 14px; margin: var(--s-4); padding: var(--s-4) var(--s-2); }
 .flow .chart-label { fill: var(--on-ink-2); }
-.flow-band { fill: none; stroke: var(--ripple); stroke-opacity: 0.28; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 0.9s var(--ease) forwards; animation-delay: calc(var(--i, 0) * 350ms + 150ms); transition: stroke-opacity var(--d-fast) var(--ease); }
-.flow-band:hover { stroke-opacity: 0.55; }
-.flow-particle { fill: #cfe3ff; filter: drop-shadow(0 0 3px rgb(94 162 245 / 0.9)); }
-.flow-node { opacity: 0; animation: pop var(--d-slow) var(--ease) forwards; animation-delay: calc(var(--i, 0) * 350ms); transform-box: fill-box; transform-origin: center; }
-.flow-node rect { fill: #7f8ba3; }
-.flow-origin rect { fill: #fff; }
-.flow-sink rect { fill: var(--danger-ink); animation: sinkglow 2.4s var(--ease) infinite 2s; }
+.flow-band { fill: none; stroke: var(--ripple); stroke-opacity: 0.55; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 0.8s var(--ease) forwards; animation-delay: calc(var(--i, 0) * 450ms + 200ms); transition: stroke-opacity var(--d-fast) var(--ease); }
+.flow-band:hover { stroke-opacity: 1; }
+.flow-arrow { fill: var(--ripple); }
+.flow-particle { fill: #e3efff; filter: drop-shadow(0 0 4px rgb(94 162 245 / 0.95)); }
+.flow-node { opacity: 0; animation: pop var(--d-slow) var(--ease) forwards; animation-delay: calc(var(--i, 0) * 450ms); transform-box: fill-box; transform-origin: center; }
+.flow-node > circle:not(.flow-ring) { fill: #1c2a45; stroke: #7f8ba3; stroke-width: 2; }
+.flow-node.flow-origin > circle { fill: #fff; stroke: #fff; }
+.flow-sink > circle:not(.flow-ring) { fill: var(--danger-ink); stroke: #ffb3bf; }
+.flow-ring { fill: none; stroke: var(--danger-ink); stroke-width: 2; transform-box: fill-box; transform-origin: center; animation: ripple 2.4s var(--ease) infinite 2.2s; }
 .flow-name { fill: var(--on-ink); font: 500 12px var(--font); }
 .flow-value { fill: var(--on-ink-2); font: 400 11px var(--font-mono); }
 .flow-sink .flow-name { fill: #fff; font-weight: 600; }
@@ -395,13 +397,12 @@ dl.kv dd { margin: 0; overflow-wrap: anywhere; }
 @keyframes pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
 @keyframes ripple { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(2.6); opacity: 0; } }
 @keyframes ripple-wide { 0% { transform: scale(0.4); opacity: 0; } 15% { opacity: 0.55; } 100% { transform: scale(9); opacity: 0; } }
-@keyframes sinkglow { 0%, 100% { filter: drop-shadow(0 0 0 rgb(255 107 127 / 0)); } 50% { filter: drop-shadow(0 0 8px rgb(255 107 127 / 0.8)); } }
 .main > [data-enter] { animation: rise var(--d-slow) var(--ease) both; animation-delay: calc(var(--i, 0) * 70ms); }
 
 @media (prefers-reduced-motion: reduce) {
   .main > [data-enter], .t-step, .chart-stroke, .ranked .bar span, details.disclose > div { animation: none; }
   .flow-band { animation: none; stroke-dashoffset: 0; }
   .flow-node { animation: none; opacity: 1; }
-  .flow-particles, .auth-rings { display: none; }
-  .pulse-dot::before, .pulse-dot::after, .alarm-icon::before, .alarm-icon::after, .flow-sink rect { animation: none; }
+  .flow-particles, .flow-ring, .auth-rings { display: none; }
+  .pulse-dot::before, .pulse-dot::after, .alarm-icon::before, .alarm-icon::after { animation: none; }
 }
