@@ -20,3 +20,4 @@ Every library, copied snippet (>5 lines), dataset, image, font or icon used in t
 | python-multipart | https://github.com/Kludex/python-multipart | Apache-2.0 | app/: HTML form parsing for FastAPI |
 | htmx 2.0.4 | https://github.com/bigskysoftware/htmx | 0BSD | app/static/htmx.min.js (vendored, unmodified): live notification and trace fragments |
 | Lucide icons 0.460.0 (12 icons, path data inlined) | https://github.com/lucide-icons/lucide | ISC | app/templates/partials/icons.html |
+| fpdf2 | https://github.com/py-pdf/fpdf2 | LGPL-3.0 | flows/report.py: incident report PDF (used as unmodified library) |
