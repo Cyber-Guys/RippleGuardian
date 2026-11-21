@@ -12,7 +12,7 @@
     <div class="x-more"><div>
       <p>{{ a.message }}</p>
       <dl class="kv"><dt>Wallet</dt><dd class="mono">{{ short(a.wallet) }}</dd><dt>Transaction</dt><dd>{{ tx(a.tx_hash, tx_url) }}</dd></dl>
-      {% if a.kind in ("security_change", "taint_at_exchange") %}<div><a class="btn btn-small" href="/wallets/{{ a.wallet }}/recover">Start recovery</a></div>{% endif %}
+      {% if a.kind in ("security_change", "taint_at_exchange") %}<div><a class="btn btn-small btn-danger" href="/wallets/{{ a.wallet }}/recover">Start recovery</a></div>{% endif %}
     </div></div>
   </li>
   {% endfor %}

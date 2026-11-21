@@ -27,3 +27,4 @@ Mainnet, Clawback/Freeze.
 - make check 75 passed; tests/flows/test_report.py; tests/app/test_web.py (recovery, PDF, trace request, live feed, flow replay)
 - scripts/e2e_browser.py on the docker stack: both roles, PDF download, 0 console errors; artifacts/screenshots/ and incident-report.pdf
 - 10:10 nico/claude: hop graph redone as a node-link graph (circles per account, curved arrows per transfer, value particles), on nico's request.
+- 10:42 nico/claude: T-017 light white/grey/celeste palette (inspired by the dashboard-shell prompt, no React), node depth, hover path highlight, beacons on the next action, multi-hop demo (2 relays, 5 mules, 2 exchanges). After the 10:30 merge freeze, on nico's explicit instruction.

@@ -5,7 +5,7 @@
 {% block main %}
 <div class="stack">
   {% set worst = (wallets|selectattr("status.state", "equalto", "compromised")|first) %}
-  {% set cta %}{% if worst %}<a class="btn btn-danger btn-big" href="/wallets/{{ worst.wallet.address }}/recover">Start recovery</a><a class="btn btn-quiet btn-big" href="/wallets/{{ worst.wallet.address }}/report.pdf">{{ icon("download") }} Report</a>{% endif %}{% endset %}
+  {% set cta %}{% if worst %}<a class="btn btn-danger btn-big beacon" href="/wallets/{{ worst.wallet.address }}/recover">Start recovery</a><a class="btn btn-quiet btn-big" href="/wallets/{{ worst.wallet.address }}/report.pdf">{{ icon("download") }} Report</a>{% endif %}{% endset %}
   {{ alarm(overall, cta) }}
   {{ errors(error) }}
   <div class="grid-2" data-enter style="--i: 1">

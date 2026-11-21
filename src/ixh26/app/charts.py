@@ -129,6 +129,8 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 340) -
     unit = report["params"]["stolen"].split()[-1]
     per_unit = Decimal(10**6) if unit == "XRP" else Decimal(1)
     hops = max(n.hop for n in nodes)
+    busiest = max(sum(1 for n in nodes if n.hop == h) for h in range(hops + 1))
+    height = max(height, 84 * busiest + 40)  # room for each node's two label lines
     uid = zlib.crc32(f"{report['params']['origin']}{report.get('computed_at')}".encode()) % 10**6
     pad_y = 48
 
@@ -143,7 +145,9 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 340) -
             y = _scale(row + 0.5, 0, len(column), pad_y, height - 24)
             pos[(n.key, n.hop)] = (x, y, radius(n.value))
 
+    index = {k: i for i, k in enumerate(pos)}
     links, particles = [], []
+    pairs: list[tuple[int, int]] = []
     for e in report["edges"]:
         src = next((k for k in pos if k[0][0] == e["source"] and k[1] == e["hop"] - 1), None)
         dst = next((k for k in pos if k[0][0] == e["destination"] and k[1] == e["hop"]), None)
@@ -155,20 +159,25 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 340) -
         d = f"M{x0:.1f},{sy:.1f} C{mid:.1f},{sy:.1f} {mid:.1f},{dy:.1f} {x1:.1f},{dy:.1f}"
         share = float(Decimal(e["taint_value"]) / stolen)
         link_id = f"link-{uid}-{len(links)}"
+        pairs.append((index[src], index[dst]))
         links.append(
-            f'<path id="{link_id}" class="flow-band" style="--i:{e["hop"]}" pathLength="1" '
+            f'<path id="{link_id}" class="flow-band PATH{len(pairs) - 1}" style="--i:{e["hop"]}" '
+            'pathLength="1" '
             f'stroke-width="{1.5 + 4.5 * share:.1f}" marker-end="url(#arrow-{uid})" d="{d}">'
             f"<title>{escape(e['taint'])} via {escape(e['tx_hash'][:12])}…</title></path>"
         )
         for k in range(1 + round(share * 2)):  # bigger flows carry more particles
             begin = 0.45 * e["hop"] + 1.0 + k * 0.7
-            particles.append(
-                f'<circle class="flow-particle" opacity="0" r="{2.5 + 2 * share:.1f}">'
-                f'<set attributeName="opacity" to="1" begin="{begin:.2f}s"/>'
-                f'<animateMotion dur="1.4s" begin="{begin:.2f}s" repeatCount="indefinite">'
-                f'<mpath href="#{link_id}"/></animateMotion></circle>'
-            )
+            for lag, scale in ((0.0, 1.0), (0.08, 0.6), (0.16, 0.35)):  # head + fading trail
+                particles.append(
+                    f'<circle class="flow-particle" opacity="0" '
+                    f'r="{(2.5 + 2 * share) * scale:.1f}">'
+                    f'<set attributeName="opacity" to="{scale}" begin="{begin + lag:.2f}s"/>'
+                    f'<animateMotion dur="1.4s" begin="{begin + lag:.2f}s" '
+                    f'repeatCount="indefinite"><mpath href="#{link_id}"/></animateMotion></circle>'
+                )
 
+    on_path = _paths(len(pos), pairs)
     circles = []
     for n in nodes:
         x, y, r = pos[(n.key, n.hop)]
@@ -180,9 +189,11 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 340) -
             if n.kind == "sink"
             else ""
         )
+        i = index[(n.key, n.hop)]
         circles.append(
-            f'<g class="flow-node flow-{n.kind}" style="--i:{n.hop}">{ring}'
-            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}"><title>{escape(n.key[0])}'
+            f'<g id="n-{uid}-{i}" class="flow-node flow-{n.kind} NODE{i}" style="--i:{n.hop}">'
+            f'{ring}<circle class="flow-body" cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}">'
+            f"<title>{escape(n.key[0])}"
             f"{escape(tag)}: {value}</title></circle>"
             f'<text class="flow-name" x="{x:.1f}" y="{y + r + 15:.1f}" text-anchor="middle">'
             f"{escape(n.label)}{escape(tag)}</text>"
@@ -198,13 +209,67 @@ def flow_graph(report: dict[str, Any], *, width: int = 960, height: int = 340) -
         f'<defs><marker id="arrow-{uid}" viewBox="0 0 10 10" refX="8" refY="5" '
         'markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" '
         'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="flow-arrow"/>'
-        "</marker></defs>"
+        f"</marker>{_GRADIENTS.format(w=width)}</defs>"
+    )
+    # Tag every link and node with the hovered-node paths it belongs to, then one CSS rule per
+    # node dims everything else while that node is hovered.
+    links = [
+        s.replace(f"PATH{j}", _owners(uid, on_path, {a, b}), 1)
+        for j, (s, (a, b)) in enumerate(zip(links, pairs, strict=True))
+    ]
+    circles = [
+        s.replace(f"NODE{index[(n.key, n.hop)]}", _owners(uid, on_path, {index[(n.key, n.hop)]}), 1)
+        for s, n in zip(circles, nodes, strict=True)
+    ]
+    hover = "".join(
+        f".flow:has(#n-{uid}-{i}:hover) :is(.flow-band,.flow-node):not(.p-{uid}-{i}){{opacity:.12}}"
+        for i in range(len(pos))
     )
     return Markup(
         f'<svg class="chart flow" viewBox="0 0 {width} {height + 30}" role="img" '
-        f'aria-label="Funds flow over {hops} hops">{arrow}{hop_labels}{"".join(links)}'
+        f'aria-label="Funds flow over {hops} hops"><style>{hover}</style>{arrow}{hop_labels}'
+        f"{''.join(links)}"
         f'<g class="flow-particles">{"".join(particles)}</g>{"".join(circles)}</svg>'
     )
+
+
+_GRADIENTS = (
+    '<linearGradient id="edge-grad" gradientUnits="userSpaceOnUse" x1="0" x2="{w}" y1="0" y2="0">'
+    '<stop offset="0" stop-color="#9cc6ea"/><stop offset=".6" stop-color="#2f86d1"/>'
+    '<stop offset="1" stop-color="#d6334a"/></linearGradient>'
+    '<radialGradient id="node-grad" cx=".35" cy=".3" r=".8">'
+    '<stop offset="0" stop-color="#ffffff"/>'
+    '<stop offset="1" stop-color="#cfe6f8"/></radialGradient>'
+    '<radialGradient id="origin-grad" cx=".35" cy=".3" r=".8">'
+    '<stop offset="0" stop-color="#94a3b8"/>'
+    '<stop offset="1" stop-color="#334155"/></radialGradient>'
+    '<radialGradient id="sink-grad" cx=".35" cy=".3" r=".8">'
+    '<stop offset="0" stop-color="#ff8b9b"/>'
+    '<stop offset="1" stop-color="#c5283d"/></radialGradient>'
+)
+
+
+def _paths(count: int, pairs: list[tuple[int, int]]) -> dict[int, set[int]]:
+    """For every node: itself plus every node upstream and downstream (its money path)."""
+    out: dict[int, set[int]] = {}
+    for start in range(count):
+        seen = {start}
+        for forward in (True, False):
+            frontier = [start]
+            while frontier:
+                cur = frontier.pop()
+                for a, b in pairs:
+                    nxt = b if forward and a == cur else a if not forward and b == cur else None
+                    if nxt is not None and nxt not in seen:
+                        seen.add(nxt)
+                        frontier.append(nxt)
+        out[start] = seen
+    return out
+
+
+def _owners(uid: int, path_of: dict[int, set[int]], needed: set[int]) -> str:
+    """CSS classes of every hovered node whose path contains all of ``needed``."""
+    return " ".join(f"p-{uid}-{n}" for n, members in path_of.items() if needed <= members)
 
 
 def ranked_bars(items: list[tuple[str, int]]) -> list[dict[str, Any]]:

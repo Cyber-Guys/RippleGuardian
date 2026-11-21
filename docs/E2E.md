@@ -40,3 +40,17 @@ uv run --with playwright python scripts/e2e_browser.py --user alice:PASS --analy
 ```
 
 On WSL machines where Python DNS lookups stall (IPv6), prefix the network commands with `RES_OPTIONS="timeout:1 attempts:1"`.
+
+## Second run: a laundering tree (21 Nov, 10:30 CET)
+
+`make demo` now builds a more realistic case: the attacker splits the stolen XRP across two relays, the relays feed five mules, three mules cash out at Exchange (tag 777001), one at Exchange B (tag 4242, a second SIMULATED exchange), and one keeps its share.
+
+| Check | Result |
+|---|---|
+| Drain of 99.99997 XRP | [5824D3C4…](https://testnet.xrpl.org/transactions/5824D3C46D3B223031BFFD93364BDD6A102AC3A91C9EE80C029EFB749430AECB) |
+| Trace 2 | 12 tainted transfers over 4 hops |
+| Located at Exchange, tag 777001 | 54.939982 XRP (55%) |
+| Located at Exchange B, tag 4242 | 21.975993 XRP (22%) |
+| Held by one mule | 15.383995 XRP (15%), reported as an unlabelled endpoint |
+
+Screenshots: `artifacts/screenshots/analyst-hop-graph.png` and `analyst-hop-graph-hover.png` (hovering a mule dims everything off its money path).

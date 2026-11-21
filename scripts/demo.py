@@ -32,7 +32,12 @@ from ixh26.store.repo import Store
 
 XRP1 = Decimal(1_000_000)
 EXCHANGE_TAG = 777001  # the "customer account" at the exchange
-SPLIT = (Decimal("0.40"), Decimal("0.35"), Decimal("0.25"))
+EXCHANGE_B_TAG = 4242
+RELAY_SPLIT = (Decimal("0.6"), Decimal("0.4"))
+MULE_SPLITS = (
+    (Decimal("0.45"), Decimal("0.35"), Decimal("0.2")),  # relay 1 -> mules 1-3
+    (Decimal("0.6"), Decimal("0.4")),  # relay 2 -> mules 4-5
+)
 FEE_MARGIN = Decimal(100_000)  # 0.1 XRP kept back for fees on each hop
 
 
@@ -91,36 +96,55 @@ async def main(args: argparse.Namespace) -> int:
     )
     print(f"{stolen / XRP1} XRP stolen at ledger {drain.ledger_index}: {drain.explorer_url}")
 
-    step("3. Split across three fresh mule accounts")
-    available = stolen - reserve - FEE_MARGIN
-    mules = [ephemeral_wallet() for _ in SPLIT]
-    sent = []
-    for mule, share in zip(mules, SPLIT, strict=True):
-        amount = (available * share).to_integral_value()
-        r = await pay_xrp(
-            settings,
-            attacker,
-            attacker.classic_address,
-            mule.classic_address,
-            amount,
-            "demo: split to mule",
+    # A realistic laundering tree: two relays, five mules, two exchanges, one mule lying low.
+    exchange_b = ephemeral_wallet()  # SIMULATED second exchange, labelled for this run only
+    store.upsert_label(
+        AccountLabel(
+            exchange_b.classic_address, AccountLabelKind.EXCHANGE, "Exchange B (SIMULATED)"
         )
-        sent.append(amount)
-        print(f"{amount / XRP1} XRP -> {mule.classic_address}: {r.explorer_url}")
+    )
 
-    step("4. Mules deposit at the exchange under one customer tag")
-    for mule, amount in zip(mules, sent, strict=True):
+    async def hop(src, amounts, purpose):
+        """Pay each fresh account its share of what ``src`` received; return the new wallets."""
+        out = []
+        for amount in amounts:
+            dst = ephemeral_wallet()
+            r = await pay_xrp(
+                settings, src, src.classic_address, dst.classic_address, amount, purpose
+            )
+            print(f"{amount / XRP1} XRP -> {dst.classic_address}: {r.explorer_url}")
+            out.append((dst, amount))
+        return out
+
+    def shares(total, parts):
+        return [(total * p).to_integral_value() for p in parts]
+
+    step("3. Two relay accounts")
+    available = stolen - reserve - FEE_MARGIN
+    relays = await hop(attacker, shares(available, RELAY_SPLIT), "demo: relay")
+
+    step("4. Relays split across five mules")
+    mules = []
+    for (relay, amount), split in zip(relays, MULE_SPLITS, strict=True):
+        mules += await hop(relay, shares(amount - reserve - FEE_MARGIN, split), "demo: mule")
+
+    step("5. Mules cash out at two exchanges; one lies low")
+    destinations = [(exchange, EXCHANGE_TAG)] * 3 + [(exchange_b, EXCHANGE_B_TAG), (None, None)]
+    for (mule, amount), (target, tag) in zip(mules, destinations, strict=True):
+        if target is None:
+            print(f"{mule.classic_address} keeps {amount / XRP1} XRP")
+            continue
         deposit = amount - reserve - FEE_MARGIN
         r = await pay_xrp(
             settings,
             mule,
             mule.classic_address,
-            exchange.classic_address,
+            target.classic_address,
             deposit,
             "demo: deposit at exchange",
-            destination_tag=EXCHANGE_TAG,
+            destination_tag=tag,
         )
-        print(f"{deposit / XRP1} XRP -> exchange tag {EXCHANGE_TAG}: {r.explorer_url}")
+        print(f"{deposit / XRP1} XRP -> {target.classic_address} tag {tag}: {r.explorer_url}")
 
     step("Trace parameters")
     print(f"robbed wallet  {victim.classic_address}")

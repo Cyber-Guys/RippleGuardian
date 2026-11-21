@@ -77,7 +77,7 @@ def test_user_pages_and_role_enforcement(store: Store) -> None:
 def test_analyst_findings_trace_and_flag_visible_to_users(store: Store) -> None:
     ana = client_for(store, "ana", "analyst-pass")
     overview = ana.get("/analyst")
-    assert "Open findings" in overview.text and 'class="flow-band"' in overview.text
+    assert "Open findings" in overview.text and 'class="flow-band' in overview.text
     assert "animateMotion" in overview.text and "Exchange exposure" in overview.text
     assert ":777" in ana.get("/ui/live").text
     assert ana.get("/ui/flow/1").status_code == 200
@@ -125,7 +125,8 @@ def test_flow_marks_only_stops_and_known_entities() -> None:
     kinds = {n.key[0]: n.kind for n in flow_nodes(report)}
     assert kinds == {"rVictim": "origin", "rMule": "hop", "rEx": "sink", "rStay": "sink"}
     svg = str(flow_graph(report))
-    assert svg.count('class="flow-band"') == 3 and "Exchange, tag 7" in svg
+    assert svg.count('class="flow-band') == 3 and "Exchange, tag 7" in svg
+    assert ":has(#n-" in svg  # hovering a node dims everything off its money path
 
 
 def test_balance_line_follows_transfers() -> None:
