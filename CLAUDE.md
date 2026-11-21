@@ -1,6 +1,6 @@
 # CLAUDE.md: shared agent policy for our IXH26 Track 2 repo
 
-**Policy version: 1.0 (2026-11-20 20:00 CET).** This file is the single shared policy for **every** agent working in this repo: Claude Code sessions, subagents, and any other AI tool. Link it for non-Claude tools: `ln -s CLAUDE.md AGENTS.md`.
+**Policy version: 1.1 (2026-11-21 11:00 CET).** This file is the single shared policy for **every** agent working in this repo: Claude Code sessions, subagents, and any other AI tool. Link it for non-Claude tools: `ln -s CLAUDE.md AGENTS.md`.
 Every agent follows it. If it conflicts with a task file or with an agent's own judgment, **this file wins**. Only an explicit instruction from one of our humans overrides it, and that override applies only to that human's task.
 
 ---
@@ -40,8 +40,11 @@ Every agent follows these. If a rule blocks you, **stop and ask your human**; ne
 12. **Leave a handoff.** Before stopping for any reason, append status, the next step and any gotchas to the task's Log.
 13. **Fail loudly.** No bare `except`, and no fallback that hides a failure as success.
 14. **Prioritise the demo.** The demo and the judging criteria take precedence over completeness, generality or refactoring.
+15. **Use the superpowers skills.** Before acting on a task, invoke the `superpowers:*` skill that fits it: `brainstorming` before new work, `systematic-debugging` for a bug, `test-driven-development` while coding, `verification-before-completion` before calling anything done. A tool without skills follows the same steps by hand.
+16. **Docs follow the code.** After every commit that changes behaviour, update the docs it affects (`README.md`, `docs/`, the task file) on the same branch, and write that prose with the `humanizer` skill. When the docs and the code disagree, the code is right: fix the docs.
+17. **No AI credit in git.** Commits, PRs and tags never carry a `Co-Authored-By` trailer for an AI, a "Generated with" line, or anything equivalent. AI use is declared once, in `docs/SUBMISSION.md` (§7).
 
-At the start of each session, state in one line: `Policy 1.0 acknowledged · task T-xxx · scope <paths>`.
+At the start of each session, state in one line: `Policy 1.1 acknowledged · task T-xxx · scope <paths>`.
 
 ---
 
@@ -104,7 +107,7 @@ One sentence describing the outcome, not the activity.
 - **Commits:** keep them small and frequent. A visible incremental history supports the "new work only" rule.
   - Format: `<type>(<area>): <summary> [T-012]`.
   - Types: `feat`, `fix`, `test`, `docs`, `chore`, `refactor`, `policy`.
-  - Keep the tool's default AI co-author trailer (it supports AI-use transparency).
+  - No AI co-author trailer and no "Generated with" line (Compact rule 17). Turn the tool's default trailer off.
 - **Sync:** rebase your branch on `main` before asking to merge.
 - **Merging:**
   - Squash or fast-forward into `main`, only after checks pass and your human says OK.
@@ -228,6 +231,7 @@ One sentence describing the outcome, not the activity.
   - Numbers and units in UI and slides must be consistent and come from real runs.
   - Anything not built goes under "Roadmap".
   - Mocks carry a `# SIMULATED:` code comment and a visible UI label.
+  - The source code is the reference. Every commit that changes behaviour updates the affected docs, written with the `humanizer` skill (Compact rule 16).
 
 ---
 
