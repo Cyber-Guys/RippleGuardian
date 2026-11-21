@@ -16,7 +16,7 @@ Text for the hackathon app. A human submits it before Sat 21 Nov 12:00 CET (targ
 ## Short description (max 200 characters)
 
 ```text
-Ripple Guardian alerts XRPL wallet owners when keys change or funds leave, and lets analysts trace stolen XRP hop by hop, while also aiding in detection.
+Ripple Guardian is a blockchain forensics framework for the XRP Ledger: it alerts owners when keys change or funds leave, and traces stolen XRP hop by hop to the exchange and destination tag.
 ```
 
 ## Description (max 5000 characters, markdown)
@@ -28,7 +28,7 @@ When an XRPL seed leaks, a thief can add their own signing key, empty the wallet
 
 ## What Ripple Guardian does
 
-One web app with two roles: wallet owners and analysts.
+Ripple Guardian is a blockchain forensics framework for the XRP Ledger, built for the people who own the wallets. One web app with two roles: wallet owners and analysts.
 
 ### For owners
 

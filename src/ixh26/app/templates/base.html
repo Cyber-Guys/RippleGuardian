@@ -5,7 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ brand }}{% endblock %} | {{ brand }}</title>
-  <link rel="icon" href="/static/logo.svg" type="image/svg+xml">
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
   <link rel="stylesheet" href="/static/app.css">
   <script src="/static/htmx.min.js" defer></script>
 </head>
@@ -14,7 +15,7 @@
 <div class="shell">
   <aside class="sidebar">
     <a class="brand" href="/">
-      {% with mark_id="nav" %}{% include "partials/mark.html" %}{% endwith %}
+      {% include "partials/mark.html" %}
       <span class="brand-name">{{ brand }}<small>{{ "Analyst desk" if user.is_analyst else "Wallet protection" }}</small></span>
     </a>
     <nav class="nav" aria-label="Main">
