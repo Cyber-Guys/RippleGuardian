@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from ixh26 import __version__, config
-from ixh26.app import api
+from ixh26.app import api, verification
 from ixh26.store.repo import Store
 
 
@@ -31,6 +31,7 @@ def create_app(settings: config.Settings | None = None, store: Store | None = No
     app.state.settings = settings
     app.state.store = store
     app.include_router(api.router)
+    app.include_router(verification.router)
 
     @app.get("/healthz")
     def healthz() -> dict[str, str]:

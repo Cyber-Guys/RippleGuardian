@@ -18,6 +18,7 @@ from xrpl.asyncio.clients import AsyncJsonRpcClient, AsyncWebsocketClient
 from xrpl.asyncio.clients.exceptions import XRPLRequestFailureException
 from xrpl.asyncio.transaction import submit_and_wait
 from xrpl.asyncio.wallet import generate_faucet_wallet
+from xrpl.core.addresscodec import is_valid_classic_address
 from xrpl.models import Memo, Response
 from xrpl.models.requests import AccountInfo, AccountTx, Ledger, Request, Subscribe, Tx
 from xrpl.models.transactions import Transaction
@@ -137,6 +138,10 @@ class XrplReader:
     async def current_ledger(self) -> int:
         result = await self._call(Ledger(ledger_index="validated"))
         return int(result["ledger_index"])
+
+    @staticmethod
+    def valid_address(address: str) -> bool:
+        return is_valid_classic_address(address)
 
     async def xrp_balance(self, account: str, ledger_index: int | str = "validated") -> Decimal:
         """Balance in drops at ``ledger_index``; 0 if the account did not exist then."""
