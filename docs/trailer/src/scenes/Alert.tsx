@@ -113,7 +113,7 @@ export const Alert: React.FC<SceneProps> = (p) => {
         </CameraMove>
       </FloatingWindow>
       <Caption eyebrow="OWNER" at={at(p, "alertCaption")}>
-        Alerts in plain words, the moment it happens.
+        Alerts in plain words, the moment something happens.
       </Caption>
     </>
   );

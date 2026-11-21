@@ -92,8 +92,8 @@ export const Trace: React.FC<SceneProps> = (p) => {
         nextAt={second}
         next={
           <>
-            {values.trace.transfers} tainted transfers · {values.trace.hops}{" "}
-            hops · every amount from{" "}
+            {values.trace.transfers} tainted transfers over {values.trace.hops}{" "}
+            hops, every amount read from{" "}
             <span style={{ fontFamily: MONO, fontWeight: 500 }}>
               delivered_amount
             </span>

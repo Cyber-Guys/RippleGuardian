@@ -39,11 +39,14 @@ const CARDS: { icon: string; text: React.ReactNode }[] = [
         <span style={{ fontFamily: MONO, fontWeight: 500 }}>
           delivered_amount
         </span>
-        : amounts that cannot be faked
+        : partial payments can't inflate the amounts
       </>
     ),
   },
-  { icon: "tag", text: "Destination tag: the customer, not just the exchange" },
+  {
+    icon: "tag",
+    text: "Destination tag: it points to one customer's account at the exchange",
+  },
   { icon: "check", text: "7 of 7 traced transfers match the ledger" },
   { icon: "flag", text: "Public flags, signed with the analyst's name" },
 ];

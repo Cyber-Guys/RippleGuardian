@@ -91,7 +91,7 @@ SCENE 3 - THE ALERT (0:12-0:20, bars 7-10) - real UI, owner "alice"
 Capture: the owner dashboard and the wallet page in the compromised state.
 Push in on the red status and the alert feed ("Signing key changed",
 "XRP sent"). Spotlight the red "What to do" button; the recorded cursor clicks it.
-Caption: eyebrow "OWNER", title "Alerts in plain words, the moment it happens."
+Caption: eyebrow "OWNER", title "Alerts in plain words, the moment something happens."
 
 SCENE 4 - RECOVERY (0:20-0:26, bars 11-13) - real UI
 Capture: /wallets/{address}/recover. Pan down the four steps
@@ -108,7 +108,7 @@ right edge as the graph grows. On bar 20 beat 1 (impact), spotlight the node
 "Exchange (SIMULATED), tag 777001" and its "54.939982 XRP (55%)".
 Captions, one after the other:
   eyebrow "ANALYST", title "Blockchain forensics: follow the money, hop by hop."
-  "12 tainted transfers · 4 hops · every amount from delivered_amount"
+  "12 tainted transfers over 4 hops, every amount read from delivered_amount"
 
 SCENE 6 - THE OWNER KNOWS (0:40-0:46, bars 21-23) - real UI
 Capture: /notifications with the "Stolen funds located" entry expanded:
@@ -121,7 +121,7 @@ Caption: "The exact destination tag: the customer account the exchange can freez
 SCENE 7 - PLATFORM TOUR (0:46-1:10, bars 24-35) - real UI, 2 bars per feature
 Fast, clean, consistent: each feature is one capture in the floating window, one
 push-in to its key element, one caption. Whoosh + cut on every downbeat pair.
-  Bars 24-25  /register             OWNER    "Sign up with a username. No email, no phone."
+  Bars 24-25  /register             OWNER    "Sign up with just a username: no email or phone number needed."
   Bars 26-27  /wallets              OWNER    "Watch any wallet, live from the ledger."
   Bars 28-29  /wallets/{a}/verify   OWNER    "Prove you own it with a one-drop payment."
   Bars 30-31  /analyst/findings     ANALYST  "Four detectors raise findings to review."
@@ -132,8 +132,8 @@ push-in to its key element, one caption. Whoosh + cut on every downbeat pair.
 
 SCENE 8 - WHY XRPL (1:10-1:18, bars 36-39) - motion graphics
 Four cards in a 2x2 grid, one per bar, blue icon + one line each:
-  "delivered_amount: amounts that cannot be faked"
-  "Destination tag: the customer, not just the exchange"
+  "delivered_amount: partial payments can't inflate the amounts"
+  "Destination tag: it points to one customer's account at the exchange"
   "7 of 7 traced transfers match the ledger"
   "Public flags, signed with the analyst's name"
 

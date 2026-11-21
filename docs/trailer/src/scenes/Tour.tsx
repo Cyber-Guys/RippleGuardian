@@ -19,7 +19,7 @@ const FEATURES = [
     file: "auth-register.png",
     key: "card",
     area: "OWNER",
-    title: "Sign up with a username. No email, no phone.",
+    title: "Sign up with just a username: no email or phone number needed.",
     left: 1,
     widen: 560,
   },
