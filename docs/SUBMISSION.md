@@ -77,7 +77,6 @@ Transaction hashes, screenshots and the browser check are in the repo (`docs/E2E
 ## Next
 
 - Use the trace as evidence to ask a token issuer to freeze or claw back stolen tokens.
-- Require the wallet ownership proof (already built as an optional page) before a wallet is watched.
 - Read DEX fills and AMM withdrawals, so all four detectors run live and the trace can follow funds across currencies.
 ```
 

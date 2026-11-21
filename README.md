@@ -140,7 +140,7 @@ On WSL, Python DNS lookups can stall on IPv6 and make every Testnet call time ou
 | Users can't open analyst pages; analyst flags are visible to users | `tests/app/test_web.py`, `scripts/e2e_browser.py` run in [docs/E2E.md](docs/E2E.md) |
 | Takeover and funnel detectors fire on live Testnet data | findings in [docs/E2E.md](docs/E2E.md); rules in `tests/core/test_detection.py` |
 | Testnet is the default. Mainnet is opt-in with `XRPL_NETWORK=mainnet`, needs its own database and never submits a transaction. Any validated transaction can be looked up by hash on either network, from the Find transaction page | `tests/test_config.py`, `tests/app/test_transaction_api.py`, `tests/store/test_network_store.py` |
-| A user can prove control of a watched wallet with a one-drop payment that carries a one-time destination tag, valid for 15 minutes, from the wallet page | `tests/app/test_verification.py`, `tests/app/test_frontend_pages.py` |
+| A normal user's wallet is monitored only after its owner proves control with a one-drop payment that carries a one-time destination tag (valid 15 minutes). Until then it is stored, no alerts are sent and the worker skips it. Analysts are exempt | `tests/app/test_verification.py`, `tests/app/test_frontend_pages.py`, `tests/flows/test_flows.py::test_unverified_wallets_are_not_monitored_until_the_owner_proves_control` |
 | Amounts are never floats and seeds can't be committed | `tests/test_contracts.py`, `tests/test_secret_scan.py` |
 | Analysts adjust the four detector rules on the Detection settings page or through the API, with version checks between analysts, and the worker reads saved thresholds on its next run | `tests/app/test_detector_settings_api.py`, `tests/app/test_frontend_pages.py`, [frontend API handoff](docs/FRONTEND-BACKEND-HANDOFF.md) |
 
@@ -154,7 +154,6 @@ On WSL, Python DNS lookups can stall on IPv6 and make every Testnet call time ou
 ## Roadmap
 
 - Ask the issuer to freeze or claw back stolen tokens (trust line freeze, Clawback), using the trace as evidence.
-- Show the verified badge on the wallet cards and require it before a wallet is watched. Today the proof exists as an optional page on each wallet.
 - Read DEX fills and AMM withdrawals, so all four detectors run live and taint can follow funds across currencies.
 - Opt-in push or email delivery.
 - Mainnet in the web app. The backend can watch and trace on Mainnet, read-only, but the demo and all evidence stay on Testnet until the evidence format has been reviewed with an exchange.

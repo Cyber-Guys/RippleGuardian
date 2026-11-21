@@ -49,7 +49,8 @@ def test_register_then_watch_wallet_and_see_statement(store: Store) -> None:
     r = client.post(
         "/wallets", data={"address": "rPEPPER7kfTD9w2To4CQk6UCfuHM9c6GDY", "label": "Mine"}
     )
-    assert r.status_code == 200 and "Mine" in r.text
+    assert r.status_code == 200 and "Verify ownership" in r.text  # the proof comes first
+    assert "Mine" in client.get("/").text
 
 
 def test_user_pages_and_role_enforcement(store: Store) -> None:

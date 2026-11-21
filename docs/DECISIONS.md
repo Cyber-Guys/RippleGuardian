@@ -95,3 +95,11 @@ To reverse a decision, add a new entry that supersedes it. Don't edit old entrie
 - Why: Impact. Judges can look up a real Mainnet transaction by hash, and ownership proof stops anyone from watching a stranger's wallet in the app.
 - Conflict to resolve: CLAUDE.md section 5 still says "Mainnet is forbidden". This entry records that two humans asked for read-only Mainnet; a human must either update the policy or revert this decision before the submission.
 - Alternatives considered: keeping Mainnet out entirely (the previous rule).
+
+## D-011 · A wallet is monitored only after its owner proves control
+- Date: 2026-11-21 11:35 CET · Decided by: nico
+- Status: accepted
+- Decision: When a normal user adds a wallet, it is stored but not monitored until the one-drop ownership proof (T-017) succeeds. The worker skips unverified wallets and no alerts are sent for them. Analysts are exempt. The demo script performs the real payment for its victim wallet.
+- Why: Impact and trust. Nobody can watch a stranger's wallet through the app, and the product only holds data its owner has proven to own.
+- Alternatives considered: optional proof (the previous state); a verified flag on the wallet row (needs a schema change on existing databases).
+- Consequences: `Store.add_wallet(..., verified=True)` exists for tests and SIMULATED scenarios only. Existing unverified wallets stop being monitored after this change.

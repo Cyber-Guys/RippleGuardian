@@ -13,6 +13,7 @@ from ixh26.app.auth import CurrentUser, SettingsDep, StoreDep
 from ixh26.app.charts import line_chart
 from ixh26.app.views.common import PageUser, amount_text, redirect, render, xrp
 from ixh26.app.views.models import (
+    WalletState,
     balance_points,
     last_activity,
     overall_state,
@@ -23,9 +24,12 @@ from ixh26.app.views.models import (
 from ixh26.contracts import XRP
 from ixh26.flows.report import Incident, build_incident, incident_pdf
 from ixh26.store.repo import Store
-from ixh26.store.verification import get_proof
 
 router = APIRouter(include_in_schema=False)
+
+UNVERIFIED = WalletState(
+    "attention", "Not watched yet", "Verify you own this wallet to start monitoring it."
+)
 
 
 @router.get("/")
@@ -36,7 +40,10 @@ def home(request: Request, user: PageUser, store: StoreDep) -> Response:
     wallets = [
         {
             "wallet": w,
-            "status": wallet_state(store, user.id, w.address, flagged),
+            "status": wallet_state(store, user.id, w.address, flagged)
+            if store.is_verified(w)
+            else UNVERIFIED,
+            "verified": store.is_verified(w),
             "last": last_activity(store, w.address),
         }
         for w in store.wallets(user.id)
@@ -68,7 +75,7 @@ def wallet_add(
         return redirect("/?error=That+is+not+a+valid+XRPL+address+(it+starts+with+r).")
     if not store.wallet(user.id, address):
         store.add_wallet(user.id, address, label.strip()[:40])
-    return redirect(f"/wallets/{address}")
+    return redirect(f"/wallets/{address}/verify")  # watching starts only after the proof
 
 
 @router.get("/wallets/{address}")
@@ -93,7 +100,7 @@ def wallet_page(
         flagged=flagged,
         min_outgoing_xrp=xrp(wallet.min_outgoing_drops),
         synced=store.cursor(address) is not None,
-        verified=get_proof(store, wallet, settings.network.name) is not None,
+        verified=store.is_verified(wallet),
         saved=request.query_params.get("saved"),
     )
 

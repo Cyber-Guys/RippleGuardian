@@ -166,18 +166,19 @@ def list_wallets(user: UserDep, store: StoreDep) -> list[dict[str, Any]]:
             "notify_security": w.notify_security,
             "notify_flagged": w.notify_flagged,
             "min_outgoing_drops": w.min_outgoing_drops,
+            "verified": store.is_verified(w),  # unverified wallets are stored but not monitored
         }
         for w in store.wallets(user.id)
     ]
 
 
 @router.post("/wallets", status_code=201)
-def add_wallet(body: WalletIn, user: UserDep, store: StoreDep) -> dict[str, str]:
+def add_wallet(body: WalletIn, user: UserDep, store: StoreDep) -> dict[str, Any]:
     address = require_address(body.address)
     if store.wallet(user.id, address):
         raise HTTPException(409, "already watched")
     store.add_wallet(user.id, address, body.label)
-    return {"address": address}
+    return {"address": address, "verified": False}
 
 
 @router.patch("/wallets/{address}")

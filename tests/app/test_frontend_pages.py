@@ -236,3 +236,20 @@ def test_verification_expired_other_user_and_unavailable(
     monkeypatch.delenv("XRPL_VERIFICATION_RECIPIENT_TESTNET")
     off = alice.post(f"/wallets/{SOURCE}/verify/challenge")
     assert off.status_code == 503 and "available on this deployment" in off.text
+
+
+def test_adding_a_wallet_leads_to_verification_and_is_not_watched_until_then(
+    store: Store, chain
+) -> None:
+    carol = store.create_user("carol", hash_password("testing-123"))
+    client = make_client(store, "carol")
+    page = client.post("/wallets", data={"address": SOURCE, "label": "Main"})
+    assert page.url.path == f"/wallets/{SOURCE}/verify" and "Not verified" in page.text
+    assert "Verify to watch" in client.get("/").text and "Not watched yet" in client.get("/").text
+    assert store.watched_addresses() == []  # nobody is monitored without a proof
+    fields = start(client)
+    pay(chain, fields["destination_tag"])
+    done = client.post(f"/wallets/{SOURCE}/verify/confirm", data={**fields, "tx_hash": HASH})
+    assert "You control this wallet" in done.text
+    assert store.watched_addresses() == [SOURCE]
+    assert carol.id == store.wallets(carol.id)[0].user_id

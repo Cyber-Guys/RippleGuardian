@@ -15,6 +15,7 @@ import asyncio
 import logging
 import sys
 import time
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from ixh26 import config
@@ -29,6 +30,7 @@ from ixh26.ledger.ops import (
     set_regular_key,
 )
 from ixh26.store.repo import Store
+from ixh26.store.verification import confirm_challenge, issue_challenge
 
 XRP1 = Decimal(1_000_000)
 EXCHANGE_TAG = 777001  # the "customer account" at the exchange
@@ -75,6 +77,29 @@ async def main(args: argparse.Namespace) -> int:
             raise SystemExit(f"no user {args.watch_user!r}: register in the app first")
         if store.wallet(user.id, victim.classic_address) is None:
             store.add_wallet(user.id, victim.classic_address, "Savings")
+        watched = store.wallet(user.id, victim.classic_address)
+        if not store.is_verified(watched):
+            step("0. Ownership proof: the victim pays 1 drop with a one-time tag (real payment)")
+            challenge = issue_challenge(
+                store,
+                watched,
+                settings.network.name,
+                exchange.classic_address,
+                await reader.current_ledger(),
+            )
+            paid = await pay_xrp(
+                settings,
+                victim,
+                victim.classic_address,
+                exchange.classic_address,
+                Decimal(1),
+                "demo: wallet verification",
+                destination_tag=challenge.destination_tag,
+            )
+            confirm_challenge(
+                store, challenge.id, settings.network.name, paid.tx_hash.upper(), datetime.now(UTC)
+            )
+            print(paid.explorer_url)
         print(f"waiting for the worker to sync {args.watch_user}'s wallet…")
         await wait_for_backfill(store, victim.classic_address)
 

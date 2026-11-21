@@ -14,7 +14,8 @@
 <div class="stack">
   {% set cta %}{% if status.state == "compromised" %}<a class="btn btn-danger btn-big beacon" href="/wallets/{{ wallet.address }}/recover">What to do</a>{% endif %}<a class="btn btn-quiet btn-big" href="/wallets/{{ wallet.address }}/report.pdf">{{ icon("download") }} Report</a>{% endset %}
   {{ alarm(status, cta) }}
-  {% if not synced %}<p class="notice notice-sim">{{ icon("radar") }} Reading history from the ledger</p>{% endif %}
+  {% if not verified %}<p class="notice notice-error" role="alert">{{ icon("triangle-alert") }} Not watched yet. <a href="/wallets/{{ wallet.address }}/verify">Verify ownership</a> to start monitoring this wallet.</p>
+  {% elif not synced %}<p class="notice notice-sim">{{ icon("radar") }} Reading history from the ledger</p>{% endif %}
 
   <section class="panel" data-enter style="--i: 1">
     <div class="panel-head"><h2>Balance</h2><span class="small muted">XRP from recorded transfers</span></div>

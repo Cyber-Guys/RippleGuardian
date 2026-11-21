@@ -25,7 +25,7 @@ def test_flagged_counterparty_and_per_wallet_settings() -> None:
     store = Store.from_url("sqlite://")
     ana = store.create_user("ana", "h", role="analyst")
     alice = store.create_user("alice", "h")
-    store.add_wallet(alice.id, smoke.MULES[0])
+    store.add_wallet(alice.id, smoke.MULES[0], verified=True)
     store.add_flag("account", smoke.EXCHANGE, "theft", "receives stolen funds", ana.id)
     store.update_wallet(alice.id, smoke.MULES[0], min_outgoing_drops=str(100 * smoke.XRP1))
     Monitor(store).process(smoke._pay(6, smoke.MULES[0], smoke.EXCHANGE, 40, smoke.TAG))
@@ -37,7 +37,7 @@ def test_flag_alert_can_be_disabled() -> None:
     store = Store.from_url("sqlite://")
     ana = store.create_user("ana", "h", role="analyst")
     bob = store.create_user("bob", "h")
-    store.add_wallet(bob.id, smoke.EXCHANGE)
+    store.add_wallet(bob.id, smoke.EXCHANGE, verified=True)
     store.update_wallet(bob.id, smoke.EXCHANGE, notify_flagged=False)
     store.add_flag("account", smoke.MULES[1], "scam", "mule", ana.id)
     Monitor(store).process(smoke._pay(7, smoke.MULES[1], smoke.EXCHANGE, 30, smoke.TAG))
@@ -56,7 +56,7 @@ class CatchUpReader(smoke.FakeReader):
 async def test_polling_backfills_silently_then_catches_up_with_alerts() -> None:
     store = Store.from_url("sqlite://")
     user = store.create_user("demo", "h")
-    store.add_wallet(user.id, smoke.ATTACKER)
+    store.add_wallet(user.id, smoke.ATTACKER, verified=True)
     reader = CatchUpReader()
     monitor = Monitor(store)
     await catch_up(reader, monitor)  # first sight: history only, no alerts
@@ -98,3 +98,19 @@ def test_cli_creates_analyst_and_label(tmp_path: Path, monkeypatch: pytest.Monke
     store = Store.from_url(db)
     assert store.user_by_name("ana").role == "analyst"
     assert smoke.EXCHANGE in store.labels()
+
+
+def test_unverified_wallets_are_not_monitored_until_the_owner_proves_control() -> None:
+    store = Store.from_url("sqlite://")
+    alice = store.create_user("alice", "h")
+    ana = store.create_user("ana", "h", role="analyst")
+    wallet = store.add_wallet(alice.id, smoke.MULES[0])  # a normal user, no proof yet
+    store.add_wallet(ana.id, smoke.MULES[1])  # analysts are exempt
+    assert store.is_verified(wallet) is False
+    assert store.watched_addresses() == [smoke.MULES[1]]
+    assert store.watchers(smoke.MULES[0]) == []
+    Monitor(store).process(smoke._pay(6, smoke.MULES[0], smoke.EXCHANGE, 40, smoke.TAG))
+    assert store.alerts(alice.id) == []  # no proof, no alerts
+    store.remove_wallet(alice.id, smoke.MULES[0])
+    proven = store.add_wallet(alice.id, smoke.MULES[0], verified=True)
+    assert store.is_verified(proven) and smoke.MULES[0] in store.watched_addresses()

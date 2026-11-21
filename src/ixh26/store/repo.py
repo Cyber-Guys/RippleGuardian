@@ -6,12 +6,14 @@ scale, switch to the async engine if the worker ever watches thousands of wallet
 
 from __future__ import annotations
 
+import secrets
 from collections.abc import Iterable, Iterator, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
+from uuid import uuid4
 
 from sqlalchemy import create_engine, delete, func, or_, select, text, update
 from sqlalchemy.engine import Engine
@@ -47,6 +49,8 @@ from ixh26.store.models import (
     TransferRow,
     User,
     Wallet,
+    WalletChallenge,
+    utcnow,
 )
 
 ROLES = ("user", "analyst")
@@ -192,12 +196,37 @@ class Store:
 
     # --- wallets ----------------------------------------------------------------------------
 
-    def add_wallet(self, user_id: int, address: str, label: str = "") -> Wallet:
+    def add_wallet(
+        self, user_id: int, address: str, label: str = "", *, verified: bool = False
+    ) -> Wallet:
+        """Add a wallet. It is only monitored once its owner proves control (see T-017).
+
+        ``verified=True`` skips the proof: for tests and SIMULATED scenarios only.
+        """
         with self.session() as s:
             wallet = Wallet(user_id=user_id, address=address, label=label)
             s.add(wallet)
             s.flush()
+            if verified:
+                # SIMULATED: a proof row with no payment, so tests can exercise monitoring.
+                s.add(
+                    WalletChallenge(
+                        id=uuid4().hex,
+                        wallet_id=wallet.id,
+                        wallet_created_at=wallet.created_at,
+                        network="simulated",
+                        destination="SIMULATED",
+                        destination_tag=secrets.randbits(32),
+                        after_ledger=0,
+                        expires_at=utcnow(),
+                        verified_at=utcnow(),
+                    )
+                )
             return wallet
+
+    def is_verified(self, wallet: Wallet) -> bool:
+        with self.session() as s:
+            return bool(s.scalar(select(_proved(wallet.id, wallet.created_at).exists())))
 
     def wallets(self, user_id: int) -> list[Wallet]:
         with self.session() as s:
@@ -232,11 +261,11 @@ class Store:
 
     def watched_addresses(self) -> list[str]:
         with self.session() as s:
-            return list(s.scalars(select(Wallet.address).distinct()))
+            return list(s.scalars(select(Wallet.address).where(_monitored()).distinct()))
 
     def watchers(self, address: str) -> list[Wallet]:
         with self.session() as s:
-            return list(s.scalars(select(Wallet).where(Wallet.address == address)))
+            return list(s.scalars(select(Wallet).where(Wallet.address == address, _monitored())))
 
     def cursor(self, address: str) -> int | None:
         with self.session() as s:
@@ -543,6 +572,21 @@ class Store:
                 .where(TraceRow.id == trace_id)
                 .values(status="failed" if error else "done", result=result, error=error[:280])
             )
+
+
+def _proved(wallet_id: Any, created_at: Any) -> Any:
+    return select(WalletChallenge.id).where(
+        WalletChallenge.wallet_id == wallet_id,
+        WalletChallenge.wallet_created_at == created_at,
+        WalletChallenge.verified_at.is_not(None),
+    )
+
+
+def _monitored() -> Any:
+    """Wallets the worker may watch: proven by their owner, or added by an analyst."""
+    proof = _proved(Wallet.id, Wallet.created_at).exists()
+    analyst = Wallet.user_id.in_(select(User.id).where(User.role == "analyst"))
+    return or_(proof, analyst)
 
 
 def _exists(s: Session, model: type[Base], **where: Any) -> bool:

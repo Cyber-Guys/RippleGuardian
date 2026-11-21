@@ -20,10 +20,10 @@
       {% if wallets %}
       <div class="wallets">
         {% for item in wallets %}
-        <a class="wallet-card" href="/wallets/{{ item.wallet.address }}" data-state="{{ item.status.state }}">
+        <a class="wallet-card" href="/wallets/{{ item.wallet.address }}{{ '' if item.verified else '/verify' }}" data-state="{{ item.status.state }}">
           <strong>{{ item.wallet.label or "Unnamed wallet" }}</strong>
           <span class="mono small addr">{{ item.wallet.address }}</span>
-          <span>{{ tag("Compromised" if item.status.state == "compromised" else "Check" if item.status.state == "attention" else "Safe", item.status.state) }}</span>
+          <span>{{ tag("Verify to watch" if not item.verified else "Compromised" if item.status.state == "compromised" else "Check" if item.status.state == "attention" else "Safe", item.status.state) }}</span>
           <span class="small muted">{{ item.last }}</span>
         </a>
         {% endfor %}
@@ -39,7 +39,7 @@
             <div class="field" style="flex: 0 1 160px"><label for="label">Name</label><input id="label" name="label" type="text" maxlength="40" placeholder="Savings"></div>
             <button class="btn" type="submit">Watch</button>
           </form>
-          <p class="small muted">Address only. Never type your secret key anywhere.</p>
+          <p class="small muted">Address only. You'll prove you own it with a one-drop payment before we watch it.</p>
         </div>
       </details>
     </section>

@@ -116,7 +116,7 @@ class FakeReader:
 async def run_scenario(store: Store) -> dict[str, object]:
     """Victim watched by user ``demo``: live alerts, detector findings, trace to the exchange."""
     user = store.create_user("demo", "not-a-real-hash")
-    store.add_wallet(user.id, VICTIM, "Savings (SIMULATED)")
+    store.add_wallet(user.id, VICTIM, "Savings (SIMULATED)", verified=True)
     store.set_cursor(VICTIM, 1000)
     store.upsert_label(AccountLabel(EXCHANGE, AccountLabelKind.EXCHANGE, "Exchange (SIMULATED)"))
     monitor = Monitor(store)
