@@ -6,7 +6,7 @@
 
 <p align="center">
   Wallet protection and theft tracing for the XRP Ledger.<br>
-  IXH26 Bari · Track 2, XRPL applications · built 20 to 21 November 2026
+  IXH26 Bari · Track 2, XRPL applications · built 20 to 21 November 2026 
 </p>
 
 <p align="center">
