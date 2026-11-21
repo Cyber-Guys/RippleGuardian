@@ -23,6 +23,7 @@ from ixh26.app.views.models import (
 from ixh26.contracts import XRP
 from ixh26.flows.report import Incident, build_incident, incident_pdf
 from ixh26.store.repo import Store
+from ixh26.store.verification import get_proof
 
 router = APIRouter(include_in_schema=False)
 
@@ -71,7 +72,9 @@ def wallet_add(
 
 
 @router.get("/wallets/{address}")
-def wallet_page(request: Request, address: str, user: PageUser, store: StoreDep) -> Response:
+def wallet_page(
+    request: Request, address: str, user: PageUser, store: StoreDep, settings: SettingsDep
+) -> Response:
     wallet = store.wallet(user.id, address)
     if wallet is None:
         raise HTTPException(404, "not one of your wallets")
@@ -90,6 +93,7 @@ def wallet_page(request: Request, address: str, user: PageUser, store: StoreDep)
         flagged=flagged,
         min_outgoing_xrp=xrp(wallet.min_outgoing_drops),
         synced=store.cursor(address) is not None,
+        verified=get_proof(store, wallet, settings.network.name) is not None,
         saved=request.query_params.get("saved"),
     )
 

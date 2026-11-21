@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import icon %}
+{% from "macros.html" import tx %}
+{% block title %}Verify ownership{% endblock %}
+{% block main %}
+<a class="back" href="/wallets/{{ address }}">Wallet</a>
+<div class="page-head" data-enter>
+  <div><h1>Verify ownership</h1><p class="mono small addr">{{ address }}</p></div>
+  {% if status.verified %}<span class="tag tag-done">{{ icon("badge-check") }} Verified</span>{% else %}<span class="tag tag-pending">Not verified</span>{% endif %}
+</div>
+<div class="stack">
+  {% if status.verified %}
+  <section class="alarm" data-state="safe" role="status" data-enter>
+    <span class="alarm-icon">{{ icon("badge-check") }}</span>
+    <div><h2>You control this wallet</h2><p>Confirmed {{ status.verified_at.strftime('%d %b %Y, %H:%M') }} UTC by payment {{ tx(status.tx_hash, tx_url) }}</p></div>
+  </section>
+  {% else %}
+  {% if error %}<p class="notice notice-error" role="alert">{{ icon("triangle-alert") }} {{ error }}</p>{% endif %}
+  {% if pending %}<p class="notice notice-sim" role="status">{{ icon("radar") }} Waiting for the ledger to validate your payment. Confirm again in a few seconds.</p>{% endif %}
+
+  {% if challenge %}
+  <section class="panel" data-enter style="--i: 1">
+    <div class="panel-head"><h2>Send 1 drop to prove it</h2><span class="tag tag-pending">{{ challenge.network|capitalize }}</span></div>
+    <div class="panel-body">
+      <p class="secondary">From <strong>your wallet</strong>, pay exactly <strong>1 drop (0.000001 XRP)</strong> plus the network fee. Use your own wallet app: we never ask for keys.</p>
+      <dl class="verify-facts">
+        <div><dt>From</dt><dd class="mono addr">{{ challenge.source }}</dd></div>
+        <div><dt>To</dt><dd class="mono addr">{{ challenge.destination }}</dd></div>
+        <div class="fact-key"><dt>Destination tag</dt><dd class="mono addr">{{ challenge.destination_tag }}</dd></div>
+        <div><dt>Amount</dt><dd>{{ challenge.amount_drops }} drop</dd></div>
+      </dl>
+      <p class="small muted">Click a value to select it, then copy. Valid for 15 minutes{% if challenge.expires_at %} (until {{ challenge.expires_at }}){% endif %}.</p>
+    </div>
+    <form class="panel-foot form-row" method="post" action="/wallets/{{ address }}/verify/confirm">
+      <input type="hidden" name="challenge_id" value="{{ challenge.challenge_id }}">
+      <input type="hidden" name="destination" value="{{ challenge.destination }}">
+      <input type="hidden" name="destination_tag" value="{{ challenge.destination_tag }}">
+      <input type="hidden" name="expires_at" value="{{ challenge.expires_at }}">
+      <div class="field"><label for="tx_hash">Hash of your payment</label><input id="tx_hash" name="tx_hash" type="text" placeholder="64 hex characters" spellcheck="false" autocomplete="off" required></div>
+      <button class="btn" type="submit">Confirm payment</button>
+    </form>
+  </section>
+  {% else %}
+  <section class="panel" data-enter style="--i: 1">
+    <div class="panel-body">
+      <p class="secondary">Prove you control this wallet with one tiny payment. We give you a recipient and a one-time tag; you pay 1 drop from this wallet, then paste the hash.</p>
+      <form method="post" action="/wallets/{{ address }}/verify/challenge"><button class="btn btn-big" type="submit">{{ icon("badge-check") }} {{ "Get new payment details" if expired else "Get payment details" }}</button></form>
+    </div>
+  </section>
+  {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

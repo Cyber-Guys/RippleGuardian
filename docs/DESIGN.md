@@ -45,7 +45,7 @@ Trust boundaries: the browser is untrusted, the api trusts only its session cook
 | Launderer mixing with clean funds | Dilute the taint | Haircut model shows the diluted share honestly | A different model (FIFO, poison) would attribute differently; we show the model on every trace. |
 | Launderer swapping on the DEX | Change currency mid-route | Same-asset tracing only | Cross-currency taint is roadmap. |
 | Careless or malicious analyst | Flag an innocent account | Flags show category, reason and analyst name; can be revoked; analysts are created only from the CLI | A wrong flag is visible to users until revoked. |
-| Someone watching a stranger's wallet | Add any address | Addresses and their history are already public on the ledger | The web app doesn't enforce it yet. The API for proving control with a one-drop tagged payment exists (T-017), so the web page is the remaining step. |
+| Someone watching a stranger's wallet | Add any address | Addresses and their history are already public on the ledger | Owners can prove control from the wallet page with a one-drop payment that carries a one-time tag (T-017), but the app doesn't require it to watch a wallet. |
 | Web attacker | Session theft, CSRF, role escalation | argon2 password hashes, signed JWT in an HttpOnly cookie, SameSite=Lax, role checked on every analyst route and API call, Jinja2 autoescaping | Cookie is not `Secure` (local demo over http). No rate limit on login. |
 | Secret leak through the repo | Commit a seed | Seeds only in `.env`, git-ignored; a secret scan in `make check` fails on seed patterns | Human error outside the repo. |
 | Public node outage | Missed transactions | Polling catch-up from the cursor; retries with backoff | The public Testnet node keeps about 2 hours of history; a longer outage loses older activity. |
@@ -63,7 +63,7 @@ Trust boundaries: the browser is untrusted, the api trusts only its session cook
 ## Roadmap (not built)
 
 - Issuer freeze and clawback for stolen tokens, using the trace as evidence.
-- A web page for the wallet ownership proof (the API is built).
+- Require the ownership proof before a wallet is watched (the proof page exists, it is optional today).
 - DEX and AMM data for cross-currency tracing and the two market detectors.
 - Opt-in push or email.
 - Mainnet, after review with an exchange.

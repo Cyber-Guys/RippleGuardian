@@ -91,7 +91,7 @@ To reverse a decision, add a new entry that supersedes it. Don't edit old entrie
 ## D-010 · Mainnet reads and wallet verification (T-016, T-017)
 - Date: 2026-11-21 11:05 CET · Decided by: daniele (requested), nico (confirmed the merge)
 - Status: accepted
-- Decision: The backend can run against Mainnet with `XRPL_NETWORK=mainnet`, using its own database, for reads and monitoring only. Submissions to Mainnet are refused before any server is contacted. Testnet stays the default. A user can prove control of a watched wallet with a one-drop payment that carries a one-time destination tag (API only).
+- Decision: The backend can run against Mainnet with `XRPL_NETWORK=mainnet`, using its own database, for reads and monitoring only. Submissions to Mainnet are refused before any server is contacted. Testnet stays the default. A user can prove control of a watched wallet with a one-drop payment that carries a one-time destination tag (API and a page on each wallet).
 - Why: Impact. Judges can look up a real Mainnet transaction by hash, and ownership proof stops anyone from watching a stranger's wallet in the app.
 - Conflict to resolve: CLAUDE.md section 5 still says "Mainnet is forbidden". This entry records that two humans asked for read-only Mainnet; a human must either update the policy or revert this decision before the submission.
 - Alternatives considered: keeping Mainnet out entirely (the previous rule).

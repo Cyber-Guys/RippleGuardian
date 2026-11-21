@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "macros.html" import errors as err_box %}
+{% from "partials/icons.html" import icon %}
+{% block title %}Detection settings{% endblock %}
+{% block main %}
+<div class="page-head" data-enter>
+  <div>
+    <h1>Detection settings</h1>
+    <p>Shared by every analyst. Applied on the worker's next run.</p>
+  </div>
+  <span class="small muted">{% if view.updated_at %}Saved {{ view.updated_at.strftime('%d %b %Y, %H:%M') }} UTC (v{{ view.version }}){% else %}Factory defaults{% endif %}</span>
+</div>
+
+{% if saved %}<p class="notice notice-ok" role="status" data-enter>{{ icon("check") }} Saved. Existing findings stay as recorded.</p>{% endif %}
+{% if conflict %}
+<p class="notice notice-error" role="alert" data-enter>{{ icon("triangle-alert") }} Another analyst saved newer settings. Your edits are kept below; the latest value shows under each field that differs. <a href="/analyst/settings">Load the latest</a> to discard your edits.</p>
+{% elif errors %}
+<p class="notice notice-error" role="alert" data-enter>{{ icon("triangle-alert") }} Fix the highlighted fields and save again.</p>
+{% endif %}
+
+<form method="post" action="/analyst/settings" class="stack" id="settings-form" data-enter style="--i: 1">
+  <input type="hidden" name="version" value="{{ view.version }}">
+  {% for title, live, fields in groups %}
+  <section class="panel">
+    <div class="panel-head">
+      <h2>{{ title }}</h2>
+      {% if live %}<span class="tag tag-done">Live on the worker</span>{% else %}<span class="tag tag-pending" title="Saved, but the worker has no fills or pool withdrawals to scan yet">Live data unavailable</span>{% endif %}
+    </div>
+    <div class="panel-body settings-grid">
+      {% for name, label, unit in fields %}
+      <div class="field {{ 'has-error' if name in errors }}">
+        <label for="f-{{ name }}">{{ label }}</label>
+        <div class="input-unit">
+          <input id="f-{{ name }}" name="{{ name }}" type="text" inputmode="decimal" value="{{ values[name] }}" aria-describedby="h-{{ name }}" {% if name in errors %}aria-invalid="true"{% endif %}>
+          <span class="unit">{{ unit }}</span>
+        </div>
+        <span class="hint {{ 'hint-error' if name in errors }}" id="h-{{ name }}">
+          {% if name in errors %}{{ errors[name] }}{% elif conflict and values[name] != latest[name] %}Latest saved: <strong>{{ latest[name] }}</strong>{% else %}&nbsp;{% endif %}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+  <div class="actions">
+    <button class="btn btn-big" type="submit">Save settings</button>
+    <button class="btn btn-quiet btn-big" type="submit" formaction="/analyst/settings/restore" formnovalidate>Restore defaults</button>
+  </div>
+</form>
+{% endblock %}

@@ -23,6 +23,8 @@
         <a href="/analyst" {% if path == '/analyst' %}aria-current="page"{% endif %}>{{ icon("layout-dashboard") }} Overview</a>
         <a href="/analyst/findings" {% if path.startswith('/analyst/findings') %}aria-current="page"{% endif %}>{{ icon("radar") }} Findings</a>
         <a href="/analyst/traces" {% if path.startswith('/analyst/traces') %}aria-current="page"{% endif %}>{{ icon("route") }} Traces</a>
+        <a href="/analyst/settings" {% if path.startswith('/analyst/settings') %}aria-current="page"{% endif %}>{{ icon("sliders-horizontal") }} Detection settings</a>
+        <a href="/transactions" {% if path == '/transactions' %}aria-current="page"{% endif %}>{{ icon("search") }} Find transaction</a>
         <span class="nav-label">Publish</span>
         <a href="/flags" {% if path == '/flags' %}aria-current="page"{% endif %}>{{ icon("flag") }} Flags</a>
       {% else %}
@@ -30,6 +32,7 @@
         <a href="/notifications" {% if path == '/notifications' %}aria-current="page"{% endif %}>{{ icon("bell") }} Notifications
           <span class="count" hx-get="/ui/unread" hx-trigger="every 5s" hx-swap="outerHTML" aria-label="unread notifications">{{ unread or "" }}</span></a>
         <a href="/flags" {% if path == '/flags' %}aria-current="page"{% endif %}>{{ icon("search") }} Check address</a>
+        <a href="/transactions" {% if path == '/transactions' %}aria-current="page"{% endif %}>{{ icon("file-text") }} Find transaction</a>
       {% endif %}
     </nav>
     <div class="sidebar-foot">

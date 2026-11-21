@@ -6,7 +6,10 @@
 <a class="back" href="/">Wallets</a>
 <div class="page-head" data-enter>
   <div><h1>{{ wallet.label or "Unnamed wallet" }}</h1><p class="mono small">{{ wallet.address }}</p></div>
-  <a class="btn btn-quiet" href="{{ account_url(wallet.address) }}" target="_blank" rel="noopener">Explorer {{ icon("external-link") }}</a>
+  <div class="actions">
+    <a class="btn btn-quiet" href="/wallets/{{ wallet.address }}/verify">{{ icon("badge-check") }} {{ "Verified" if verified else "Verify ownership" }}</a>
+    <a class="btn btn-quiet" href="{{ account_url(wallet.address) }}" target="_blank" rel="noopener">Explorer {{ icon("external-link") }}</a>
+  </div>
 </div>
 <div class="stack">
   {% set cta %}{% if status.state == "compromised" %}<a class="btn btn-danger btn-big beacon" href="/wallets/{{ wallet.address }}/recover">What to do</a>{% endif %}<a class="btn btn-quiet btn-big" href="/wallets/{{ wallet.address }}/report.pdf">{{ icon("download") }} Report</a>{% endset %}

@@ -12,10 +12,26 @@ from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
 
 from ixh26.app import auth
-from ixh26.app.views import analyst_pages, auth_pages, flag_pages, user_pages
+from ixh26.app.views import (
+    analyst_pages,
+    auth_pages,
+    detector_pages,
+    flag_pages,
+    lookup_pages,
+    user_pages,
+    verify_pages,
+)
 from ixh26.app.views.common import HERE, AnalystOnly, LoginRequired, redirect, render
 
-ROUTERS = (auth_pages.router, user_pages.router, flag_pages.router, analyst_pages.router)
+ROUTERS = (
+    auth_pages.router,
+    user_pages.router,
+    flag_pages.router,
+    analyst_pages.router,
+    detector_pages.router,
+    lookup_pages.router,
+    verify_pages.router,
+)
 
 
 def mount(app: FastAPI) -> None:

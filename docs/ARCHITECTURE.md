@@ -159,6 +159,8 @@ Anything other than a validated `tesSUCCESS` raises. Every success is appended t
 
 Charts are SVG built on the server by pure functions in `app/charts.py`, so there is no JavaScript to write or audit. HTMX refreshes the notification count and feed every five seconds, and the trace page while a trace is running. The look is described in [DECISIONS.md](DECISIONS.md) (D-007), and every token lives at the top of `app/static/app.css`.
 
+Four pages sit on top of the services that other branches added. `views/detector_pages.py` is the analyst's Detection settings form: it calls the same typed service as the JSON API, maps each validation error to its field, keeps the draft on a 422 or a 409 version conflict, and labels the wash-trading and liquidity sections "Live data unavailable" because the worker has no fills or pool withdrawals to scan yet. `views/lookup_pages.py` searches a transaction by hash on Mainnet or Testnet; the selector changes only that lookup. `views/verify_pages.py` walks a user through the one-drop ownership payment and keeps the challenge on screen between a "not validated yet" answer and the retry.
+
 Two roles are enforced on the server. Page dependencies raise `LoginRequired` (redirect to `/login`) or `AnalystOnly` (403). The JSON API under `/api` applies the same rules.
 
 ## Testing

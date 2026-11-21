@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import icon %}
+{% from "macros.html" import tag %}
+{% block title %}Find a transaction{% endblock %}
+{% block main %}
+<div class="page-head" data-enter>
+  <div><h1>Find a transaction</h1><p>Look up any validated transaction by hash. The network here only changes this search; monitoring stays on {{ network|capitalize }}.</p></div>
+</div>
+<div class="stack">
+  <section class="panel" data-enter style="--i: 1">
+    <form class="panel-body form-row" method="get" action="/transactions" role="search">
+      <div class="field"><label for="hash">Transaction hash</label><input id="hash" name="hash" type="text" value="{{ hash }}" placeholder="64 hex characters" spellcheck="false" autocomplete="off" required></div>
+      <div class="field" style="flex: 0 1 180px"><label for="network">Network</label>
+        <select id="network" name="network">{% for c in choices %}<option value="{{ c }}" {% if c == chosen %}selected{% endif %}>{{ c|capitalize }}</option>{% endfor %}</select></div>
+      <button class="btn" type="submit">{{ icon("search") }} Search</button>
+    </form>
+  </section>
+  {% if error %}<p class="notice notice-error" role="alert">{{ icon("triangle-alert") }} {{ error }}</p>{% endif %}
+  {% if found %}
+  <section class="panel" data-enter>
+    <div class="panel-head">
+      <h2>{{ found.network|capitalize }} transaction</h2>
+      <div class="actions">
+        {{ tag("Validated", "done") }}
+        {% if found.result == "tesSUCCESS" %}{{ tag("Succeeded", "done") }}{% else %}{{ tag("Failed: " ~ found.result, "failed") }}{% endif %}
+      </div>
+    </div>
+    <div class="panel-body">
+      <dl class="kv">
+        <dt>Hash</dt><dd class="mono addr">{{ found.hash }}</dd>
+        <dt>Ledger</dt><dd class="num">{{ "{:,}".format(found.ledger_index) }}</dd>
+        <dt>Result</dt><dd class="mono">{{ found.result }}</dd>
+        {% for k, v in rows %}<dt>{{ k }}</dt><dd class="mono">{{ v }}</dd>{% endfor %}
+      </dl>
+      <a class="btn btn-quiet btn-small" href="{{ found.explorer_url }}" target="_blank" rel="noopener">Open in explorer {{ icon("external-link") }}</a>
+    </div>
+    <details class="disclose" style="border-top: 1px solid var(--hairline)">
+      <summary>Ledger metadata {{ icon("chevron-down", cls="x-chev") }}</summary>
+      <div><pre class="mono small raw">{{ raw }}</pre></div>
+    </details>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}
