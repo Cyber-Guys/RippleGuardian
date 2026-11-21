@@ -1,11 +1,32 @@
 # Start prompt: build the trailer
 
-Open a fresh Claude Code session in the repo root (`cd ~/xrpl_hackathon && claude`) and paste the block below. The session reads [BRIEF.md](BRIEF.md), runs the app locally, captures the real screens, synthesizes the music and renders the video. Everything lives in `docs/trailer/`.
+The platform runs on a teammate's machine and is exposed with ngrok. This machine only builds the video: the session reads [BRIEF.md](BRIEF.md), captures the real screens from the ngrok URL, synthesizes the music and renders the video. Everything lives in `docs/trailer/`.
 
-Before starting:
+On the teammate's machine:
 
-- Docker running, `make setup` done, a `JWT_SECRET` in `.env`.
-- Have the passwords for the local demo users `alice` and `analyst` ready, or let the session ask you to create them. The session never writes passwords to files.
+```bash
+git pull                                   # includes the new logo
+docker compose up -d --build               # or SQLite + make api / make worker (README)
+docker compose exec api ixh26 create-user alice
+docker compose exec api ixh26 create-user analyst --role analyst
+DATABASE_URL=postgresql+psycopg://ixh26:ixh26@localhost:5432/ixh26 \
+  make demo ARGS="--watch-user alice --auto-trace analyst"
+# wait for alice's "Stolen funds located" notification, then:
+ngrok http 8000
+```
+
+Keep that machine and ngrok running until the session says the captures are done.
+
+On this machine:
+
+```bash
+cd ~/xrpl_hackathon && git pull
+export TRAILER_BASE_URL='https://xxxx.ngrok-free.app'
+export TRAILER_USER='alice:PASSWORD' TRAILER_ANALYST='analyst:PASSWORD'
+claude
+```
+
+Then paste the block below.
 
 ```text
 Build the Ripple Guardian trailer described in docs/trailer/BRIEF.md.
@@ -19,7 +40,7 @@ AUTHORIZATION AND LIMITS
 - Create docs/trailer/.gitignore for node_modules/, out/, captures/ and *.wav.
   Commit only sources (scripts, Remotion code, timing.json, docs). Never commit
   binaries over 5 MB.
-- If something blocks you (Testnet down, missing users, Docker errors), stop and
+- If something blocks you (ngrok URL down, login fails, missing trace), stop and
   ask me instead of working around it.
 
 STEP 1 - READ
@@ -27,23 +48,29 @@ STEP 1 - READ
   every scene, timing, exact caption, color and font. Read README.md (Quickstart),
   docs/E2E.md and scripts/e2e_browser.py.
 
-STEP 2 - RUN THE PLATFORM LOCALLY
-- Check whether the stack is already up with demo data: curl
-  http://localhost:8000/healthz and look for an existing trace. If it is, reuse it.
-- Otherwise follow the README Quickstart: docker compose up -d --build, create the
-  users alice and analyst (role analyst), then run make demo with
-  ARGS="--watch-user alice --auto-trace analyst" and the DATABASE_URL from the
-  README. On WSL prefix network commands with RES_OPTIONS="timeout:1 attempts:1".
-  Wait until the trace has finished and alice has the "Stolen funds located"
-  notification.
-- Write down the real values the app now shows (addresses, amounts, trace id,
-  deposit hash). If they differ from the brief, the captions follow the app.
+STEP 2 - CONNECT TO THE REMOTE PLATFORM
+- The platform runs on a teammate's machine at $TRAILER_BASE_URL (ngrok). Do NOT
+  start Docker, the API, the worker or make demo on this machine, and do not touch
+  .env here.
+- ngrok's free tier shows a warning page to browsers: send the header
+  "ngrok-skip-browser-warning: true" on every request (Playwright
+  extra_http_headers, and in any check you script).
+- Check $TRAILER_BASE_URL/healthz, log in as both users, and confirm there is a
+  finished trace and alice has the "Stolen funds located" notification. If not,
+  stop and tell me.
+- Write down the real values the app shows (addresses, amounts, trace id, deposit
+  hash). If they differ from the brief, the captions follow the app.
+- The tunnel is temporary: do all captures first, in one pass, then tell me
+  "captures done" so the teammate can shut down. Everything after that works
+  offline from the saved captures.
 
 STEP 3 - CAPTURE THE REAL SCREENS (docs/trailer/capture.py)
 - Python + Playwright via: uv run --with playwright python docs/trailer/capture.py
-  Reuse the login and page flow of scripts/e2e_browser.py. Read credentials from
-  the TRAILER_USER and TRAILER_ANALYST environment variables (name:password),
-  which I will set; never hard-code them.
+  Reuse the login and page flow of scripts/e2e_browser.py. Read the base URL from
+  TRAILER_BASE_URL and credentials from TRAILER_USER and TRAILER_ANALYST
+  (name:password), which I set; never hard-code or commit them.
+- The ngrok URL must never appear on screen: no browser chrome, and crop or cover
+  any page element that prints the host.
 - Viewport 1920x1080, device_scale_factor 2, Chromium headless, no browser chrome.
 - Screenshots (full viewport, after the entrance motion settles) for every page in
   scenes 3, 4, 6 and 7 of the brief, plus the testnet.xrpl.org page of the deposit
