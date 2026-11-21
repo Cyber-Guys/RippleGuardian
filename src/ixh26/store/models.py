@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any, ClassVar
 
-from sqlalchemy import JSON, ForeignKey, Index, String, UniqueConstraint
+from sqlalchemy import JSON, BigInteger, ForeignKey, Index, String, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -40,6 +40,26 @@ class Wallet(Base):
     notify_flagged: Mapped[bool] = mapped_column(default=True)
     min_outgoing_drops: Mapped[str] = mapped_column(String(40), default="0")
     created_at: Mapped[datetime] = mapped_column(default=utcnow)
+
+
+class WalletChallenge(Base):
+    """A payment challenge bound to this particular watch, even after it is deleted."""
+
+    __tablename__ = "wallet_challenges"
+    __table_args__ = (
+        UniqueConstraint("network", "destination", "destination_tag"),
+        UniqueConstraint("network", "payment_hash"),
+    )
+    id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    wallet_id: Mapped[int] = mapped_column(index=True)
+    wallet_created_at: Mapped[datetime]
+    network: Mapped[str] = mapped_column(String(16))
+    destination: Mapped[str] = mapped_column(String(40))
+    destination_tag: Mapped[int] = mapped_column(BigInteger)
+    after_ledger: Mapped[int]
+    expires_at: Mapped[datetime]
+    payment_hash: Mapped[str | None] = mapped_column(String(64))
+    verified_at: Mapped[datetime | None]
 
 
 class Cursor(Base):

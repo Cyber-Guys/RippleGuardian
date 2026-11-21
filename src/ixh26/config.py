@@ -134,3 +134,9 @@ def has_wallet_seed(name: str, env: dict[str, str] | None = None) -> bool:
     """Presence check that never exposes the value (CLAUDE.md §6)."""
     env = dict(os.environ) if env is None else env
     return bool(env.get(f"XRPL_SEED_{name.upper()}"))
+
+
+def verification_recipient(network: NetworkEndpoints, env: dict[str, str] | None = None) -> str:
+    """The operator's funded classic address for the selected network, if configured."""
+    env = dict(os.environ) if env is None else env
+    return env.get(f"XRPL_VERIFICATION_RECIPIENT_{network.name.upper()}", "").strip()

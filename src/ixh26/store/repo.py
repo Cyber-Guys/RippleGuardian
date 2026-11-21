@@ -13,7 +13,7 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import create_engine, delete, func, or_, select, update
+from sqlalchemy import create_engine, delete, func, or_, select, text, update
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
@@ -122,7 +122,11 @@ class Store:
         elif url.startswith("sqlite"):
             kwargs = {"connect_args": {"check_same_thread": False}}
         store = cls(create_engine(url, **kwargs))
-        Base.metadata.create_all(store.engine)  # shortcut: no migrations; add Alembic later
+        with store.engine.begin() as connection:
+            if connection.dialect.name == "postgresql":
+                # The API and worker can start together against a freshly provisioned database.
+                connection.execute(text("SELECT pg_advisory_xact_lock(26112026)"))
+            Base.metadata.create_all(connection)
         return store
 
     @contextmanager
