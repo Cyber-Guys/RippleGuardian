@@ -42,7 +42,9 @@ async def catch_up(reader: XrplReader, monitor: Monitor) -> None:
         cursor = monitor.store.cursor(address)
         start = EARLIEST if cursor is None else cursor + 1
         ...
-        for activity in await reader.account_activity(address, from_ledger=start, to_ledger=current):
+        for activity in await reader.account_activity(
+            address, from_ledger=start, to_ledger=current
+        ):
             monitor.process(activity, notify=cursor is not None)
         monitor.store.set_cursor(address, current)
 ```
@@ -111,7 +113,7 @@ An analyst starts a trace with the robbed wallet, the stolen amount and the ledg
 The rule itself is a few lines in `core/taint.py`:
 
 ```python
-for t in ordered:                       # every transfer, in ledger order
+for t in ordered:  # every transfer, in ledger order
     ...
     if taint[src] > 0 and src not in labels:
         if src == params.origin:
@@ -138,8 +140,10 @@ The product reads the ledger and never signs anything. The demo script does writ
 ```python
 async def submit(settings, tx, wallet, purpose, *, tx_log=TX_LOG) -> TxResult:
     """The ONLY submission path: SourceTag + memo, submit_and_wait, require tesSUCCESS, log."""
-    memo = Memo(memo_type=str_to_hex("ixh26/purpose"),
-                memo_data=str_to_hex(f"{config.APP_ID}:{purpose}"[:120]))
+    memo = Memo(
+        memo_type=str_to_hex("ixh26/purpose"),
+        memo_data=str_to_hex(f"{config.APP_ID}:{purpose}"[:120]),
+    )
     tx = replace(tx, source_tag=settings.source_tag, memos=[*(tx.memos or []), memo])
     ...
 ```
