@@ -48,6 +48,7 @@ Everything in the demo runs on XRPL Testnet with real, validated transactions.
 - [What is simulated](#what-is-simulated)
 - [Roadmap](#roadmap)
 - [Team](#team)
+- [License](#license)
 - [Documentation](#documentation)
 
 ## The hackathon
@@ -332,6 +333,12 @@ Team **CyberGuys**, a hackathon team from Sardinia.
 We all worked on every part of the project. The commit history comes from fewer laptops than people, so it does not show who did what.
 
 Built with AI coding assistants, declared in [docs/SUBMISSION.md](docs/SUBMISSION.md).
+
+## License
+
+Ripple Guardian is released under the [Apache License 2.0](LICENSE). You can use, modify and share it, including commercially, as long as you keep the [NOTICE](NOTICE) file and credit **Cyber Guys** as the original authors.
+
+The names "Ripple Guardian" and "Cyber Guys" and the project logo are not covered by the licence. Third-party libraries and assets keep their own licences, listed in [THIRD_PARTY.md](THIRD_PARTY.md).
 
 ## Documentation
 
