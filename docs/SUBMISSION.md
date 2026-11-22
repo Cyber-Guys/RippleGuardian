@@ -8,7 +8,7 @@ Text for the hackathon app. A human submits it before Sat 21 Nov 12:00 CET (targ
 |---|---|
 | Project name | Ripple Guardian |
 | Track | XRPL applications |
-| Repository | https://github.com/Cyber-Guys/ripple-guardian |
+| Repository | https://github.com/Cyber-Guys/RippleGuardian |
 | Demo video | TODO |
 | Slides | TODO |
 | SourceTag | none assigned; transactions use the team constant 26112026 (see `config.py`) |
