@@ -24,6 +24,24 @@ Ripple Guardian was built in 24 hours at **IXH26**, the Italian XRPL Hackathon, 
 
 We competed in **Track 2: XRPL applications**, the open track. There is no fixed theme: the brief is to *build something that meaningfully leverages the XRP Ledger*, whether payments, tokenisation, DeFi, identity or something new. Projects are judged on idea, implementation, demo quality and real-world potential. Prizes, rules and how we address each criterion are in [The hackathon](#the-hackathon).
 
+## Team
+
+Team **CyberGuys**, a hackathon team from Sardinia.
+
+<p align="center">
+  <a href="https://github.com/doliv8"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/team/doliv8-dark.png"><img src="docs/assets/team/doliv8-light.png" width="140" alt="Diego Oliva (@doliv8)"></picture></a>&nbsp;&nbsp;
+  <a href="https://github.com/uNickz"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/team/uNickz-dark.png"><img src="docs/assets/team/uNickz-light.png" width="140" alt="Nicholas Meli (@uNickz)"></picture></a>&nbsp;&nbsp;
+  <a href="https://github.com/AndreaCerolini"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/team/AndreaCerolini-dark.png"><img src="docs/assets/team/AndreaCerolini-light.png" width="140" alt="Andrea Cerolini (@AndreaCerolini)"></picture></a>
+  <br><br>
+  <a href="https://github.com/DenInDev"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/team/DenInDev-dark.png"><img src="docs/assets/team/DenInDev-light.png" width="140" alt="Daniele Orrù (@DenInDev)"></picture></a>&nbsp;&nbsp;
+  <a href="https://github.com/NicoXVI"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/team/NicoXVI-dark.png"><img src="docs/assets/team/NicoXVI-light.png" width="140" alt="Nicola Ghisu (@NicoXVI)"></picture></a>&nbsp;&nbsp;
+  <a href="https://github.com/T0mm1-byte"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/team/T0mm1-byte-dark.png"><img src="docs/assets/team/T0mm1-byte-light.png" width="140" alt="Tommaso Casti (@T0mm1-byte)"></picture></a>
+</p>
+
+We all worked on every part of the project. The commit history comes from fewer laptops than people, so it does not show who did what.
+
+Built with AI coding assistants, declared in [docs/SUBMISSION.md](docs/SUBMISSION.md).
+
 ## What Ripple Guardian does
 
 When an XRPL seed leaks, a thief adds their own signing key, empties the wallet and pushes the money through fresh accounts to an exchange, often within minutes. Tracing services exist, but they are sold to exchanges and police, so the owner finds out late and has nothing to show anyone. Ripple Guardian is a blockchain forensics framework for the XRP Ledger, and it watches wallets for the people who own them. It tells the owner in plain words when a key changes or funds leave, walks them through recovery, and follows the stolen XRP hop by hop to the exchange and the destination tag that received it: the one number an exchange needs to find the customer. Analysts review what the detectors raise and publish accountable flags that every user can check before sending money.
@@ -47,7 +65,6 @@ Everything in the demo runs on XRPL Testnet with real, validated transactions.
 - [Claims and evidence](#claims-and-evidence)
 - [What is simulated](#what-is-simulated)
 - [Roadmap](#roadmap)
-- [Team](#team)
 - [License](#license)
 - [Documentation](#documentation)
 
@@ -316,23 +333,6 @@ The three deposits under tag 777001 add up to 54.939982 XRP, the 54.94 XRP the t
 - Read DEX fills and AMM withdrawals, so all four detectors run live and taint can follow funds across currencies.
 - Opt-in push or email delivery.
 - Mainnet in the web app. The backend can watch and trace on Mainnet, read-only, but the demo and all evidence stay on Testnet until the evidence format has been reviewed with an exchange.
-
-## Team
-
-Team **CyberGuys**, a hackathon team from Sardinia.
-
-| | |
-|---|---|
-| Nicola Ghisu | [@NicoXVI](https://github.com/NicoXVI) |
-| Tommaso Casti | [@T0mm1-byte](https://github.com/T0mm1-byte) |
-| Daniele Orrù | [@DenInDev](https://github.com/DenInDev) |
-| Andrea Cerolini | [@AndreaCerolini](https://github.com/AndreaCerolini) |
-| Diego Oliva | [@doliv8](https://github.com/doliv8) |
-| Nicholas Meli | [@uNickz](https://github.com/uNickz) |
-
-We all worked on every part of the project. The commit history comes from fewer laptops than people, so it does not show who did what.
-
-Built with AI coding assistants, declared in [docs/SUBMISSION.md](docs/SUBMISSION.md).
 
 ## License
 
