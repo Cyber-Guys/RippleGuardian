@@ -8,8 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="docs/trailer/out/trailer.mp4"><img src="docs/trailer/out/trailer-30s.gif" width="100%" alt="Ripple Guardian trailer (click for the full video with audio)"></a><br>
-  <a href="docs/trailer/out/trailer.mp4">Full trailer with audio (90 s)</a> · <a href="docs/trailer/out/trailer-30s.mp4">30 s cut</a>
+  <a href="docs/trailer/out/trailer.mp4"><img src="docs/trailer/out/trailer-30s.gif" width="100%" alt="Ripple Guardian trailer (click for the full video with audio)"></a>
 </p>
 
 <p align="center">
