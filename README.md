@@ -8,8 +8,8 @@
 </p>
 
 <p align="center">
-  <video src="https://github.com/Cyber-Guys/RippleGuardian/raw/main/docs/trailer/out/trailer.mp4" controls muted width="100%"></video><br>
-  <a href="docs/trailer/out/trailer.mp4">Trailer (90 s)</a> · <a href="docs/trailer/out/trailer-30s.mp4">30 s cut</a>
+  <a href="docs/trailer/out/trailer.mp4"><img src="docs/trailer/out/trailer-30s.gif" width="100%" alt="Ripple Guardian trailer (click for the full video with audio)"></a><br>
+  <a href="docs/trailer/out/trailer.mp4">Full trailer with audio (90 s)</a> · <a href="docs/trailer/out/trailer-30s.mp4">30 s cut</a>
 </p>
 
 <p align="center">
