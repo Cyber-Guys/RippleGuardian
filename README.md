@@ -5,7 +5,11 @@
 <p align="center">
   <b>A blockchain forensics framework for the XRP Ledger: wallet protection and theft tracing.</b><br>
   <sub>IXH26 Italian XRPL Hackathon · Bari · Track 2, XRPL applications · built 20-21 November 2026 by team CyberGuys</sub><br>
-  <a href="docs/trailer/out/trailer.mp4">▶ Watch the trailer (90 s)</a> · <a href="docs/trailer/out/trailer-30s.mp4">30 s cut</a>
+</p>
+
+<p align="center">
+  <video src="https://github.com/Cyber-Guys/RippleGuardian/raw/main/docs/trailer/out/trailer.mp4" controls muted width="100%"></video><br>
+  <a href="docs/trailer/out/trailer.mp4">Trailer (90 s)</a> · <a href="docs/trailer/out/trailer-30s.mp4">30 s cut</a>
 </p>
 
 <p align="center">
