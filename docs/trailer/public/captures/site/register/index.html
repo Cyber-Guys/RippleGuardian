@@ -1,0 +1,41 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create account | Ripple Guardian</title>
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+
+<div class="auth">
+  <div class="auth-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="auth-card">
+    <section class="auth-story">
+      <img class="auth-logo" src="/static/logo.png" alt="Ripple Guardian" width="140" height="140">
+      <h1>Know the moment your wallet moves</h1>
+      <p>Live protection for XRP Ledger wallets. If yours is drained, we show you where the money went.</p>
+      <p class="small">XRPL Testnet. Username only, no personal data.</p>
+    </section>
+    <section class="auth-form">
+      
+<h2>Create an account</h2>
+
+
+<form method="post" action="/register" class="stack" style="gap: var(--s-4)">
+  <div class="field"><label for="username">Username</label><input id="username" name="username" type="text" autocomplete="username" required pattern="[A-Za-z0-9_\-]{3,32}" value=""><span class="hint">3-32 letters, digits, _ or -</span></div>
+  <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="new-password" required minlength="8"><span class="hint">At least 8 characters</span></div>
+  <button class="btn" type="submit">Create account</button>
+</form>
+<p class="muted">Already registered? <a href="/login">Sign in</a></p>
+
+    </section>
+  </div>
+</div>
+
+</body>
+</html>

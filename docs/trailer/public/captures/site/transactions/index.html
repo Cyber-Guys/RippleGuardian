@@ -1,0 +1,153 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Find a transaction | Ripple Guardian</title>
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      
+<img class="brand-mark" src="/static/logo-mark.png" alt="" width="32" height="32">
+      <span class="brand-name">Ripple Guardian<small>Analyst desk</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      
+        <span class="nav-label">Investigate</span>
+        <a href="/analyst" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" />
+</svg> Overview</a>
+        <a href="/analyst/findings" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34" /><path d="M4 6h.01" /><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35" /><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67" /><path d="M12 18h.01" /><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67" /><circle cx="12" cy="12" r="2" /><path d="m13.41 10.59 5.66-5.66" />
+</svg> Findings</a>
+        <a href="/analyst/traces" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
+</svg> Traces</a>
+        <a href="/analyst/settings" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<line x1="21" x2="14" y1="4" y2="4" /><line x1="10" x2="3" y1="4" y2="4" /><line x1="21" x2="12" y1="12" y2="12" /><line x1="8" x2="3" y1="12" y2="12" /><line x1="21" x2="16" y1="20" y2="20" /><line x1="12" x2="3" y1="20" y2="20" /><line x1="14" x2="14" y1="2" y2="6" /><line x1="8" x2="8" y1="10" y2="14" /><line x1="16" x2="16" y1="18" y2="22" />
+</svg> Detection settings</a>
+        <a href="/transactions" aria-current="page"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+</svg> Find transaction</a>
+        <span class="nav-label">Publish</span>
+        <a href="/flags" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" x2="4" y1="22" y2="15" />
+</svg> Flags</a>
+      
+    </nav>
+    <div class="sidebar-foot">
+      <span class="pulse" data-live="true" title="Last ledger fully read by the monitor">
+        <span class="pulse-dot"></span>
+        <span>Live on XRPL Testnet<br><span class="mono small">#22,497,752</span></span>
+      </span>
+      <div class="signout">
+        <span>analyst</span>
+        <form method="post" action="/logout"><button class="link-button" type="submit"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+</svg> Sign out</button></form>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    
+<div class="page-head" data-enter>
+  <div><h1>Find a transaction</h1><p>Look up any validated transaction by hash. The network here only changes this search; monitoring stays on Testnet.</p></div>
+</div>
+<div class="stack">
+  <section class="panel" data-enter style="--i: 1">
+    <form class="panel-body form-row" method="get" action="/transactions" role="search">
+      <div class="field"><label for="hash">Transaction hash</label><input id="hash" name="hash" type="text" value="62E75B3A817369244A53E61E699022CC3D748FB28583CE77F25B17EF92A750FC" placeholder="64 hex characters" spellcheck="false" autocomplete="off" required></div>
+      <div class="field" style="flex: 0 1 180px"><label for="network">Network</label>
+        <select id="network" name="network"><option value="mainnet" >Mainnet</option><option value="testnet" selected>Testnet</option></select></div>
+      <button class="btn" type="submit"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+</svg> Search</button>
+    </form>
+  </section>
+  
+  
+  <section class="panel" data-enter>
+    <div class="panel-head">
+      <h2>Testnet transaction</h2>
+      <div class="actions">
+        <span class="tag tag-done">Validated</span>
+        <span class="tag tag-done">Succeeded</span>
+      </div>
+    </div>
+    <div class="panel-body">
+      <dl class="kv">
+        <dt>Hash</dt><dd class="mono addr">62E75B3A817369244A53E61E699022CC3D748FB28583CE77F25B17EF92A750FC</dd>
+        <dt>Ledger</dt><dd class="num">22,497,109</dd>
+        <dt>Result</dt><dd class="mono">tesSUCCESS</dd>
+        <dt>Type</dt><dd class="mono">Payment</dd><dt>From</dt><dd class="mono">rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG</dd><dt>To</dt><dd class="mono">rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw</dd><dt>Destination tag</dt><dd class="mono">777001</dd>
+      </dl>
+      <a class="btn btn-quiet btn-small" href="https://testnet.xrpl.org/transactions/62E75B3A817369244A53E61E699022CC3D748FB28583CE77F25B17EF92A750FC" target="_blank" rel="noopener">Open in explorer <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+</svg></a>
+    </div>
+    <details class="disclose" style="border-top: 1px solid var(--hairline)">
+      <summary>Ledger metadata <svg class="icon x-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="m6 9 6 6 6-6" />
+</svg></summary>
+      <div><pre class="mono small raw">{
+  &#34;AffectedNodes&#34;: [
+    {
+      &#34;ModifiedNode&#34;: {
+        &#34;FinalFields&#34;: {
+          &#34;Account&#34;: &#34;rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw&#34;,
+          &#34;Balance&#34;: &#34;124810995&#34;,
+          &#34;Flags&#34;: 0,
+          &#34;OwnerCount&#34;: 0,
+          &#34;Sequence&#34;: 22496434
+        },
+        &#34;LedgerEntryType&#34;: &#34;AccountRoot&#34;,
+        &#34;LedgerIndex&#34;: &#34;2BE4F6BF8ECFA63267B8F682FC183D19748151F5CDB3F8E5118CB4F70D8BA213&#34;,
+        &#34;PreviousFields&#34;: {
+          &#34;Balance&#34;: &#34;100000001&#34;
+        },
+        &#34;PreviousTxnID&#34;: &#34;70D7F3C55CAA178902F24B113DB9E7FEF122E10B29BC83A2CA13780A79378525&#34;,
+        &#34;PreviousTxnLgrSeq&#34;: 22497044
+      }
+    },
+    {
+      &#34;ModifiedNode&#34;: {
+        &#34;FinalFields&#34;: {
+          &#34;Account&#34;: &#34;rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG&#34;,
+          &#34;Balance&#34;: &#34;1099990&#34;,
+          &#34;Flags&#34;: 0,
+          &#34;OwnerCount&#34;: 0,
+          &#34;Sequence&#34;: 22497080
+        },
+        &#34;LedgerEntryType&#34;: &#34;AccountRoot&#34;,
+        &#34;LedgerIndex&#34;: &#34;5D6C62978E82A5BA77342450878403D95D53ACF0CC5ADFB014BA5724B89C28A0&#34;,
+        &#34;PreviousFields&#34;: {
+          &#34;Balance&#34;: &#34;25910994&#34;,
+          &#34;Sequence&#34;: 22497079
+        },
+        &#34;PreviousTxnID&#34;: &#34;C4960DF1087B7C979894259C47129DB6FD376B948E7A1AFF344CCFC2C78DFA8B&#34;,
+        &#34;PreviousTxnLgrSeq&#34;: 22497079
+      }
+    }
+  ],
+  &#34;TransactionIndex&#34;: 1,
+  &#34;TransactionResult&#34;: &#34;tesSUCCESS&#34;,
+  &#34;delivered_amount&#34;: &#34;24810994&#34;
+}</pre></div>
+    </details>
+  </section>
+  
+</div>
+
+  </main>
+</div>
+
+</body>
+</html>

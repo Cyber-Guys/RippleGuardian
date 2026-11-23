@@ -1,0 +1,188 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Findings | Ripple Guardian</title>
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      
+<img class="brand-mark" src="/static/logo-mark.png" alt="" width="32" height="32">
+      <span class="brand-name">Ripple Guardian<small>Analyst desk</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      
+        <span class="nav-label">Investigate</span>
+        <a href="/analyst" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" />
+</svg> Overview</a>
+        <a href="/analyst/findings" aria-current="page"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34" /><path d="M4 6h.01" /><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35" /><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67" /><path d="M12 18h.01" /><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67" /><circle cx="12" cy="12" r="2" /><path d="m13.41 10.59 5.66-5.66" />
+</svg> Findings</a>
+        <a href="/analyst/traces" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
+</svg> Traces</a>
+        <a href="/analyst/settings" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<line x1="21" x2="14" y1="4" y2="4" /><line x1="10" x2="3" y1="4" y2="4" /><line x1="21" x2="12" y1="12" y2="12" /><line x1="8" x2="3" y1="12" y2="12" /><line x1="21" x2="16" y1="20" y2="20" /><line x1="12" x2="3" y1="20" y2="20" /><line x1="14" x2="14" y1="2" y2="6" /><line x1="8" x2="8" y1="10" y2="14" /><line x1="16" x2="16" y1="18" y2="22" />
+</svg> Detection settings</a>
+        <a href="/transactions" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+</svg> Find transaction</a>
+        <span class="nav-label">Publish</span>
+        <a href="/flags" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" x2="4" y1="22" y2="15" />
+</svg> Flags</a>
+      
+    </nav>
+    <div class="sidebar-foot">
+      <span class="pulse" data-live="true" title="Last ledger fully read by the monitor">
+        <span class="pulse-dot"></span>
+        <span>Live on XRPL Testnet<br><span class="mono small">#22,497,748</span></span>
+      </span>
+      <div class="signout">
+        <span>analyst</span>
+        <form method="post" action="/logout"><button class="link-button" type="submit"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+</svg> Sign out</button></form>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    
+<div class="page-head" data-enter>
+  <div>
+    <h1>Findings</h1>
+    <p>Leads to review, not verdicts</p>
+  </div>
+  <nav class="segmented" aria-label="Filter by status">
+    
+      <a href="?status=open" aria-current="page">Open</a>
+    
+      <a href="?status=flagged" >Flagged</a>
+    
+      <a href="?status=dismissed" >Dismissed</a>
+    
+      <a href="?status=all" >All</a>
+    
+  </nav>
+</div>
+
+<section class="panel">
+  
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Detector</th><th>Subject</th><th>Asset</th><th>Trigger</th><th>Status</th><th>Review</th></tr></thead>
+      <tbody>
+      
+        
+        
+        <tr>
+          <td><strong>Funds funnel</strong><br><span class="small muted">21 Nov 11:18 UTC</span></td>
+          <td><a class="mono" href="https://testnet.xrpl.org/accounts/rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw" target="_blank" rel="noopener" title="rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw">rPfXCA…HMtw</a> <span class="muted small">tag 777001</span></td>
+          <td class="small">XRP</td>
+          <td><a class="mono" href="https://testnet.xrpl.org/transactions/75ABB16098EEEB092D3C6E09A9E930B918191D3C1FBEDAC8E6BAF568F0D3066D" target="_blank" rel="noopener" title="75ABB16098EEEB092D3C6E09A9E930B918191D3C1FBEDAC8E6BAF568F0D3066D">75ABB160…</a><br><span class="small muted">ledger 22497121</span></td>
+          <td><span class="tag tag-open">open</span></td>
+          <td>
+            <details>
+              <summary>Evidence and actions</summary>
+              <dl class="kv">
+                <dt>sender count</dt><dd>3</dd><dt>matched inflow upper bound</dt><dd>54279986</dd>
+                <dt>transactions</dt><dd><a class="mono" href="https://testnet.xrpl.org/transactions/C4960DF1087B7C979894259C47129DB6FD376B948E7A1AFF344CCFC2C78DFA8B" target="_blank" rel="noopener" title="C4960DF1087B7C979894259C47129DB6FD376B948E7A1AFF344CCFC2C78DFA8B">C4960DF1…</a>, <a class="mono" href="https://testnet.xrpl.org/transactions/62E75B3A817369244A53E61E699022CC3D748FB28583CE77F25B17EF92A750FC" target="_blank" rel="noopener" title="62E75B3A817369244A53E61E699022CC3D748FB28583CE77F25B17EF92A750FC">62E75B3A…</a>, <a class="mono" href="https://testnet.xrpl.org/transactions/C82F383B7088CB46BD9FCE4810FC3C5C9623933204B5CBAEE577954FBE29C03B" target="_blank" rel="noopener" title="C82F383B7088CB46BD9FCE4810FC3C5C9623933204B5CBAEE577954FBE29C03B">C82F383B…</a>, <a class="mono" href="https://testnet.xrpl.org/transactions/6C3774375B9B08F10DE26A53778B7C368AFE370C48B780E0A88150405864A98B" target="_blank" rel="noopener" title="6C3774375B9B08F10DE26A53778B7C368AFE370C48B780E0A88150405864A98B">6C377437…</a>, <a class="mono" href="https://testnet.xrpl.org/transactions/826C49FC70D2A02A794B385BA8045C1A09F88F5DF62957E9F88247274884CBC0" target="_blank" rel="noopener" title="826C49FC70D2A02A794B385BA8045C1A09F88F5DF62957E9F88247274884CBC0">826C49FC…</a>, <a class="mono" href="https://testnet.xrpl.org/transactions/75ABB16098EEEB092D3C6E09A9E930B918191D3C1FBEDAC8E6BAF568F0D3066D" target="_blank" rel="noopener" title="75ABB16098EEEB092D3C6E09A9E930B918191D3C1FBEDAC8E6BAF568F0D3066D">75ABB160…</a></dd>
+              </dl>
+              <div class="stack" style="gap: var(--s-2); margin-top: var(--s-3)">
+                
+                  <form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw">
+  <input type="hidden" name="target_type" value="account">
+  <input type="hidden" name="back" value="/analyst/findings">
+  <input type="hidden" name="finding_id" value="2">
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw-2">Category</label>
+      <select id="cat-rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw-2" name="category">
+        <option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw-2">Reason users will read</label>
+      <input id="reason-rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw-2" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag account</button>
+  </div>
+</form>
+                  <div class="actions">
+                    <form method="post" action="/analyst/findings/2/dismiss"><button class="btn btn-quiet btn-small" type="submit">Dismiss</button></form>
+                    
+                  </div>
+                
+              </div>
+            </details>
+          </td>
+        </tr>
+      
+        
+        
+        <tr>
+          <td><strong>Possible takeover</strong><br><span class="small muted">21 Nov 11:14 UTC</span></td>
+          <td><a class="mono" href="https://testnet.xrpl.org/accounts/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R" target="_blank" rel="noopener" title="rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R">rs9oiH…Y99R</a></td>
+          <td class="small">XRP</td>
+          <td><a class="mono" href="https://testnet.xrpl.org/transactions/724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A" target="_blank" rel="noopener" title="724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A">724D1BC2…</a><br><span class="small muted">ledger 22497061</span></td>
+          <td><span class="tag tag-open">open</span></td>
+          <td>
+            <details>
+              <summary>Evidence and actions</summary>
+              <dl class="kv">
+                <dt>signing change</dt><dd>set_regular_key</dd><dt>new destination count</dt><dd>1</dd><dt>outflow fraction of starting balance</dt><dd>0.9889999976899995148998981290</dd>
+                <dt>transactions</dt><dd><a class="mono" href="https://testnet.xrpl.org/transactions/FCB997901C88F7A98AB01F866A837155AE9BBCD1733DB3D8AE28191DC1E89C79" target="_blank" rel="noopener" title="FCB997901C88F7A98AB01F866A837155AE9BBCD1733DB3D8AE28191DC1E89C79">FCB99790…</a>, <a class="mono" href="https://testnet.xrpl.org/transactions/724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A" target="_blank" rel="noopener" title="724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A">724D1BC2…</a></dd>
+              </dl>
+              <div class="stack" style="gap: var(--s-2); margin-top: var(--s-3)">
+                
+                  <form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R">
+  <input type="hidden" name="target_type" value="account">
+  <input type="hidden" name="back" value="/analyst/findings">
+  <input type="hidden" name="finding_id" value="1">
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R-1">Category</label>
+      <select id="cat-rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R-1" name="category">
+        <option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R-1">Reason users will read</label>
+      <input id="reason-rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R-1" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag account</button>
+  </div>
+</form>
+                  <div class="actions">
+                    <form method="post" action="/analyst/findings/1/dismiss"><button class="btn btn-quiet btn-small" type="submit">Dismiss</button></form>
+                    <a class="btn btn-quiet btn-small" href="/analyst/traces?origin=rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R">Trace funds from this wallet</a>
+                  </div>
+                
+              </div>
+            </details>
+          </td>
+        </tr>
+      
+      </tbody>
+    </table>
+  </div>
+  
+</section>
+
+  </main>
+</div>
+
+</body>
+</html>

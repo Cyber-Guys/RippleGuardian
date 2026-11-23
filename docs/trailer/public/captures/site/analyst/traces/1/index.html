@@ -1,0 +1,482 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trace 1 | Ripple Guardian</title>
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      
+<img class="brand-mark" src="/static/logo-mark.png" alt="" width="32" height="32">
+      <span class="brand-name">Ripple Guardian<small>Analyst desk</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      
+        <span class="nav-label">Investigate</span>
+        <a href="/analyst" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" />
+</svg> Overview</a>
+        <a href="/analyst/findings" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34" /><path d="M4 6h.01" /><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35" /><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67" /><path d="M12 18h.01" /><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67" /><circle cx="12" cy="12" r="2" /><path d="m13.41 10.59 5.66-5.66" />
+</svg> Findings</a>
+        <a href="/analyst/traces" aria-current="page"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
+</svg> Traces</a>
+        <a href="/analyst/settings" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<line x1="21" x2="14" y1="4" y2="4" /><line x1="10" x2="3" y1="4" y2="4" /><line x1="21" x2="12" y1="12" y2="12" /><line x1="8" x2="3" y1="12" y2="12" /><line x1="21" x2="16" y1="20" y2="20" /><line x1="12" x2="3" y1="20" y2="20" /><line x1="14" x2="14" y1="2" y2="6" /><line x1="8" x2="8" y1="10" y2="14" /><line x1="16" x2="16" y1="18" y2="22" />
+</svg> Detection settings</a>
+        <a href="/transactions" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+</svg> Find transaction</a>
+        <span class="nav-label">Publish</span>
+        <a href="/flags" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" x2="4" y1="22" y2="15" />
+</svg> Flags</a>
+      
+    </nav>
+    <div class="sidebar-foot">
+      <span class="pulse" data-live="true" title="Last ledger fully read by the monitor">
+        <span class="pulse-dot"></span>
+        <span>Live on XRPL Testnet<br><span class="mono small">#22,497,748</span></span>
+      </span>
+      <div class="signout">
+        <span>analyst</span>
+        <form method="post" action="/logout"><button class="link-button" type="submit"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+</svg> Sign out</button></form>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    
+<div class="page-head" data-enter>
+  <div>
+    <h1>Trace 1</h1>
+    <p>From <span class="mono small">rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R</span>, ledger 22,497,061 onward</p>
+  </div>
+  <a class="btn btn-quiet" href="/analyst/traces">All traces</a>
+</div>
+<div id="trace-body" data-enter style="--i: 1" >
+  
+
+
+<div class="stack">
+  
+<section class="panel" >
+  <div class="panel-head">
+    <h2>Where the stolen funds went</h2>
+    <div class="actions">
+      <span class="small muted">98.899979 XRP stolen</span>
+      <button class="btn btn-quiet btn-small" hx-get="/ui/flow/1" hx-target="#flow-1" hx-swap="outerHTML"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34" /><path d="M4 6h.01" /><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35" /><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67" /><path d="M12 18h.01" /><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67" /><circle cx="12" cy="12" r="2" /><path d="m13.41 10.59 5.66-5.66" />
+</svg> Replay</button>
+      
+    </div>
+  </div>
+  <div class="flow-stage" id="flow-1"><svg class="chart flow" viewBox="0 0 960 490" role="img" aria-label="Funds flow over 4 hops"><style>.flow:has(#n-699151-0:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-0){opacity:.12}.flow:has(#n-699151-0:is(:hover, :focus)) #card-699151-0{opacity:1;transform:none}.flow:has(#n-699151-1:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-1){opacity:.12}.flow:has(#n-699151-1:is(:hover, :focus)) #card-699151-1{opacity:1;transform:none}.flow:has(#n-699151-2:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-2){opacity:.12}.flow:has(#n-699151-2:is(:hover, :focus)) #card-699151-2{opacity:1;transform:none}.flow:has(#n-699151-3:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-3){opacity:.12}.flow:has(#n-699151-3:is(:hover, :focus)) #card-699151-3{opacity:1;transform:none}.flow:has(#n-699151-4:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-4){opacity:.12}.flow:has(#n-699151-4:is(:hover, :focus)) #card-699151-4{opacity:1;transform:none}.flow:has(#n-699151-5:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-5){opacity:.12}.flow:has(#n-699151-5:is(:hover, :focus)) #card-699151-5{opacity:1;transform:none}.flow:has(#n-699151-6:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-6){opacity:.12}.flow:has(#n-699151-6:is(:hover, :focus)) #card-699151-6{opacity:1;transform:none}.flow:has(#n-699151-7:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-7){opacity:.12}.flow:has(#n-699151-7:is(:hover, :focus)) #card-699151-7{opacity:1;transform:none}.flow:has(#n-699151-8:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-8){opacity:.12}.flow:has(#n-699151-8:is(:hover, :focus)) #card-699151-8{opacity:1;transform:none}.flow:has(#n-699151-9:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-9){opacity:.12}.flow:has(#n-699151-9:is(:hover, :focus)) #card-699151-9{opacity:1;transform:none}.flow:has(#n-699151-10:is(:hover, :focus)) :is(.flow-band,.flow-node):not(.p-699151-10){opacity:.12}.flow:has(#n-699151-10:is(:hover, :focus)) #card-699151-10{opacity:1;transform:none}</style><defs><marker id="arrow-699151" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="flow-arrow"/></marker><linearGradient id="edge-grad" gradientUnits="userSpaceOnUse" x1="0" x2="960" y1="0" y2="0"><stop offset="0" stop-color="#9cc6ea"/><stop offset=".6" stop-color="#2f86d1"/><stop offset="1" stop-color="#d6334a"/></linearGradient><radialGradient id="node-grad" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cfe6f8"/></radialGradient><radialGradient id="origin-grad" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#94a3b8"/><stop offset="1" stop-color="#334155"/></radialGradient><radialGradient id="sink-grad" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ff8b9b"/><stop offset="1" stop-color="#c5283d"/></radialGradient></defs><text class="chart-label" x="90.0" y="18" text-anchor="middle">Victim</text><text class="chart-label" x="255.0" y="18" text-anchor="middle">Hop 1</text><text class="chart-label" x="420.0" y="18" text-anchor="middle">Hop 2</text><text class="chart-label" x="585.0" y="18" text-anchor="middle">Hop 3</text><text class="chart-label" x="750.0" y="18" text-anchor="middle">Hop 4</text><path id="link-699151-0" class="flow-band p-699151-0 p-699151-1 p-699151-2 p-699151-3 p-699151-4 p-699151-5 p-699151-6 p-699151-7 p-699151-8 p-699151-9 p-699151-10" style="--i:1" pathLength="1" stroke-width="6.0" marker-end="url(#arrow-699151)" d="M118.0,242.0 C170.5,242.0 170.5,242.0 223.0,242.0"><title>98.899979 XRP via 724D1BC26D3D…</title></path><path id="link-699151-1" class="flow-band p-699151-0 p-699151-1 p-699151-2 p-699151-4 p-699151-6 p-699151-8 p-699151-9" style="--i:2" pathLength="1" stroke-width="4.2" marker-end="url(#arrow-699151)" d="M283.0,242.0 C339.0,242.0 339.0,145.0 394.9,145.0"><title>58.679987 XRP via 473241C6FFCD…</title></path><path id="link-699151-2" class="flow-band p-699151-0 p-699151-1 p-699151-3 p-699151-5 p-699151-7 p-699151-10" style="--i:2" pathLength="1" stroke-width="3.3" marker-end="url(#arrow-699151)" d="M283.0,242.0 C340.6,242.0 340.6,339.0 398.3,339.0"><title>39.119992 XRP via 6A7FFEB93934…</title></path><path id="link-699151-3" class="flow-band p-699151-0 p-699151-1 p-699151-2 p-699151-4 p-699151-9" style="--i:3" pathLength="1" stroke-width="2.7" marker-end="url(#arrow-699151)" d="M441.1,145.0 C503.3,145.0 503.3,86.8 565.5,86.8"><title>25.910994 XRP via C4960DF1087B…</title></path><path id="link-699151-4" class="flow-band p-699151-0 p-699151-1 p-699151-2 p-699151-6 p-699151-9" style="--i:3" pathLength="1" stroke-width="2.4" marker-end="url(#arrow-699151)" d="M441.1,145.0 C503.8,145.0 503.8,242.0 566.5,242.0"><title>20.152995 XRP via C82F383B7088…</title></path><path id="link-699151-5" class="flow-band p-699151-0 p-699151-1 p-699151-2 p-699151-8 p-699151-9" style="--i:3" pathLength="1" stroke-width="2.0" marker-end="url(#arrow-699151)" d="M441.1,145.0 C504.6,145.0 504.6,397.2 568.0,397.2"><title>11.515997 XRP via 826C49FC70D2…</title></path><path id="link-699151-6" class="flow-band p-699151-0 p-699151-1 p-699151-3 p-699151-5 p-699151-10" style="--i:3" pathLength="1" stroke-width="2.5" marker-end="url(#arrow-699151)" d="M437.7,339.0 C501.9,339.0 501.9,164.4 566.1,164.4"><title>22.811995 XRP via 6F2C7EACFA39…</title></path><path id="link-699151-7" class="flow-band p-699151-0 p-699151-1 p-699151-3 p-699151-7" style="--i:3" pathLength="1" stroke-width="2.2" marker-end="url(#arrow-699151)" d="M437.7,339.0 C502.6,339.0 502.6,319.6 567.4,319.6"><title>15.207997 XRP via 4A2AB5965871…</title></path><path id="link-699151-8" class="flow-band p-699151-0 p-699151-1 p-699151-2 p-699151-4 p-699151-9" style="--i:4" pathLength="1" stroke-width="2.6" marker-end="url(#arrow-699151)" d="M600.5,86.8 C663.1,86.8 663.1,145.0 725.7,145.0"><title>24.810994 XRP via 62E75B3A8173…</title></path><path id="link-699151-9" class="flow-band p-699151-0 p-699151-1 p-699151-2 p-699151-6 p-699151-9" style="--i:4" pathLength="1" stroke-width="2.4" marker-end="url(#arrow-699151)" d="M599.5,242.0 C662.6,242.0 662.6,145.0 725.7,145.0"><title>19.052995 XRP via 6C3774375B9B…</title></path><path id="link-699151-10" class="flow-band p-699151-0 p-699151-1 p-699151-2 p-699151-8 p-699151-9" style="--i:4" pathLength="1" stroke-width="2.0" marker-end="url(#arrow-699151)" d="M598.0,397.2 C661.8,397.2 661.8,145.0 725.7,145.0"><title>10.415997 XRP via 75ABB16098EE…</title></path><path id="link-699151-11" class="flow-band p-699151-0 p-699151-1 p-699151-3 p-699151-5 p-699151-10" style="--i:4" pathLength="1" stroke-width="2.5" marker-end="url(#arrow-699151)" d="M599.9,164.4 C665.6,164.4 665.6,339.0 731.3,339.0"><title>21.711995 XRP via B470355A0626…</title></path><g class="flow-particles"><circle class="flow-particle" opacity="0" r="4.5"><set attributeName="opacity" to="1.0" begin="1.45s"/><animateMotion dur="1.4s" begin="1.45s" repeatCount="indefinite"><mpath href="#link-699151-0"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.7"><set attributeName="opacity" to="0.6" begin="1.53s"/><animateMotion dur="1.4s" begin="1.53s" repeatCount="indefinite"><mpath href="#link-699151-0"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.6"><set attributeName="opacity" to="0.35" begin="1.61s"/><animateMotion dur="1.4s" begin="1.61s" repeatCount="indefinite"><mpath href="#link-699151-0"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="4.5"><set attributeName="opacity" to="1.0" begin="2.15s"/><animateMotion dur="1.4s" begin="2.15s" repeatCount="indefinite"><mpath href="#link-699151-0"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.7"><set attributeName="opacity" to="0.6" begin="2.23s"/><animateMotion dur="1.4s" begin="2.23s" repeatCount="indefinite"><mpath href="#link-699151-0"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.6"><set attributeName="opacity" to="0.35" begin="2.31s"/><animateMotion dur="1.4s" begin="2.31s" repeatCount="indefinite"><mpath href="#link-699151-0"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="4.5"><set attributeName="opacity" to="1.0" begin="2.85s"/><animateMotion dur="1.4s" begin="2.85s" repeatCount="indefinite"><mpath href="#link-699151-0"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.7"><set attributeName="opacity" to="0.6" begin="2.93s"/><animateMotion dur="1.4s" begin="2.93s" repeatCount="indefinite"><mpath href="#link-699151-0"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.6"><set attributeName="opacity" to="0.35" begin="3.01s"/><animateMotion dur="1.4s" begin="3.01s" repeatCount="indefinite"><mpath href="#link-699151-0"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="3.7"><set attributeName="opacity" to="1.0" begin="1.90s"/><animateMotion dur="1.4s" begin="1.90s" repeatCount="indefinite"><mpath href="#link-699151-1"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.2"><set attributeName="opacity" to="0.6" begin="1.98s"/><animateMotion dur="1.4s" begin="1.98s" repeatCount="indefinite"><mpath href="#link-699151-1"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.3"><set attributeName="opacity" to="0.35" begin="2.06s"/><animateMotion dur="1.4s" begin="2.06s" repeatCount="indefinite"><mpath href="#link-699151-1"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="3.7"><set attributeName="opacity" to="1.0" begin="2.60s"/><animateMotion dur="1.4s" begin="2.60s" repeatCount="indefinite"><mpath href="#link-699151-1"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.2"><set attributeName="opacity" to="0.6" begin="2.68s"/><animateMotion dur="1.4s" begin="2.68s" repeatCount="indefinite"><mpath href="#link-699151-1"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.3"><set attributeName="opacity" to="0.35" begin="2.76s"/><animateMotion dur="1.4s" begin="2.76s" repeatCount="indefinite"><mpath href="#link-699151-1"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="3.3"><set attributeName="opacity" to="1.0" begin="1.90s"/><animateMotion dur="1.4s" begin="1.90s" repeatCount="indefinite"><mpath href="#link-699151-2"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.0"><set attributeName="opacity" to="0.6" begin="1.98s"/><animateMotion dur="1.4s" begin="1.98s" repeatCount="indefinite"><mpath href="#link-699151-2"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.2"><set attributeName="opacity" to="0.35" begin="2.06s"/><animateMotion dur="1.4s" begin="2.06s" repeatCount="indefinite"><mpath href="#link-699151-2"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="3.3"><set attributeName="opacity" to="1.0" begin="2.60s"/><animateMotion dur="1.4s" begin="2.60s" repeatCount="indefinite"><mpath href="#link-699151-2"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.0"><set attributeName="opacity" to="0.6" begin="2.68s"/><animateMotion dur="1.4s" begin="2.68s" repeatCount="indefinite"><mpath href="#link-699151-2"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.2"><set attributeName="opacity" to="0.35" begin="2.76s"/><animateMotion dur="1.4s" begin="2.76s" repeatCount="indefinite"><mpath href="#link-699151-2"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="3.0"><set attributeName="opacity" to="1.0" begin="2.35s"/><animateMotion dur="1.4s" begin="2.35s" repeatCount="indefinite"><mpath href="#link-699151-3"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.8"><set attributeName="opacity" to="0.6" begin="2.43s"/><animateMotion dur="1.4s" begin="2.43s" repeatCount="indefinite"><mpath href="#link-699151-3"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.1"><set attributeName="opacity" to="0.35" begin="2.51s"/><animateMotion dur="1.4s" begin="2.51s" repeatCount="indefinite"><mpath href="#link-699151-3"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="3.0"><set attributeName="opacity" to="1.0" begin="3.05s"/><animateMotion dur="1.4s" begin="3.05s" repeatCount="indefinite"><mpath href="#link-699151-3"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.8"><set attributeName="opacity" to="0.6" begin="3.13s"/><animateMotion dur="1.4s" begin="3.13s" repeatCount="indefinite"><mpath href="#link-699151-3"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.1"><set attributeName="opacity" to="0.35" begin="3.21s"/><animateMotion dur="1.4s" begin="3.21s" repeatCount="indefinite"><mpath href="#link-699151-3"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.9"><set attributeName="opacity" to="1.0" begin="2.35s"/><animateMotion dur="1.4s" begin="2.35s" repeatCount="indefinite"><mpath href="#link-699151-4"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.7"><set attributeName="opacity" to="0.6" begin="2.43s"/><animateMotion dur="1.4s" begin="2.43s" repeatCount="indefinite"><mpath href="#link-699151-4"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.0"><set attributeName="opacity" to="0.35" begin="2.51s"/><animateMotion dur="1.4s" begin="2.51s" repeatCount="indefinite"><mpath href="#link-699151-4"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.7"><set attributeName="opacity" to="1.0" begin="2.35s"/><animateMotion dur="1.4s" begin="2.35s" repeatCount="indefinite"><mpath href="#link-699151-5"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.6"><set attributeName="opacity" to="0.6" begin="2.43s"/><animateMotion dur="1.4s" begin="2.43s" repeatCount="indefinite"><mpath href="#link-699151-5"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.0"><set attributeName="opacity" to="0.35" begin="2.51s"/><animateMotion dur="1.4s" begin="2.51s" repeatCount="indefinite"><mpath href="#link-699151-5"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="3.0"><set attributeName="opacity" to="1.0" begin="2.35s"/><animateMotion dur="1.4s" begin="2.35s" repeatCount="indefinite"><mpath href="#link-699151-6"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.8"><set attributeName="opacity" to="0.6" begin="2.43s"/><animateMotion dur="1.4s" begin="2.43s" repeatCount="indefinite"><mpath href="#link-699151-6"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.0"><set attributeName="opacity" to="0.35" begin="2.51s"/><animateMotion dur="1.4s" begin="2.51s" repeatCount="indefinite"><mpath href="#link-699151-6"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.8"><set attributeName="opacity" to="1.0" begin="2.35s"/><animateMotion dur="1.4s" begin="2.35s" repeatCount="indefinite"><mpath href="#link-699151-7"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.7"><set attributeName="opacity" to="0.6" begin="2.43s"/><animateMotion dur="1.4s" begin="2.43s" repeatCount="indefinite"><mpath href="#link-699151-7"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.0"><set attributeName="opacity" to="0.35" begin="2.51s"/><animateMotion dur="1.4s" begin="2.51s" repeatCount="indefinite"><mpath href="#link-699151-7"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="3.0"><set attributeName="opacity" to="1.0" begin="2.80s"/><animateMotion dur="1.4s" begin="2.80s" repeatCount="indefinite"><mpath href="#link-699151-8"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.8"><set attributeName="opacity" to="0.6" begin="2.88s"/><animateMotion dur="1.4s" begin="2.88s" repeatCount="indefinite"><mpath href="#link-699151-8"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.1"><set attributeName="opacity" to="0.35" begin="2.96s"/><animateMotion dur="1.4s" begin="2.96s" repeatCount="indefinite"><mpath href="#link-699151-8"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="3.0"><set attributeName="opacity" to="1.0" begin="3.50s"/><animateMotion dur="1.4s" begin="3.50s" repeatCount="indefinite"><mpath href="#link-699151-8"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.8"><set attributeName="opacity" to="0.6" begin="3.58s"/><animateMotion dur="1.4s" begin="3.58s" repeatCount="indefinite"><mpath href="#link-699151-8"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.1"><set attributeName="opacity" to="0.35" begin="3.66s"/><animateMotion dur="1.4s" begin="3.66s" repeatCount="indefinite"><mpath href="#link-699151-8"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.9"><set attributeName="opacity" to="1.0" begin="2.80s"/><animateMotion dur="1.4s" begin="2.80s" repeatCount="indefinite"><mpath href="#link-699151-9"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.7"><set attributeName="opacity" to="0.6" begin="2.88s"/><animateMotion dur="1.4s" begin="2.88s" repeatCount="indefinite"><mpath href="#link-699151-9"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.0"><set attributeName="opacity" to="0.35" begin="2.96s"/><animateMotion dur="1.4s" begin="2.96s" repeatCount="indefinite"><mpath href="#link-699151-9"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.7"><set attributeName="opacity" to="1.0" begin="2.80s"/><animateMotion dur="1.4s" begin="2.80s" repeatCount="indefinite"><mpath href="#link-699151-10"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.6"><set attributeName="opacity" to="0.6" begin="2.88s"/><animateMotion dur="1.4s" begin="2.88s" repeatCount="indefinite"><mpath href="#link-699151-10"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="0.9"><set attributeName="opacity" to="0.35" begin="2.96s"/><animateMotion dur="1.4s" begin="2.96s" repeatCount="indefinite"><mpath href="#link-699151-10"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="2.9"><set attributeName="opacity" to="1.0" begin="2.80s"/><animateMotion dur="1.4s" begin="2.80s" repeatCount="indefinite"><mpath href="#link-699151-11"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.8"><set attributeName="opacity" to="0.6" begin="2.88s"/><animateMotion dur="1.4s" begin="2.88s" repeatCount="indefinite"><mpath href="#link-699151-11"/></animateMotion></circle><circle class="flow-particle" opacity="0" r="1.0"><set attributeName="opacity" to="0.35" begin="2.96s"/><animateMotion dur="1.4s" begin="2.96s" repeatCount="indefinite"><mpath href="#link-699151-11"/></animateMotion></circle></g><g id="n-699151-0" class="flow-node flow-origin p-699151-0 p-699151-1 p-699151-2 p-699151-3 p-699151-4 p-699151-5 p-699151-6 p-699151-7 p-699151-8 p-699151-9 p-699151-10" tabindex="0" style="--i:0" aria-label="Victim: 98.899979 XRP"><circle class="flow-body" cx="90.0" cy="242.0" r="26.0"/><text class="flow-name" x="90.0" y="283.0" text-anchor="middle">Victim</text><text class="flow-value" x="90.0" y="297.0" text-anchor="middle">98.899979 XRP (100%)</text></g><g id="n-699151-1" class="flow-node flow-hop p-699151-0 p-699151-1 p-699151-2 p-699151-3 p-699151-4 p-699151-5 p-699151-6 p-699151-7 p-699151-8 p-699151-9 p-699151-10" tabindex="0" style="--i:1" aria-label="r4zhpM…tmwA: 98.899979 XRP"><circle class="flow-body" cx="255.0" cy="242.0" r="26.0"/></g><g id="n-699151-2" class="flow-node flow-hop p-699151-0 p-699151-1 p-699151-2 p-699151-4 p-699151-6 p-699151-8 p-699151-9" tabindex="0" style="--i:2" aria-label="rNjTA8…d27L: 58.679987 XRP"><circle class="flow-body" cx="420.0" cy="145.0" r="19.1"/></g><g id="n-699151-3" class="flow-node flow-hop p-699151-0 p-699151-1 p-699151-3 p-699151-5 p-699151-7 p-699151-10" tabindex="0" style="--i:2" aria-label="rJ8Gph…VwQV: 39.119992 XRP"><circle class="flow-body" cx="420.0" cy="339.0" r="15.7"/></g><g id="n-699151-4" class="flow-node flow-hop p-699151-0 p-699151-1 p-699151-2 p-699151-4 p-699151-9" tabindex="0" style="--i:3" aria-label="rKkW19…MQpG: 25.910994 XRP"><circle class="flow-body" cx="585.0" cy="86.8" r="13.5"/></g><g id="n-699151-5" class="flow-node flow-hop p-699151-0 p-699151-1 p-699151-3 p-699151-5 p-699151-10" tabindex="0" style="--i:3" aria-label="rHXGce…Mx2L: 22.811995 XRP"><circle class="flow-body" cx="585.0" cy="164.4" r="12.9"/></g><g id="n-699151-6" class="flow-node flow-hop p-699151-0 p-699151-1 p-699151-2 p-699151-6 p-699151-9" tabindex="0" style="--i:3" aria-label="rLJoMR…3kWz: 20.152995 XRP"><circle class="flow-body" cx="585.0" cy="242.0" r="12.5"/></g><g id="n-699151-7" class="flow-node flow-sink p-699151-0 p-699151-1 p-699151-3 p-699151-7" tabindex="0" style="--i:3" aria-label="rGciqX…Wnuv: 15.207997 XRP"><circle class="flow-ring" cx="585.0" cy="319.6" r="11.6"/><circle class="flow-body" cx="585.0" cy="319.6" r="11.6"/><text class="flow-name" x="585.0" y="346.2" text-anchor="middle">rGciqX…Wnuv</text><text class="flow-value" x="585.0" y="360.2" text-anchor="middle">15.207997 XRP (15%)</text></g><g id="n-699151-8" class="flow-node flow-hop p-699151-0 p-699151-1 p-699151-2 p-699151-8 p-699151-9" tabindex="0" style="--i:3" aria-label="r4UZPd…vUzY: 11.515997 XRP"><circle class="flow-body" cx="585.0" cy="397.2" r="11.0"/></g><g id="n-699151-9" class="flow-node flow-sink p-699151-0 p-699151-1 p-699151-2 p-699151-4 p-699151-6 p-699151-8 p-699151-9" tabindex="0" style="--i:4" aria-label="Exchange (SIMULATED): 54.279986 XRP"><circle class="flow-ring" cx="750.0" cy="145.0" r="18.3"/><circle class="flow-body" cx="750.0" cy="145.0" r="18.3"/><text class="flow-name" x="750.0" y="178.3" text-anchor="middle">Exchange (SIMULATED), tag 777001</text><text class="flow-value" x="750.0" y="192.3" text-anchor="middle">54.279986 XRP (55%)</text></g><g id="n-699151-10" class="flow-node flow-sink p-699151-0 p-699151-1 p-699151-3 p-699151-5 p-699151-10" tabindex="0" style="--i:4" aria-label="Exchange B (SIMULATED): 21.711995 XRP"><circle class="flow-ring" cx="750.0" cy="339.0" r="12.7"/><circle class="flow-body" cx="750.0" cy="339.0" r="12.7"/><text class="flow-name" x="750.0" y="366.7" text-anchor="middle">Exchange B (SIMULATED), tag 4242</text><text class="flow-value" x="750.0" y="380.7" text-anchor="middle">21.711995 XRP (22%)</text></g><g transform="translate(8.0 122.0)"><g id="card-699151-0" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">Robbed wallet</text><text class="card-addr" x="14" y="41">rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R</text><text class="card-fig" x="14" y="61">98.899979 XRP · 100% of the theft</text><text class="card-meta" x="14" y="77">Victim</text></g></g><g transform="translate(132.0 122.0)"><g id="card-699151-1" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">Pass-through account</text><text class="card-addr" x="14" y="41">r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA</text><text class="card-fig" x="14" y="61">98.899979 XRP · 100% of the theft</text><text class="card-meta" x="14" y="77">Hop 1</text></g></g><g transform="translate(297.0 31.9)"><g id="card-699151-2" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">Pass-through account</text><text class="card-addr" x="14" y="41">rNjTA8dj2WMZx9goqQY25biixFmFj9d27L</text><text class="card-fig" x="14" y="61">58.679987 XRP · 59% of the theft</text><text class="card-meta" x="14" y="77">Hop 2</text></g></g><g transform="translate(297.0 229.3)"><g id="card-699151-3" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">Pass-through account</text><text class="card-addr" x="14" y="41">rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV</text><text class="card-fig" x="14" y="61">39.119992 XRP · 40% of the theft</text><text class="card-meta" x="14" y="77">Hop 2</text></g></g><g transform="translate(462.0 112.3)"><g id="card-699151-4" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">Pass-through account</text><text class="card-addr" x="14" y="41">rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG</text><text class="card-fig" x="14" y="61">25.910994 XRP · 26% of the theft</text><text class="card-meta" x="14" y="77">Hop 3</text></g></g><g transform="translate(462.0 57.5)"><g id="card-699151-5" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">Pass-through account</text><text class="card-addr" x="14" y="41">rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L</text><text class="card-fig" x="14" y="61">22.811995 XRP · 23% of the theft</text><text class="card-meta" x="14" y="77">Hop 3</text></g></g><g transform="translate(462.0 135.5)"><g id="card-699151-6" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">Pass-through account</text><text class="card-addr" x="14" y="41">rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz</text><text class="card-fig" x="14" y="61">20.152995 XRP · 20% of the theft</text><text class="card-meta" x="14" y="77">Hop 3</text></g></g><g transform="translate(462.0 214.0)"><g id="card-699151-7" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">rGciqX…Wnuv</text><text class="card-addr" x="14" y="41">rGciqXNiacCTQ1MwZM4xS5DAh3C1qcWnuv</text><text class="card-fig" x="14" y="61">15.207997 XRP · 15% of the theft</text><text class="card-meta" x="14" y="77">Hop 3</text></g></g><g transform="translate(462.0 292.2)"><g id="card-699151-8" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">Pass-through account</text><text class="card-addr" x="14" y="41">r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY</text><text class="card-fig" x="14" y="61">11.515997 XRP · 12% of the theft</text><text class="card-meta" x="14" y="77">Hop 3</text></g></g><g transform="translate(627.0 32.7)"><g id="card-699151-9" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">Exchange (SIMULATED)</text><text class="card-addr" x="14" y="41">rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw</text><text class="card-fig" x="14" y="61">54.279986 XRP · 55% of the theft</text><text class="card-meta" x="14" y="77">Hop 4, tag 777001</text></g></g><g transform="translate(627.0 232.3)"><g id="card-699151-10" class="flow-card"><rect width="246" height="84" rx="12"/><text class="card-title" x="14" y="23">Exchange B (SIMULATED)</text><text class="card-addr" x="14" y="41">rnF3cdhX6XfQoMeemRkNFAaKQi1YpN9NDN</text><text class="card-fig" x="14" y="61">21.711995 XRP · 22% of the theft</text><text class="card-meta" x="14" y="77">Hop 4, tag 4242</text></g></g></svg></div>
+  <div class="chart-legend">
+    <span><i style="background: #fff; box-shadow: inset 0 0 0 1px var(--hairline-strong); border-radius: 50%"></i>Victim</span>
+    <span><i style="background: #1c2a45; box-shadow: inset 0 0 0 2px #7f8ba3; border-radius: 50%"></i>Pass-through</span>
+    <span><i style="background: var(--danger-ink); border-radius: 50%"></i>Funds stopped / known entity</span>
+    <span><i style="background: var(--ripple)"></i>Size and line width = stolen value</span>
+  </div>
+</section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Endpoints</h2></div>
+    
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Account</th><th>Known as</th><th class="num">Stolen value</th><th class="num">Share</th><th class="num">Hop</th><th></th></tr></thead>
+        <tbody>
+        
+          <tr>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw" target="_blank" rel="noopener" title="rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw">rPfXCA…HMtw</a> <span class="muted small">tag 777001</span></td>
+            <td>Exchange (SIMULATED)</td>
+            <td class="num">54.279986 XRP</td>
+            <td class="num">54.9%</td>
+            <td class="num">4</td>
+            <td></td>
+          </tr>
+        
+          <tr>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rnF3cdhX6XfQoMeemRkNFAaKQi1YpN9NDN" target="_blank" rel="noopener" title="rnF3cdhX6XfQoMeemRkNFAaKQi1YpN9NDN">rnF3cd…9NDN</a> <span class="muted small">tag 4242</span></td>
+            <td>Exchange B (SIMULATED)</td>
+            <td class="num">21.711995 XRP</td>
+            <td class="num">21.9%</td>
+            <td class="num">4</td>
+            <td></td>
+          </tr>
+        
+          <tr>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rGciqXNiacCTQ1MwZM4xS5DAh3C1qcWnuv" target="_blank" rel="noopener" title="rGciqXNiacCTQ1MwZM4xS5DAh3C1qcWnuv">rGciqX…Wnuv</a></td>
+            <td>Unlabelled</td>
+            <td class="num">15.207997 XRP</td>
+            <td class="num">15.4%</td>
+            <td class="num">3</td>
+            <td><details><summary>Flag</summary><form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="rGciqXNiacCTQ1MwZM4xS5DAh3C1qcWnuv">
+  <input type="hidden" name="target_type" value="account">
+  <input type="hidden" name="back" value="/analyst/traces/1">
+  
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-rGciqXNiacCTQ1MwZM4xS5DAh3C1qcWnuv-None">Category</label>
+      <select id="cat-rGciqXNiacCTQ1MwZM4xS5DAh3C1qcWnuv-None" name="category">
+        <option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-rGciqXNiacCTQ1MwZM4xS5DAh3C1qcWnuv-None">Reason users will read</label>
+      <input id="reason-rGciqXNiacCTQ1MwZM4xS5DAh3C1qcWnuv-None" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag account</button>
+  </div>
+</form></details></td>
+          </tr>
+        
+          <tr>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rNjTA8dj2WMZx9goqQY25biixFmFj9d27L" target="_blank" rel="noopener" title="rNjTA8dj2WMZx9goqQY25biixFmFj9d27L">rNjTA8…d27L</a></td>
+            <td>Unlabelled</td>
+            <td class="num">1.100001 XRP</td>
+            <td class="num">1.1%</td>
+            <td class="num">2</td>
+            <td><details><summary>Flag</summary><form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="rNjTA8dj2WMZx9goqQY25biixFmFj9d27L">
+  <input type="hidden" name="target_type" value="account">
+  <input type="hidden" name="back" value="/analyst/traces/1">
+  
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-rNjTA8dj2WMZx9goqQY25biixFmFj9d27L-None">Category</label>
+      <select id="cat-rNjTA8dj2WMZx9goqQY25biixFmFj9d27L-None" name="category">
+        <option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-rNjTA8dj2WMZx9goqQY25biixFmFj9d27L-None">Reason users will read</label>
+      <input id="reason-rNjTA8dj2WMZx9goqQY25biixFmFj9d27L-None" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag account</button>
+  </div>
+</form></details></td>
+          </tr>
+        
+          <tr>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY" target="_blank" rel="noopener" title="r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY">r4UZPd…vUzY</a></td>
+            <td>Unlabelled</td>
+            <td class="num">1.1 XRP</td>
+            <td class="num">1.1%</td>
+            <td class="num">3</td>
+            <td><details><summary>Flag</summary><form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY">
+  <input type="hidden" name="target_type" value="account">
+  <input type="hidden" name="back" value="/analyst/traces/1">
+  
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY-None">Category</label>
+      <select id="cat-r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY-None" name="category">
+        <option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY-None">Reason users will read</label>
+      <input id="reason-r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY-None" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag account</button>
+  </div>
+</form></details></td>
+          </tr>
+        
+          <tr>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA" target="_blank" rel="noopener" title="r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA">r4zhpM…tmwA</a></td>
+            <td>Unlabelled</td>
+            <td class="num">1.1 XRP</td>
+            <td class="num">1.1%</td>
+            <td class="num">1</td>
+            <td><details><summary>Flag</summary><form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA">
+  <input type="hidden" name="target_type" value="account">
+  <input type="hidden" name="back" value="/analyst/traces/1">
+  
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA-None">Category</label>
+      <select id="cat-r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA-None" name="category">
+        <option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA-None">Reason users will read</label>
+      <input id="reason-r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA-None" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag account</button>
+  </div>
+</form></details></td>
+          </tr>
+        
+          <tr>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L" target="_blank" rel="noopener" title="rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L">rHXGce…Mx2L</a></td>
+            <td>Unlabelled</td>
+            <td class="num">1.1 XRP</td>
+            <td class="num">1.1%</td>
+            <td class="num">3</td>
+            <td><details><summary>Flag</summary><form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L">
+  <input type="hidden" name="target_type" value="account">
+  <input type="hidden" name="back" value="/analyst/traces/1">
+  
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L-None">Category</label>
+      <select id="cat-rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L-None" name="category">
+        <option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L-None">Reason users will read</label>
+      <input id="reason-rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L-None" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag account</button>
+  </div>
+</form></details></td>
+          </tr>
+        
+          <tr>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV" target="_blank" rel="noopener" title="rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV">rJ8Gph…VwQV</a></td>
+            <td>Unlabelled</td>
+            <td class="num">1.1 XRP</td>
+            <td class="num">1.1%</td>
+            <td class="num">2</td>
+            <td><details><summary>Flag</summary><form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV">
+  <input type="hidden" name="target_type" value="account">
+  <input type="hidden" name="back" value="/analyst/traces/1">
+  
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV-None">Category</label>
+      <select id="cat-rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV-None" name="category">
+        <option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV-None">Reason users will read</label>
+      <input id="reason-rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV-None" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag account</button>
+  </div>
+</form></details></td>
+          </tr>
+        
+          <tr>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG" target="_blank" rel="noopener" title="rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG">rKkW19…MQpG</a></td>
+            <td>Unlabelled</td>
+            <td class="num">1.1 XRP</td>
+            <td class="num">1.1%</td>
+            <td class="num">3</td>
+            <td><details><summary>Flag</summary><form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG">
+  <input type="hidden" name="target_type" value="account">
+  <input type="hidden" name="back" value="/analyst/traces/1">
+  
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG-None">Category</label>
+      <select id="cat-rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG-None" name="category">
+        <option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG-None">Reason users will read</label>
+      <input id="reason-rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG-None" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag account</button>
+  </div>
+</form></details></td>
+          </tr>
+        
+          <tr>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz" target="_blank" rel="noopener" title="rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz">rLJoMR…3kWz</a></td>
+            <td>Unlabelled</td>
+            <td class="num">1.1 XRP</td>
+            <td class="num">1.1%</td>
+            <td class="num">3</td>
+            <td><details><summary>Flag</summary><form method="post" action="/flags" class="stack" style="gap: var(--s-3)">
+  <input type="hidden" name="target" value="rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz">
+  <input type="hidden" name="target_type" value="account">
+  <input type="hidden" name="back" value="/analyst/traces/1">
+  
+  <div class="form-row">
+    <div class="field" style="flex: 0 1 10rem">
+      <label for="cat-rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz-None">Category</label>
+      <select id="cat-rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz-None" name="category">
+        <option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reason-rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz-None">Reason users will read</label>
+      <input id="reason-rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz-None" type="text" name="reason" required minlength="3" maxlength="280" placeholder="e.g. received funds drained from a compromised wallet">
+    </div>
+    <button class="btn btn-danger" type="submit">Flag account</button>
+  </div>
+</form></details></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+    
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Tainted transfers</h2><span class="small muted">12</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="num">Hop</th><th>From</th><th>To</th><th class="num">Amount</th><th class="num">Stolen part</th><th class="num">Ratio</th><th>Transaction</th></tr></thead>
+        <tbody>
+        
+          <tr>
+            <td class="num">1</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R" target="_blank" rel="noopener" title="rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R">rs9oiH…Y99R</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA" target="_blank" rel="noopener" title="r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA">r4zhpM…tmwA</a></td>
+            <td class="num">98.899979 XRP</td>
+            <td class="num">98.899979 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A" target="_blank" rel="noopener" title="724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A">724D1BC2…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">2</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA" target="_blank" rel="noopener" title="r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA">r4zhpM…tmwA</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rNjTA8dj2WMZx9goqQY25biixFmFj9d27L" target="_blank" rel="noopener" title="rNjTA8dj2WMZx9goqQY25biixFmFj9d27L">rNjTA8…d27L</a></td>
+            <td class="num">58.679987 XRP</td>
+            <td class="num">58.679987 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/473241C6FFCD4087A444B86A45C0555D0402E34135A68817021ED64F581B6F9F" target="_blank" rel="noopener" title="473241C6FFCD4087A444B86A45C0555D0402E34135A68817021ED64F581B6F9F">473241C6…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">2</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA" target="_blank" rel="noopener" title="r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA">r4zhpM…tmwA</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV" target="_blank" rel="noopener" title="rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV">rJ8Gph…VwQV</a></td>
+            <td class="num">39.119992 XRP</td>
+            <td class="num">39.119992 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/6A7FFEB939340DCB92066219342ADE4E9108F965EABC05FB00C48C1538A95982" target="_blank" rel="noopener" title="6A7FFEB939340DCB92066219342ADE4E9108F965EABC05FB00C48C1538A95982">6A7FFEB9…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">3</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rNjTA8dj2WMZx9goqQY25biixFmFj9d27L" target="_blank" rel="noopener" title="rNjTA8dj2WMZx9goqQY25biixFmFj9d27L">rNjTA8…d27L</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG" target="_blank" rel="noopener" title="rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG">rKkW19…MQpG</a></td>
+            <td class="num">25.910994 XRP</td>
+            <td class="num">25.910994 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/C4960DF1087B7C979894259C47129DB6FD376B948E7A1AFF344CCFC2C78DFA8B" target="_blank" rel="noopener" title="C4960DF1087B7C979894259C47129DB6FD376B948E7A1AFF344CCFC2C78DFA8B">C4960DF1…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">3</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rNjTA8dj2WMZx9goqQY25biixFmFj9d27L" target="_blank" rel="noopener" title="rNjTA8dj2WMZx9goqQY25biixFmFj9d27L">rNjTA8…d27L</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz" target="_blank" rel="noopener" title="rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz">rLJoMR…3kWz</a></td>
+            <td class="num">20.152995 XRP</td>
+            <td class="num">20.152995 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/C82F383B7088CB46BD9FCE4810FC3C5C9623933204B5CBAEE577954FBE29C03B" target="_blank" rel="noopener" title="C82F383B7088CB46BD9FCE4810FC3C5C9623933204B5CBAEE577954FBE29C03B">C82F383B…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">3</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rNjTA8dj2WMZx9goqQY25biixFmFj9d27L" target="_blank" rel="noopener" title="rNjTA8dj2WMZx9goqQY25biixFmFj9d27L">rNjTA8…d27L</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY" target="_blank" rel="noopener" title="r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY">r4UZPd…vUzY</a></td>
+            <td class="num">11.515997 XRP</td>
+            <td class="num">11.515997 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/826C49FC70D2A02A794B385BA8045C1A09F88F5DF62957E9F88247274884CBC0" target="_blank" rel="noopener" title="826C49FC70D2A02A794B385BA8045C1A09F88F5DF62957E9F88247274884CBC0">826C49FC…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">3</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV" target="_blank" rel="noopener" title="rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV">rJ8Gph…VwQV</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L" target="_blank" rel="noopener" title="rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L">rHXGce…Mx2L</a></td>
+            <td class="num">22.811995 XRP</td>
+            <td class="num">22.811995 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/6F2C7EACFA395E3FB1A1CC0B1ED4D2288ADA7639EB80DC5BD63B26AB6BA8820C" target="_blank" rel="noopener" title="6F2C7EACFA395E3FB1A1CC0B1ED4D2288ADA7639EB80DC5BD63B26AB6BA8820C">6F2C7EAC…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">3</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV" target="_blank" rel="noopener" title="rJ8GphXSqpBMvPPMMExJ8dKLPx7L5TVwQV">rJ8Gph…VwQV</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rGciqXNiacCTQ1MwZM4xS5DAh3C1qcWnuv" target="_blank" rel="noopener" title="rGciqXNiacCTQ1MwZM4xS5DAh3C1qcWnuv">rGciqX…Wnuv</a></td>
+            <td class="num">15.207997 XRP</td>
+            <td class="num">15.207997 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/4A2AB596587184F229791C647EC2AD82E7FCB7CA0BF606D27F9F42F82E0DF484" target="_blank" rel="noopener" title="4A2AB596587184F229791C647EC2AD82E7FCB7CA0BF606D27F9F42F82E0DF484">4A2AB596…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">4</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG" target="_blank" rel="noopener" title="rKkW1948jby4i1qNcz7SDfndgM5q2BMQpG">rKkW19…MQpG</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw" target="_blank" rel="noopener" title="rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw">rPfXCA…HMtw</a> <span class="muted small">tag 777001</span></td>
+            <td class="num">24.810994 XRP</td>
+            <td class="num">24.810994 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/62E75B3A817369244A53E61E699022CC3D748FB28583CE77F25B17EF92A750FC" target="_blank" rel="noopener" title="62E75B3A817369244A53E61E699022CC3D748FB28583CE77F25B17EF92A750FC">62E75B3A…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">4</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz" target="_blank" rel="noopener" title="rLJoMRwVue3Cj41EiNdLg2HbJLPQ3U3kWz">rLJoMR…3kWz</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw" target="_blank" rel="noopener" title="rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw">rPfXCA…HMtw</a> <span class="muted small">tag 777001</span></td>
+            <td class="num">19.052995 XRP</td>
+            <td class="num">19.052995 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/6C3774375B9B08F10DE26A53778B7C368AFE370C48B780E0A88150405864A98B" target="_blank" rel="noopener" title="6C3774375B9B08F10DE26A53778B7C368AFE370C48B780E0A88150405864A98B">6C377437…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">4</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY" target="_blank" rel="noopener" title="r4UZPdEocUorH8TMbfCKdDr9XVYuotvUzY">r4UZPd…vUzY</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw" target="_blank" rel="noopener" title="rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw">rPfXCA…HMtw</a> <span class="muted small">tag 777001</span></td>
+            <td class="num">10.415997 XRP</td>
+            <td class="num">10.415997 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/75ABB16098EEEB092D3C6E09A9E930B918191D3C1FBEDAC8E6BAF568F0D3066D" target="_blank" rel="noopener" title="75ABB16098EEEB092D3C6E09A9E930B918191D3C1FBEDAC8E6BAF568F0D3066D">75ABB160…</a></td>
+          </tr>
+        
+          <tr>
+            <td class="num">4</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L" target="_blank" rel="noopener" title="rHXGcewR8x8RSY4Mf3xzKyfxLBrMSnMx2L">rHXGce…Mx2L</a></td>
+            <td><a class="mono" href="https://testnet.xrpl.org/accounts/rnF3cdhX6XfQoMeemRkNFAaKQi1YpN9NDN" target="_blank" rel="noopener" title="rnF3cdhX6XfQoMeemRkNFAaKQi1YpN9NDN">rnF3cd…9NDN</a> <span class="muted small">tag 4242</span></td>
+            <td class="num">21.711995 XRP</td>
+            <td class="num">21.711995 XRP</td>
+            <td class="num">100%</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/B470355A062697B02E8CAF33276E960B95193764EDFF27E0F0C33CCAED49DBAE" target="_blank" rel="noopener" title="B470355A062697B02E8CAF33276E960B95193764EDFF27E0F0C33CCAED49DBAE">B470355A…</a></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <p class="small muted">Heuristic attribution: results are probable, not certain. Computed 2026-11-21 11:21:16 UTC. opening balance of rNjTA8dj2WMZx9goqQY25biixFmFj9d27L unknown (RequestMethod.ACCOUNT_INFO failed after 4 attempts); assumed 0.</p>
+</div>
+
+</div>
+
+  </main>
+</div>
+
+</body>
+</html>

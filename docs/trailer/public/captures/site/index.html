@@ -1,0 +1,190 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your wallets | Ripple Guardian</title>
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      
+<img class="brand-mark" src="/static/logo-mark.png" alt="" width="32" height="32">
+      <span class="brand-name">Ripple Guardian<small>Wallet protection</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      
+        <a href="/" aria-current="page"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+</svg> Wallets</a>
+        <a href="/notifications" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+</svg> Notifications
+          <span class="count" hx-get="/ui/unread" hx-trigger="every 5s" hx-swap="outerHTML" aria-label="unread notifications">4</span></a>
+        <a href="/flags" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+</svg> Check address</a>
+        <a href="/transactions" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" />
+</svg> Find transaction</a>
+      
+    </nav>
+    <div class="sidebar-foot">
+      <span class="pulse" data-live="true" title="Last ledger fully read by the monitor">
+        <span class="pulse-dot"></span>
+        <span>Live on XRPL Testnet<br><span class="mono small">#22,497,738</span></span>
+      </span>
+      <div class="signout">
+        <span>alice</span>
+        <form method="post" action="/logout"><button class="link-button" type="submit"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+</svg> Sign out</button></form>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    
+<div class="stack">
+  
+  
+  
+<section class="alarm" data-state="compromised" role="status" data-enter>
+  <span class="alarm-icon"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="M12 8v4" /><path d="M12 16h.01" />
+</svg></span>
+  <div><h2>Savings may be compromised</h2><p>Its keys changed and funds left. Act now.</p><p class="mono small addr" title="Click to select">rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R</p></div>
+  <div class="actions"><a class="btn btn-danger btn-big beacon" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/recover">What to do</a><a class="btn btn-quiet btn-big" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/report.pdf"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" />
+</svg> Report</a></div>
+</section>
+  <dl class="kpis" data-enter style="--i: 1">
+    <div class="kpi"><dt>Wallets watched</dt><dd>1</dd></div>
+    <div class="kpi kpi-lead"><dt>Unread alerts</dt><dd>4</dd></div>
+    <div class="kpi"><dt>XRP sent out</dt><dd>98.90<small>XRP</small></dd></div>
+    <div class="kpi"><dt>Flagged contacts</dt><dd>0</dd></div>
+  </dl>
+  
+  <div class="grid-2" data-enter style="--i: 1">
+    <section class="panel">
+      <div class="panel-head"><h2>Wallets</h2><span class="small muted">1 watched</span></div>
+      
+      <div class="wallets">
+        
+        <a class="wallet-card" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R" data-state="compromised">
+          <strong>Savings</strong>
+          <span class="mono small addr">rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R</span>
+          <span><span class="tag tag-compromised">Compromised</span></span>
+          <span class="small muted">Last activity 21 Nov 11:14</span>
+        </a>
+        
+      </div>
+      
+      <details class="disclose" style="border-top: 1px solid var(--hairline)" >
+        <summary>Watch a wallet <svg class="icon x-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="m6 9 6 6 6-6" />
+</svg></summary>
+        <div>
+          <form method="post" action="/wallets" class="form-row">
+            <div class="field"><label for="address">Address</label><input id="address" name="address" type="text" required placeholder="r…" autocomplete="off" spellcheck="false"></div>
+            <div class="field" style="flex: 0 1 160px"><label for="label">Name</label><input id="label" name="label" type="text" maxlength="40" placeholder="Savings"></div>
+            <button class="btn" type="submit">Watch</button>
+          </form>
+          <p class="small muted">Address only. You'll prove you own it with a one-drop payment before we watch it.</p>
+        </div>
+      </details>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Notifications</h2><a class="small" href="/notifications">All</a></div>
+      <div class="scroll" hx-get="/ui/feed?limit=6" hx-trigger="every 5s [!this.matches(':hover, :focus-within')]" hx-swap="innerHTML">
+        
+
+
+<ul class="xlist">
+  
+  <li class="x-item" tabindex="0" data-read="false">
+    <div class="x-head">
+      <span class="sev sev-critical"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="critical">
+<circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
+</svg></span>
+      <strong>Stolen funds located</strong>
+      <span class="x-time">21 Nov 11:21 <svg class="icon x-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="m6 9 6 6 6-6" />
+</svg></span>
+    </div>
+    <div class="x-more"><div>
+      <p>Traced 21.711995 XRP of your stolen funds to Exchange B (SIMULATED) (rnF3cd…9NDN) with destination tag 4242. Share this with the exchange and the police.</p>
+      <dl class="kv"><dt>Wallet</dt><dd class="mono">rs9oiH…Y99R</dd><dt>Transaction</dt><dd><a class="mono" href="https://testnet.xrpl.org/transactions/B470355A062697B02E8CAF33276E960B95193764EDFF27E0F0C33CCAED49DBAE" target="_blank" rel="noopener" title="B470355A062697B02E8CAF33276E960B95193764EDFF27E0F0C33CCAED49DBAE">B470355A…</a></dd></dl>
+      <div><a class="btn btn-small btn-danger" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/recover">What to do</a></div>
+    </div></div>
+  </li>
+  
+  <li class="x-item" tabindex="0" data-read="false">
+    <div class="x-head">
+      <span class="sev sev-critical"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="critical">
+<circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
+</svg></span>
+      <strong>Stolen funds located</strong>
+      <span class="x-time">21 Nov 11:21 <svg class="icon x-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="m6 9 6 6 6-6" />
+</svg></span>
+    </div>
+    <div class="x-more"><div>
+      <p>Traced 54.279986 XRP of your stolen funds to Exchange (SIMULATED) (rPfXCA…HMtw) with destination tag 777001. Share this with the exchange and the police.</p>
+      <dl class="kv"><dt>Wallet</dt><dd class="mono">rs9oiH…Y99R</dd><dt>Transaction</dt><dd><a class="mono" href="https://testnet.xrpl.org/transactions/62E75B3A817369244A53E61E699022CC3D748FB28583CE77F25B17EF92A750FC" target="_blank" rel="noopener" title="62E75B3A817369244A53E61E699022CC3D748FB28583CE77F25B17EF92A750FC">62E75B3A…</a></dd></dl>
+      <div><a class="btn btn-small btn-danger" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/recover">What to do</a></div>
+    </div></div>
+  </li>
+  
+  <li class="x-item" tabindex="0" data-read="false">
+    <div class="x-head">
+      <span class="sev sev-warning"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="warning">
+<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /><path d="m21.854 2.147-10.94 10.939" />
+</svg></span>
+      <strong>XRP sent</strong>
+      <span class="x-time">21 Nov 11:14 <svg class="icon x-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="m6 9 6 6 6-6" />
+</svg></span>
+    </div>
+    <div class="x-more"><div>
+      <p>Sent 98.899979 XRP to r4zhpM…tmwA.</p>
+      <dl class="kv"><dt>Wallet</dt><dd class="mono">rs9oiH…Y99R</dd><dt>Transaction</dt><dd><a class="mono" href="https://testnet.xrpl.org/transactions/724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A" target="_blank" rel="noopener" title="724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A">724D1BC2…</a></dd></dl>
+      
+    </div></div>
+  </li>
+  
+  <li class="x-item" tabindex="0" data-read="false">
+    <div class="x-head">
+      <span class="sev sev-critical"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="critical">
+<path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
+</svg></span>
+      <strong>Signing key changed</strong>
+      <span class="x-time">21 Nov 11:14 <svg class="icon x-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="m6 9 6 6 6-6" />
+</svg></span>
+    </div>
+    <div class="x-more"><div>
+      <p>Signing configuration changed: set regular key (r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA). If this wasn&#39;t you, your keys may be compromised.</p>
+      <dl class="kv"><dt>Wallet</dt><dd class="mono">rs9oiH…Y99R</dd><dt>Transaction</dt><dd><a class="mono" href="https://testnet.xrpl.org/transactions/FCB997901C88F7A98AB01F866A837155AE9BBCD1733DB3D8AE28191DC1E89C79" target="_blank" rel="noopener" title="FCB997901C88F7A98AB01F866A837155AE9BBCD1733DB3D8AE28191DC1E89C79">FCB99790…</a></dd></dl>
+      <div><a class="btn btn-small btn-danger" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/recover">What to do</a></div>
+    </div></div>
+  </li>
+  
+</ul>
+
+      </div>
+    </section>
+  </div>
+</div>
+
+  </main>
+</div>
+
+</body>
+</html>

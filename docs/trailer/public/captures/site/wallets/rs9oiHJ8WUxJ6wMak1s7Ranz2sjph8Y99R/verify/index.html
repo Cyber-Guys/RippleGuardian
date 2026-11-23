@@ -1,0 +1,76 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify ownership | Ripple Guardian</title>
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      
+<img class="brand-mark" src="/static/logo-mark.png" alt="" width="32" height="32">
+      <span class="brand-name">Ripple Guardian<small>Wallet protection</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      
+        <a href="/" aria-current="page"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+</svg> Wallets</a>
+        <a href="/notifications" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+</svg> Notifications
+          <span class="count" hx-get="/ui/unread" hx-trigger="every 5s" hx-swap="outerHTML" aria-label="unread notifications">4</span></a>
+        <a href="/flags" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+</svg> Check address</a>
+        <a href="/transactions" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" />
+</svg> Find transaction</a>
+      
+    </nav>
+    <div class="sidebar-foot">
+      <span class="pulse" data-live="true" title="Last ledger fully read by the monitor">
+        <span class="pulse-dot"></span>
+        <span>Live on XRPL Testnet<br><span class="mono small">#22,497,743</span></span>
+      </span>
+      <div class="signout">
+        <span>alice</span>
+        <form method="post" action="/logout"><button class="link-button" type="submit"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+</svg> Sign out</button></form>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    
+<a class="back" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R">Wallet</a>
+<div class="page-head" data-enter>
+  <div><h1>Verify ownership</h1><p class="mono small addr">rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R</p></div>
+  <span class="tag tag-done"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /><path d="m9 12 2 2 4-4" />
+</svg> Verified</span>
+</div>
+<div class="stack">
+  
+  <section class="alarm" data-state="safe" role="status" data-enter>
+    <span class="alarm-icon"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /><path d="m9 12 2 2 4-4" />
+</svg></span>
+    <div><h2>You control this wallet</h2><p>Confirmed 21 Nov 2026, 11:14 UTC by payment <a class="mono" href="https://testnet.xrpl.org/transactions/70D7F3C55CAA178902F24B113DB9E7FEF122E10B29BC83A2CA13780A79378525" target="_blank" rel="noopener" title="70D7F3C55CAA178902F24B113DB9E7FEF122E10B29BC83A2CA13780A79378525">70D7F3C5…</a></p></div>
+  </section>
+  
+</div>
+
+  </main>
+</div>
+
+</body>
+</html>

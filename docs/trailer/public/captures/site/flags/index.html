@@ -1,0 +1,108 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flagged accounts | Ripple Guardian</title>
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      
+<img class="brand-mark" src="/static/logo-mark.png" alt="" width="32" height="32">
+      <span class="brand-name">Ripple Guardian<small>Analyst desk</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      
+        <span class="nav-label">Investigate</span>
+        <a href="/analyst" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" />
+</svg> Overview</a>
+        <a href="/analyst/findings" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34" /><path d="M4 6h.01" /><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35" /><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67" /><path d="M12 18h.01" /><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67" /><circle cx="12" cy="12" r="2" /><path d="m13.41 10.59 5.66-5.66" />
+</svg> Findings</a>
+        <a href="/analyst/traces" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
+</svg> Traces</a>
+        <a href="/analyst/settings" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<line x1="21" x2="14" y1="4" y2="4" /><line x1="10" x2="3" y1="4" y2="4" /><line x1="21" x2="12" y1="12" y2="12" /><line x1="8" x2="3" y1="12" y2="12" /><line x1="21" x2="16" y1="20" y2="20" /><line x1="12" x2="3" y1="20" y2="20" /><line x1="14" x2="14" y1="2" y2="6" /><line x1="8" x2="8" y1="10" y2="14" /><line x1="16" x2="16" y1="18" y2="22" />
+</svg> Detection settings</a>
+        <a href="/transactions" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+</svg> Find transaction</a>
+        <span class="nav-label">Publish</span>
+        <a href="/flags" aria-current="page"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" x2="4" y1="22" y2="15" />
+</svg> Flags</a>
+      
+    </nav>
+    <div class="sidebar-foot">
+      <span class="pulse" data-live="true" title="Last ledger fully read by the monitor">
+        <span class="pulse-dot"></span>
+        <span>Live on XRPL Testnet<br><span class="mono small">#22,497,748</span></span>
+      </span>
+      <div class="signout">
+        <span>analyst</span>
+        <form method="post" action="/logout"><button class="link-button" type="submit"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+</svg> Sign out</button></form>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    
+<div class="page-head" data-enter>
+  <div>
+    <h1>Flags</h1>
+    <p>Check before you send</p>
+  </div>
+</div>
+
+<div class="stack">
+  <section class="panel">
+    <form class="panel-body form-row" method="get" action="/flags" role="search">
+      <div class="field"><label for="q">Address or transaction</label><input id="q" name="q" type="text" value="" placeholder="r… or 64-character hash" spellcheck="false"></div>
+      <button class="btn" type="submit">Check</button>
+    </form>
+    
+  </section>
+
+  
+  <section class="panel">
+    <div class="panel-head"><h2>Flag an account</h2></div>
+    <form class="panel-body stack" method="post" action="/flags" style="gap: var(--s-3)">
+      <input type="hidden" name="back" value="/flags">
+      <div class="form-row">
+        <div class="field" style="flex: 0 1 9rem"><label for="target_type">Type</label>
+          <select id="target_type" name="target_type"><option value="account">Account</option><option value="tx">Transaction</option></select></div>
+        <div class="field"><label for="target">Address or hash</label><input id="target" name="target" type="text" required spellcheck="false"></div>
+        <div class="field" style="flex: 0 1 10rem"><label for="category">Category</label>
+          <select id="category" name="category"><option value="theft">theft</option><option value="scam">scam</option><option value="phishing">phishing</option><option value="mixer">mixer</option><option value="wash_trading">wash trading</option><option value="rug_pull">rug pull</option><option value="other">other</option></select></div>
+      </div>
+      <div class="field"><label for="reason">Reason users will read</label><input id="reason" name="reason" type="text" required minlength="3" maxlength="280"></div>
+      <div><button class="btn btn-danger" type="submit">Flag</button></div>
+      <p class="small muted">Flags are public to every user and carry your username. Revoke a flag if it turns out to be wrong.</p>
+    </form>
+  </section>
+  
+
+  <section class="panel">
+    <div class="panel-head"><h2>All active flags</h2><span class="small muted">0</span></div>
+    
+      <div class="empty"><strong>No flags yet</strong>When an analyst flags an account, it shows up here for everyone.</div>
+    
+  </section>
+</div>
+
+  </main>
+</div>
+
+</body>
+</html>

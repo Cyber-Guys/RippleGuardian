@@ -1,0 +1,159 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recovery | Ripple Guardian</title>
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      
+<img class="brand-mark" src="/static/logo-mark.png" alt="" width="32" height="32">
+      <span class="brand-name">Ripple Guardian<small>Wallet protection</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      
+        <a href="/" aria-current="page"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+</svg> Wallets</a>
+        <a href="/notifications" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+</svg> Notifications
+          <span class="count" hx-get="/ui/unread" hx-trigger="every 5s" hx-swap="outerHTML" aria-label="unread notifications">4</span></a>
+        <a href="/flags" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+</svg> Check address</a>
+        <a href="/transactions" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" />
+</svg> Find transaction</a>
+      
+    </nav>
+    <div class="sidebar-foot">
+      <span class="pulse" data-live="true" title="Last ledger fully read by the monitor">
+        <span class="pulse-dot"></span>
+        <span>Live on XRPL Testnet<br><span class="mono small">#22,497,743</span></span>
+      </span>
+      <div class="signout">
+        <span>alice</span>
+        <form method="post" action="/logout"><button class="link-button" type="submit"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+</svg> Sign out</button></form>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    
+<a class="back" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R">Savings</a>
+<div class="page-head" data-enter>
+  <div><h1>What to do now</h1><p>Four steps. Tick each one when it's done.</p></div>
+  <a class="btn btn-big" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/report.pdf"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" />
+</svg> Download report</a>
+</div>
+<div class="stack">
+  <section class="panel" data-enter style="--i: 1">
+    <div class="panel-head"><h2>What happened</h2><span class="small muted mono">RG-A6FB874E60</span></div>
+    
+    <div class="timeline">
+      
+      <div class="t-step" data-kind="key" style="--i: 0">
+        <span class="t-dot"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
+</svg></span>
+        <strong>Signing key changed</strong>
+        <span class="x-time">21 Nov 11:14:31</span>
+        <a class="mono" href="https://testnet.xrpl.org/transactions/FCB997901C88F7A98AB01F866A837155AE9BBCD1733DB3D8AE28191DC1E89C79" target="_blank" rel="noopener" title="FCB997901C88F7A98AB01F866A837155AE9BBCD1733DB3D8AE28191DC1E89C79">FCB99790…</a>
+      </div>
+      
+      <div class="t-step" data-kind="out" style="--i: 1">
+        <span class="t-dot"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /><path d="m21.854 2.147-10.94 10.939" />
+</svg></span>
+        <strong>Sent 98.899979 XRP</strong>
+        <span class="x-time">21 Nov 11:14:53</span>
+        <a class="mono" href="https://testnet.xrpl.org/transactions/724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A" target="_blank" rel="noopener" title="724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A">724D1BC2…</a>
+      </div>
+      
+      
+      <div class="t-step" data-kind="sink" style="--i: 2">
+        <span class="t-dot"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
+</svg></span>
+        <strong>Located at Exchange (SIMULATED)</strong>
+        <span class="x-time">tag 777001</span>
+      </div>
+      
+    </div>
+    
+  </section>
+
+  <section class="recover" data-enter style="--i: 2">
+    <div class="progress"><span>Progress</span><span class="progress-bar"><i></i><i></i><i></i><i></i></span></div>
+    <ol class="steps-list">
+      <li class="r-step">
+        <span class="r-num"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="12" cy="16" r="1" /><rect x="3" y="10" width="18" height="12" rx="2" /><path d="M7 10V7a5 5 0 0 1 10 0v3" />
+</svg></span>
+        <div class="r-body"><div><h3>Lock it down</h3><p>Stop using this wallet. Its key is in someone else's hands.</p></div>
+          <p class="small muted">Create a new wallet in your wallet app, on a device you trust, with a fresh secret.</p></div>
+        <label class="done-toggle"><input id="done-1" type="checkbox"> Done</label>
+      </li>
+      <li class="r-step">
+        <span class="r-num"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /><path d="m21.854 2.147-10.94 10.939" />
+</svg></span>
+        <div class="r-body"><div><h3>Save what's left</h3><p>Send anything still in it to the new wallet, now.</p></div>
+          <p class="small muted">The thief can sign too. Speed matters more than fees.</p></div>
+        <label class="done-toggle"><input id="done-2" type="checkbox"> Done</label>
+      </li>
+      <li class="r-step" id="step-find" >
+        <span class="r-num"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
+</svg></span>
+        <div class="r-body">
+          <div><h3>Find the money</h3><p>We follow it hop by hop on the ledger.</p></div>
+          
+            
+            <dl class="located">
+              <div><dt>Stolen</dt><dd>98.899979 XRP</dd></div>
+              <div><dt>At</dt><dd>Exchange (SIMULATED)</dd></div>
+              <div><dt>Deposit tag</dt><dd class="mono">777001</dd></div>
+            </dl>
+            <p class="small muted">54.279986 XRP (55%) reached <a class="mono" href="https://testnet.xrpl.org/accounts/rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw" target="_blank" rel="noopener" title="rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw">rPfXCA…HMtw</a></p>
+          
+        </div>
+        <label class="done-toggle"><input id="done-3" type="checkbox"> Done</label>
+      </li>
+      <li class="r-step">
+        <span class="r-num"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" />
+</svg></span>
+        <div class="r-body">
+          <div><h3>Report it</h3><p>Send the report to the exchange and the police.</p></div>
+          <div class="actions"><a class="btn" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/report.pdf"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" />
+</svg> Incident report (PDF)</a></div>
+          
+          
+          <p class="copybox">Funds stolen from rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R reached your deposit address rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw with destination tag 777001. Please freeze that customer account and keep its records for the police. Reference RG-A6FB874E60.</p>
+          
+        </div>
+        <label class="done-toggle"><input id="done-4" type="checkbox"> Done</label>
+      </li>
+    </ol>
+  </section>
+</div>
+
+  </main>
+</div>
+
+</body>
+</html>

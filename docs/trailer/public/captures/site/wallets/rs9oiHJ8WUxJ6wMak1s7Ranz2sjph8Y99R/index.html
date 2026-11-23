@@ -1,0 +1,162 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Savings | Ripple Guardian</title>
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      
+<img class="brand-mark" src="/static/logo-mark.png" alt="" width="32" height="32">
+      <span class="brand-name">Ripple Guardian<small>Wallet protection</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      
+        <a href="/" aria-current="page"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+</svg> Wallets</a>
+        <a href="/notifications" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+</svg> Notifications
+          <span class="count" hx-get="/ui/unread" hx-trigger="every 5s" hx-swap="outerHTML" aria-label="unread notifications">4</span></a>
+        <a href="/flags" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+</svg> Check address</a>
+        <a href="/transactions" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" />
+</svg> Find transaction</a>
+      
+    </nav>
+    <div class="sidebar-foot">
+      <span class="pulse" data-live="true" title="Last ledger fully read by the monitor">
+        <span class="pulse-dot"></span>
+        <span>Live on XRPL Testnet<br><span class="mono small">#22,497,738</span></span>
+      </span>
+      <div class="signout">
+        <span>alice</span>
+        <form method="post" action="/logout"><button class="link-button" type="submit"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+</svg> Sign out</button></form>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    
+<a class="back" href="/">Wallets</a>
+<div class="page-head" data-enter>
+  <div><h1>Savings</h1><p class="mono small">rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R</p></div>
+  <div class="actions">
+    <a class="btn btn-quiet" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/verify"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /><path d="m9 12 2 2 4-4" />
+</svg> Verified</a>
+    <a class="btn btn-quiet" href="https://testnet.xrpl.org/accounts/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R" target="_blank" rel="noopener">Explorer <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+</svg></a>
+  </div>
+</div>
+<div class="stack">
+  
+  
+<section class="alarm" data-state="compromised" role="status" data-enter>
+  <span class="alarm-icon"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="M12 8v4" /><path d="M12 16h.01" />
+</svg></span>
+  <div><h2>This wallet may be compromised</h2><p>Its keys changed and funds left. Act now.</p></div>
+  <div class="actions"><a class="btn btn-danger btn-big beacon" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/recover">What to do</a><a class="btn btn-quiet btn-big" href="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/report.pdf"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" />
+</svg> Report</a></div>
+</section>
+  
+
+  <section class="panel" data-enter style="--i: 1">
+    <div class="panel-head"><h2>Balance</h2><span class="small muted">XRP from recorded transfers</span></div>
+    <div class="panel-body"><svg class="chart chart-line" viewBox="0 0 720 240" role="img" aria-label="Balance over time, from 100 to 1.1 XRP"><line class="chart-grid" x1="56" x2="704" y1="212.0" y2="212.0"/><text class="chart-label" x="48" y="216.0" text-anchor="end">0</text><line class="chart-grid" x1="56" x2="704" y1="16.0" y2="16.0"/><text class="chart-label" x="48" y="20.0" text-anchor="end">100</text><path class="chart-area" d="M56.0,16.0 H687.8 V16.0 H704.0 V209.8 V212.0 H56.0 Z"/><path class="chart-stroke" pathLength="1" d="M56.0,16.0 H687.8 V16.0 H704.0 V209.8"/><circle class="chart-dot" cx="56.0" cy="16.0" r="4"><title>21 Nov 10:39 UTC: 100 XRP</title></circle><circle class="chart-dot" cx="687.8" cy="16.0" r="4"><title>21 Nov 11:14 UTC: 100 XRP</title></circle><circle class="chart-dot" cx="704.0" cy="209.8" r="4"><title>21 Nov 11:14 UTC: 1.1 XRP</title></circle><text class="chart-label" x="56" y="232">21 Nov 10:39</text><text class="chart-label" x="704" y="232" text-anchor="end">21 Nov 11:14</text></svg></div>
+    
+    <dl class="stats">
+      
+      <div class="stat"><dt>XRP in</dt><dd>100</dd></div>
+      <div class="stat"><dt>XRP out</dt><dd>98.89998</dd></div>
+      
+      <div class="stat"><dt>Counterparties</dt><dd>3</dd></div>
+      <div class="stat"><dt>Last activity</dt><dd class="small">21 Nov, 11:14</dd></div>
+    </dl>
+    
+  </section>
+
+  <section class="panel" data-enter style="--i: 2">
+    <div class="panel-head"><h2>History</h2><span class="small muted">latest 100</span></div>
+    
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>When (UTC)</th><th>Counterparty</th><th class="num">Amount</th><th>Tx</th></tr></thead>
+        <tbody>
+        
+          
+          
+          <tr >
+            <td class="small">21 Nov, 11:14</td>
+            <td>To <a class="mono" href="https://testnet.xrpl.org/accounts/r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA" target="_blank" rel="noopener" title="r4zhpMESsWXZKdHFWpL5RBTi6ms73ttmwA">r4zhpM…tmwA</a>
+              </td>
+            <td class="num ">−98.899979 XRP</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A" target="_blank" rel="noopener" title="724D1BC26D3D32BF8F65B1E610B412C92A0C06EAA3980704B0E442379315114A">724D1BC2…</a></td>
+          </tr>
+        
+          
+          
+          <tr >
+            <td class="small">21 Nov, 11:14</td>
+            <td>To <a class="mono" href="https://testnet.xrpl.org/accounts/rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw" target="_blank" rel="noopener" title="rPfXCARMtorCLKdo3tQ3UDjr56YaAkHMtw">rPfXCA…HMtw</a> <span class="muted small">tag 1799681927</span>
+              </td>
+            <td class="num ">−0.000001 XRP</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/70D7F3C55CAA178902F24B113DB9E7FEF122E10B29BC83A2CA13780A79378525" target="_blank" rel="noopener" title="70D7F3C55CAA178902F24B113DB9E7FEF122E10B29BC83A2CA13780A79378525">70D7F3C5…</a></td>
+          </tr>
+        
+          
+          
+          <tr >
+            <td class="small">21 Nov, 10:39</td>
+            <td>From <a class="mono" href="https://testnet.xrpl.org/accounts/rJjHYTCPpNA3qAM8ZpCDtip3a8xg7B8PFo" target="_blank" rel="noopener" title="rJjHYTCPpNA3qAM8ZpCDtip3a8xg7B8PFo">rJjHYT…8PFo</a>
+              </td>
+            <td class="num dir-in">+100 XRP</td>
+            <td><a class="mono" href="https://testnet.xrpl.org/transactions/0E7459E023DA9111BC1BA4C5C8485326331AC032DE10FD940802BDB93594E21F" target="_blank" rel="noopener" title="0E7459E023DA9111BC1BA4C5C8485326331AC032DE10FD940802BDB93594E21F">0E7459E0…</a></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+    
+  </section>
+
+  <details class="panel disclose" data-enter style="--i: 3" >
+    <summary>Notification settings <svg class="icon x-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="m6 9 6 6 6-6" />
+</svg></summary>
+    <form method="post" action="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/settings" style="display: grid; gap: var(--s-3); padding: 0 var(--s-5) var(--s-5)">
+      
+      <div class="field"><label for="label">Name</label><input id="label" name="label" type="text" maxlength="40" value="Savings"></div>
+      <label class="check"><input type="checkbox" name="notify_security" value="true" checked> Key changes</label>
+      <label class="check"><input type="checkbox" name="notify_flagged" value="true" checked> Contact with flagged accounts</label>
+      <label class="check"><input type="checkbox" name="notify_outgoing" value="true" checked> Outgoing XRP</label>
+      <div class="field" style="max-width: 240px"><label for="min_outgoing_xrp">From (XRP)</label><input id="min_outgoing_xrp" name="min_outgoing_xrp" type="text" inputmode="decimal" value="0"></div>
+      <div class="actions"><button class="btn" type="submit">Save</button></div>
+    </form>
+    <form method="post" action="/wallets/rs9oiHJ8WUxJ6wMak1s7Ranz2sjph8Y99R/remove" style="padding: 0 var(--s-5) var(--s-5)">
+      <button class="btn btn-quiet btn-small" type="submit">Stop watching</button>
+    </form>
+  </details>
+</div>
+
+  </main>
+</div>
+
+</body>
+</html>

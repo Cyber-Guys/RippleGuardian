@@ -1,0 +1,301 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detection settings | Ripple Guardian</title>
+  <link rel="icon" href="/static/logo-mark.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/logo-mark.png">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      
+<img class="brand-mark" src="/static/logo-mark.png" alt="" width="32" height="32">
+      <span class="brand-name">Ripple Guardian<small>Analyst desk</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      
+        <span class="nav-label">Investigate</span>
+        <a href="/analyst" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" />
+</svg> Overview</a>
+        <a href="/analyst/findings" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34" /><path d="M4 6h.01" /><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35" /><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67" /><path d="M12 18h.01" /><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67" /><circle cx="12" cy="12" r="2" /><path d="m13.41 10.59 5.66-5.66" />
+</svg> Findings</a>
+        <a href="/analyst/traces" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
+</svg> Traces</a>
+        <a href="/analyst/settings" aria-current="page"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<line x1="21" x2="14" y1="4" y2="4" /><line x1="10" x2="3" y1="4" y2="4" /><line x1="21" x2="12" y1="12" y2="12" /><line x1="8" x2="3" y1="12" y2="12" /><line x1="21" x2="16" y1="20" y2="20" /><line x1="12" x2="3" y1="20" y2="20" /><line x1="14" x2="14" y1="2" y2="6" /><line x1="8" x2="8" y1="10" y2="14" /><line x1="16" x2="16" y1="18" y2="22" />
+</svg> Detection settings</a>
+        <a href="/transactions" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+</svg> Find transaction</a>
+        <span class="nav-label">Publish</span>
+        <a href="/flags" ><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" x2="4" y1="22" y2="15" />
+</svg> Flags</a>
+      
+    </nav>
+    <div class="sidebar-foot">
+      <span class="pulse" data-live="true" title="Last ledger fully read by the monitor">
+        <span class="pulse-dot"></span>
+        <span>Live on XRPL Testnet<br><span class="mono small">#22,497,748</span></span>
+      </span>
+      <div class="signout">
+        <span>analyst</span>
+        <form method="post" action="/logout"><button class="link-button" type="submit"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+</svg> Sign out</button></form>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    
+<div class="page-head" data-enter>
+  <div>
+    <h1>Detection settings</h1>
+    <p>Shared by every analyst. Applied on the worker's next run.</p>
+  </div>
+  <span class="small muted">Factory defaults</span>
+</div>
+
+
+
+
+<form method="post" action="/analyst/settings" class="stack" id="settings-form" data-enter style="--i: 1">
+  <input type="hidden" name="version" value="0">
+  
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Funds funnel</h2>
+      <span class="tag tag-done">Live on the worker</span>
+    </div>
+    <div class="panel-body settings-grid">
+      
+      <div class="field ">
+        <label for="f-funnel_window_seconds">Lookback for credits and shared destination</label>
+        <div class="input-unit">
+          <input id="f-funnel_window_seconds" name="funnel_window_seconds" type="text" inputmode="decimal" value="1800" aria-describedby="h-funnel_window_seconds" >
+          <span class="unit">seconds</span>
+        </div>
+        <span class="hint " id="h-funnel_window_seconds">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-funnel_min_senders">Distinct wallets forwarding to one route</label>
+        <div class="input-unit">
+          <input id="f-funnel_min_senders" name="funnel_min_senders" type="text" inputmode="decimal" value="3" aria-describedby="h-funnel_min_senders" >
+          <span class="unit">wallets, min 2</span>
+        </div>
+        <span class="hint " id="h-funnel_min_senders">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-funnel_min_fraction">Matched share of credits and debit</label>
+        <div class="input-unit">
+          <input id="f-funnel_min_fraction" name="funnel_min_fraction" type="text" inputmode="decimal" value="0.8" aria-describedby="h-funnel_min_fraction" >
+          <span class="unit">0 to 1</span>
+        </div>
+        <span class="hint " id="h-funnel_min_fraction">
+          &nbsp;
+        </span>
+      </div>
+      
+    </div>
+  </section>
+  
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Wash trading</h2>
+      <span class="tag tag-pending" title="Saved, but the worker has no fills or pool withdrawals to scan yet">Live data unavailable</span>
+    </div>
+    <div class="panel-body settings-grid">
+      
+      <div class="field ">
+        <label for="f-wash_window_seconds">Executed trading lookback</label>
+        <div class="input-unit">
+          <input id="f-wash_window_seconds" name="wash_window_seconds" type="text" inputmode="decimal" value="1800" aria-describedby="h-wash_window_seconds" >
+          <span class="unit">seconds</span>
+        </div>
+        <span class="hint " id="h-wash_window_seconds">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-wash_min_pair_fills">Fills between two wallets to link them</label>
+        <div class="input-unit">
+          <input id="f-wash_min_pair_fills" name="wash_min_pair_fills" type="text" inputmode="decimal" value="2" aria-describedby="h-wash_min_pair_fills" >
+          <span class="unit">fills, min 2</span>
+        </div>
+        <span class="hint " id="h-wash_min_pair_fills">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-wash_min_fills">Fills within the group</label>
+        <div class="input-unit">
+          <input id="f-wash_min_fills" name="wash_min_fills" type="text" inputmode="decimal" value="6" aria-describedby="h-wash_min_fills" >
+          <span class="unit">fills, min 2</span>
+        </div>
+        <span class="hint " id="h-wash_min_fills">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-wash_max_wallets">Wallets in the group, at most</label>
+        <div class="input-unit">
+          <input id="f-wash_max_wallets" name="wash_max_wallets" type="text" inputmode="decimal" value="6" aria-describedby="h-wash_max_wallets" >
+          <span class="unit">wallets, min 2</span>
+        </div>
+        <span class="hint " id="h-wash_max_wallets">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-wash_max_net_ratio">Net-to-gross ratio, at most</label>
+        <div class="input-unit">
+          <input id="f-wash_max_net_ratio" name="wash_max_net_ratio" type="text" inputmode="decimal" value="0.15" aria-describedby="h-wash_max_net_ratio" >
+          <span class="unit">0 to 1</span>
+        </div>
+        <span class="hint " id="h-wash_max_net_ratio">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-wash_min_market_share">Share of market volume inside the group</label>
+        <div class="input-unit">
+          <input id="f-wash_min_market_share" name="wash_min_market_share" type="text" inputmode="decimal" value="0.5" aria-describedby="h-wash_min_market_share" >
+          <span class="unit">0 to 1</span>
+        </div>
+        <span class="hint " id="h-wash_min_market_share">
+          &nbsp;
+        </span>
+      </div>
+      
+    </div>
+  </section>
+  
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Liquidity withdrawal</h2>
+      <span class="tag tag-pending" title="Saved, but the worker has no fills or pool withdrawals to scan yet">Live data unavailable</span>
+    </div>
+    <div class="panel-body settings-grid">
+      
+      <div class="field ">
+        <label for="f-liquidity_window_seconds">Lookback for new buyers</label>
+        <div class="input-unit">
+          <input id="f-liquidity_window_seconds" name="liquidity_window_seconds" type="text" inputmode="decimal" value="3600" aria-describedby="h-liquidity_window_seconds" >
+          <span class="unit">seconds</span>
+        </div>
+        <span class="hint " id="h-liquidity_window_seconds">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-liquidity_min_buyers">New buyers before the withdrawal</label>
+        <div class="input-unit">
+          <input id="f-liquidity_min_buyers" name="liquidity_min_buyers" type="text" inputmode="decimal" value="3" aria-describedby="h-liquidity_min_buyers" >
+          <span class="unit">buyers, min 1</span>
+        </div>
+        <span class="hint " id="h-liquidity_min_buyers">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-liquidity_min_pool_drops">XRP in the pool before the withdrawal</label>
+        <div class="input-unit">
+          <input id="f-liquidity_min_pool_drops" name="liquidity_min_pool_drops" type="text" inputmode="decimal" value="10000000" aria-describedby="h-liquidity_min_pool_drops" >
+          <span class="unit">drops (1 XRP = 1,000,000)</span>
+        </div>
+        <span class="hint " id="h-liquidity_min_pool_drops">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-liquidity_min_drop">Share of XRP reserves removed</label>
+        <div class="input-unit">
+          <input id="f-liquidity_min_drop" name="liquidity_min_drop" type="text" inputmode="decimal" value="0.5" aria-describedby="h-liquidity_min_drop" >
+          <span class="unit">0 to 1</span>
+        </div>
+        <span class="hint " id="h-liquidity_min_drop">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-liquidity_sale_size">Token amount for the sale quote</label>
+        <div class="input-unit">
+          <input id="f-liquidity_sale_size" name="liquidity_sale_size" type="text" inputmode="decimal" value="1000" aria-describedby="h-liquidity_sale_size" >
+          <span class="unit">tokens</span>
+        </div>
+        <span class="hint " id="h-liquidity_sale_size">
+          &nbsp;
+        </span>
+      </div>
+      
+    </div>
+  </section>
+  
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Wallet takeover</h2>
+      <span class="tag tag-done">Live on the worker</span>
+    </div>
+    <div class="panel-body settings-grid">
+      
+      <div class="field ">
+        <label for="f-takeover_window_seconds">Time allowed after a signing change</label>
+        <div class="input-unit">
+          <input id="f-takeover_window_seconds" name="takeover_window_seconds" type="text" inputmode="decimal" value="900" aria-describedby="h-takeover_window_seconds" >
+          <span class="unit">seconds</span>
+        </div>
+        <span class="hint " id="h-takeover_window_seconds">
+          &nbsp;
+        </span>
+      </div>
+      
+      <div class="field ">
+        <label for="f-takeover_min_outflow">Share of starting balance sent to new destinations</label>
+        <div class="input-unit">
+          <input id="f-takeover_min_outflow" name="takeover_min_outflow" type="text" inputmode="decimal" value="0.7" aria-describedby="h-takeover_min_outflow" >
+          <span class="unit">0 to 1</span>
+        </div>
+        <span class="hint " id="h-takeover_min_outflow">
+          &nbsp;
+        </span>
+      </div>
+      
+    </div>
+  </section>
+  
+  <div class="actions">
+    <button class="btn btn-big" type="submit">Save settings</button>
+    <button class="btn btn-quiet btn-big" type="submit" formaction="/analyst/settings/restore" formnovalidate>Restore defaults</button>
+  </div>
+</form>
+
+  </main>
+</div>
+
+</body>
+</html>

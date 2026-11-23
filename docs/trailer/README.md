@@ -9,7 +9,7 @@ A 90-second trailer and a 30-second cut, made from real captures of the running 
 | `audio/make_music.py` | The soundtrack, numpy only. Writes `public/music.wav` and `public/music-30s.wav` |
 | `src/` | The Remotion project: one component per scene in `src/scenes/`, shared pieces in `src/components/` |
 
-Captures, music and renders are git-ignored, so a fresh clone needs all three steps below.
+The renders are in `out/` (`trailer.mp4`, `trailer-30s.mp4`, the `tmp-preview-full.mp4` work preview and the `stills/` frames), and the captures and music they were built from are in `public/`. Run the three steps below only to rebuild them.
 
 ## 1. Capture
 
