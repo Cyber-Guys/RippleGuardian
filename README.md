@@ -5,6 +5,7 @@
 <p align="center">
   <b>A blockchain forensics framework for the XRP Ledger: wallet protection and theft tracing.</b><br>
   <sub>IXH26 Italian XRPL Hackathon · Bari · Track 2, XRPL applications · built 20-21 November 2026 by team CyberGuys</sub><br>
+  <a href="docs/presentation/RippleGuardian.pdf">Presentation slides (PDF)</a>
 </p>
 
 <p align="center">
@@ -354,6 +355,7 @@ The names "Ripple Guardian" and "Cyber Guys" and the project logo are not covere
 | [docs/DESIGN.md](docs/DESIGN.md) | judges, reviewers | threat model and known limits |
 | [docs/E2E.md](docs/E2E.md) | judges | the Testnet runs, checked against the ledger and in a browser |
 | [docs/DECISIONS.md](docs/DECISIONS.md) | team | every decision with its reason |
+| [docs/presentation/](docs/presentation/) | everyone | the slides shown to the jury, as [PowerPoint](docs/presentation/RippleGuardian.pptx) and [PDF](docs/presentation/RippleGuardian.pdf) |
 | [docs/trailer/README.md](docs/trailer/README.md) | everyone | the trailer: rendered videos, captures, music and how to rebuild them |
 | [docs/SUBMISSION.md](docs/SUBMISSION.md) | organisers | submission text, third-party summary, AI disclosure |
 | [CLAUDE.md](CLAUDE.md) | AI agents | the rules every agent working on this repo follows |
